@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interpreto demonstration</title>
+    <link rel="icon" type="image/png" href="assets/interpreto.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="page">
+      <header class="top">
+        <div class="top-row">
+          <div class="logo-badge">
+            <img src="assets/interpreto.png" alt="Interpreto logo" />
+            <h1>Interpreto demonstration</h1>
+          </div>
+          <div class="partner-strip" aria-label="Partners">
+            <img class="partner-logo" src="assets/irt.png" alt="IRT logo" />
+            <img class="partner-logo" src="assets/deel.png" alt="Deel logo" />
+            <img class="partner-logo" src="assets/for.png" alt="FOR logo" />
+            <img class="partner-logo" src="assets/aniti.png" alt="ANITI logo" />
+            <img class="partner-logo" src="assets/irit.png" alt="IRIT logo" />
+          </div>
+        </div>
+        <div class="controls">
+          <div class="control">
+            <label for="sample-select">Sample</label>
+            <select id="sample-select" aria-label="Sample"></select>
+          </div>
+          <div class="control">
+            <label for="model-select">Model</label>
+            <select id="model-select" aria-label="Model"></select>
+          </div>
+          <div class="control control--methods">
+            <label>Methods</label>
+            <details class="methods-dropdown">
+              <summary>Select methods</summary>
+              <div class="methods-panel">
+                <div class="control-actions">
+                  <button id="methods-select-all" type="button">Select all</button>
+                  <button id="methods-clear" type="button">Clear</button>
+                </div>
+                <div id="methods-list" class="methods-list" role="list"></div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </header>
+      <main>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+        <div id="cards" class="cards"></div>
+      </main>
+    </div>
+    <noscript>
+      This page requires JavaScript to load the manifest and render the
+      comparisons.
+    </noscript>
+  </body>
+</html>
