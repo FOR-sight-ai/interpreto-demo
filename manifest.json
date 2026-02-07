@@ -1,0 +1,39 @@
+{
+  "models": {
+    "classification": {
+      "samples": {
+        "attributions": {
+          "methods": [
+            "multi.html",
+            "single.html"
+          ]
+        },
+        "concepts": {
+          "methods": [
+            "class-wise.html",
+            "general.html",
+            "local-element-classwise.html",
+            "local-element.html",
+            "local-pooled-classwise.html",
+            "local-pooled.html",
+            "local.html"
+          ]
+        }
+      }
+    },
+    "generation": {
+      "samples": {
+        "attributions": {
+          "methods": [
+            "example.html"
+          ]
+        },
+        "concepts": {
+          "methods": [
+            "example.html"
+          ]
+        }
+      }
+    }
+  }
+}
