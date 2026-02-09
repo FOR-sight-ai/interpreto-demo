@@ -44,12 +44,11 @@ MODEL_CONFIGS = {
     }
 }
 
-NUM_SAMPLES = 12
-SEED = 13
+NUM_SAMPLES = 5
 
 OUTPUT_ROOT = Path("assets")
 
-METHODS = {
+METHODS = {  # TODO: add the rest of the methods
     "saliency": Saliency,
     "integrated_gradients": IntegratedGradients,
     "smoothgrad": SmoothGrad,
@@ -63,7 +62,7 @@ METHODS = {
 def main() -> None:
     config = MODEL_CONFIGS[model_id]
     classes_names = config["classes_names"]
-    torch.manual_seed(SEED)
+    torch.manual_seed(0)
 
     # Load a fixed set of samples so outputs are reproducible.
     samples = load_samples(config)
