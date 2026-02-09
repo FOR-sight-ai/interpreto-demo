@@ -25,24 +25,12 @@ jobs:
           python-version: "3.x"
       - name: Build manifest (if attributions exist)
         run: |
-          if [ -d "attributions" ]; then
-            python tools/build_manifest.py
-          else
-            echo "No attributions directory found; keeping existing manifest.json."
-          fi
+          python tools/build_manifest.py
       - name: Prepare Pages artifact
         run: |
           mkdir -p site
           cp index.html styles.css app.js manifest.json site/
-          if [ -d "assets" ]; then
-            cp -R assets site/
-          fi
-          if [ -d "attributions" ]; then
-            cp -R attributions site/
-          fi
-          if [ -f "README.md" ]; then
-            cp README.md site/
-          fi
+          cp -R assets site/
           touch site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
