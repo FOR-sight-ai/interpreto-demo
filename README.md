@@ -12,7 +12,7 @@ This repository contains a static gallery for comparing precomputed text-attribu
 - `index.html`, `styles.css`, `app.js`: Static UI (vanilla HTML/CSS/JS)
 - `manifest.json`: Generated index of available models, samples, and methods
 - `tools/build_manifest.py`: Manifest builder script (run locally)
-- `attributions/<model>/<sample>/<method_and_params>.html`: Precomputed explanation files
+- `assets/<model>/<sample>/<method_and_params>.html`: Precomputed explanation files
 
 ## Add attribution files
 
@@ -41,7 +41,7 @@ This writes `manifest.json` at the repository root. Commit the updated manifest 
 Use a simple static file server (recommended) so `manifest.json` can be fetched:
 
 ```bash
-python -m http.server 8000
+python -m http.server 8000 --bind 127.0.0.1
 ```
 
 Then visit `http://localhost:8000/` in your browser.

@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ATTRIBUTIONS_DIR = ROOT / "attributions"
+ATTRIBUTIONS_DIR = ROOT / "assets"
 OUTPUT_PATH = ROOT / "manifest.json"
 
 

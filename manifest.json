@@ -12,11 +12,9 @@
           "methods": [
             "class-wise.html",
             "general.html",
-            "local-element-classwise.html",
             "local-element.html",
             "local-pooled-classwise.html",
-            "local-pooled.html",
-            "local.html"
+            "local-pooled.html"
           ]
         }
       }
