@@ -1,34 +1,137 @@
 {
   "models": {
-    "classification": {
+    "bert-emotion": {
       "samples": {
-        "attributions": {
+        "sample-001": {
           "methods": [
-            "multi.html",
-            "single.html"
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
           ]
         },
-        "concepts": {
+        "sample-002": {
           "methods": [
-            "class-wise.html",
-            "general.html",
-            "local-element.html",
-            "local-pooled-classwise.html",
-            "local-pooled.html"
-          ]
-        }
-      }
-    },
-    "generation": {
-      "samples": {
-        "attributions": {
-          "methods": [
-            "example.html"
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
           ]
         },
-        "concepts": {
+        "sample-003": {
           "methods": [
-            "example.html"
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-004": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-005": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-006": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-007": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-008": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-009": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-010": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-011": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
+          ]
+        },
+        "sample-012": {
+          "methods": [
+            "integrated_gradients.html",
+            "kernel_shap.html",
+            "lime.html",
+            "occlusion.html",
+            "saliency.html",
+            "smoothgrad.html",
+            "sobol.html"
           ]
         }
       }
