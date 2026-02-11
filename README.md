@@ -118,6 +118,12 @@ python -m http.server 8000 --bind 127.0.0.1
 
 Then visit `http://localhost:8000/` in your browser.
 
+## Single line local deployment
+
+```bash
+python tools/build_manifest.py; python tools/externalize_explanations.py; python -m http.server 8000 --bind 127.0.0.1
+```
+
 ## Deploy to Hugging Face Spaces (Static)
 
 1. Ensure `manifest.json` is up to date.
