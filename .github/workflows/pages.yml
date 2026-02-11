@@ -33,6 +33,7 @@ jobs:
         run: |
           mkdir -p site
           cp index.html styles.css app.js manifest.json site/
+          cp -R explanations site/
           cp -R assets site/
           touch site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
