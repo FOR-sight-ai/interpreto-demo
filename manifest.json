@@ -1,140 +1,1344 @@
 {
   "models": {
-    "bert-emotion": {
-      "samples": {
-        "sample-001": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-002": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-003": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-004": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-005": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-006": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-007": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-008": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-009": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-010": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-011": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        },
-        "sample-012": {
-          "methods": [
-            "integrated_gradients.html",
-            "kernel_shap.html",
-            "lime.html",
-            "occlusion.html",
-            "saliency.html",
-            "smoothgrad.html",
-            "sobol.html"
-          ]
-        }
-      }
+    "clf:ag-news:roberta": {
+      "task": "classification",
+      "dataset": "ag-news"
+    },
+    "clf:emotion:bert": {
+      "task": "classification",
+      "dataset": "emotion"
+    },
+    "clf:imdb:distilbert": {
+      "task": "classification",
+      "dataset": "imdb"
+    },
+    "gen:gpt2": {
+      "task": "generation",
+      "dataset": null
+    },
+    "gen:llama3.1-8b": {
+      "task": "generation",
+      "dataset": null
+    },
+    "gen:qwen3-0.6b": {
+      "task": "generation",
+      "dataset": null
     }
-  }
+  },
+  "explanations": [
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-003",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-004",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-005",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-006",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-007",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-008",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-009",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-003",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-004",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-005",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-006",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-007",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-008",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-009",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-003",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-004",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-005",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-006",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-007",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-008",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-009",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-003",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-004",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-005",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-006",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-007",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-008",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-009",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-003",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-004",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-005",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-006",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-007",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-008",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "all-classes",
+      "sample": "sample-009",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-003",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-004",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-005",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-006",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-007",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-008",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "attribution",
+      "scope": "single-class",
+      "sample": "sample-009",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:imdb:distilbert",
+      "task": "classification",
+      "type": "concept",
+      "scope": "general",
+      "sample": null,
+      "methods": [
+        "batch_top_k_sae.html",
+        "ica.html",
+        "mp_sae.html"
+      ]
+    },
+    {
+      "model": "gen:gpt2",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:gpt2",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:gpt2",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "sobol.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:llama3.1-8b",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:llama3.1-8b",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:llama3.1-8b",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:qwen3-0.6b",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-000",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:qwen3-0.6b",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-001",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:qwen3-0.6b",
+      "task": "generation",
+      "type": "attribution",
+      "scope": "general",
+      "sample": "sample-002",
+      "methods": [
+        "gradient_shap.html",
+        "integrated_gradients.html",
+        "kernel_shap.html",
+        "lime.html",
+        "occlusion.html",
+        "saliency.html",
+        "smoothgrad.html",
+        "squared_grad.html",
+        "vargrad.html"
+      ]
+    }
+  ]
 }

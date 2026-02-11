@@ -1,0 +1,13 @@
+import torch
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from interpreto import SmoothGrad, plot_attributions
+
+model_id = 'arman1o1/roberta_ag_news_model'
+classes_names = ['World', 'Sports', 'Business', 'Sci/Tech']
+
+tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
+model = AutoModelForSequenceClassification.from_pretrained(model_id)
+explainer = SmoothGrad(model, tokenizer)
+
+attributions = explainer(model_inputs='Intel drops prices on computer chips SAN FRANCISCO - Intel Corp. has cut prices on its computer chips by as much as 35 percent, though analysts on Monday said the cuts were probably unrelated to swelling inventories of the world #39;s largest chip maker.', targets=torch.arange(len(classes_names)))
+plot_attributions(attributions[0], classes_names=classes_names)
