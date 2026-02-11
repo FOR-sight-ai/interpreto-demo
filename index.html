@@ -16,27 +16,66 @@
             <img src="assets/interpreto.png" alt="Interpreto logo" />
             <h1>Interpreto demonstration</h1>
           </div>
-          <div class="partner-strip" aria-label="Partners">
-            <img class="partner-logo" src="assets/irt.png" alt="IRT logo" />
-            <img class="partner-logo" src="assets/deel.png" alt="Deel logo" />
-            <img class="partner-logo" src="assets/for.png" alt="FOR logo" />
-            <img class="partner-logo" src="assets/aniti.png" alt="ANITI logo" />
-            <img class="partner-logo" src="assets/irit.png" alt="IRIT logo" />
+          <div class="partner-group">
+            <div class="logo-actions" aria-label="Resources">
+              <a
+                class="button button--ghost resource-button github-button"
+                href="https://github.com/FOR-sight-ai/interpreto"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open Interpreto on GitHub"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                  <path
+                    d="M12 2C6.48 2 2 6.58 2 12.24c0 4.54 2.87 8.39 6.84 9.75.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.37-3.37-1.37-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.15-4.56-5.11 0-1.13.39-2.05 1.03-2.77-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.06a9.22 9.22 0 0 1 5 0c1.91-1.34 2.75-1.06 2.75-1.06.55 1.4.2 2.44.1 2.7.64.72 1.03 1.64 1.03 2.77 0 3.97-2.35 4.85-4.58 5.1.36.32.68.95.68 1.92 0 1.39-.01 2.5-.01 2.84 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.24C22 6.58 17.52 2 12 2z"
+                  />
+                </svg>
+                GitHub
+              </a>
+              <a
+                class="button button--ghost resource-button arxiv-button"
+                href="https://arxiv.org/abs/2512.09730"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open the Interpreto paper on arXiv"
+              >
+                arXiv
+              </a>
+            </div>
+            <div class="partner-strip" aria-label="Partners">
+              <img class="partner-logo" src="assets/irt.png" alt="IRT logo" />
+              <img class="partner-logo" src="assets/deel.png" alt="Deel logo" />
+              <img class="partner-logo" src="assets/for.png" alt="FOR logo" />
+              <img class="partner-logo" src="assets/aniti.png" alt="ANITI logo" />
+              <img class="partner-logo" src="assets/irit.png" alt="IRIT logo" />
+            </div>
           </div>
         </div>
         <div class="controls">
           <div class="control">
-            <label for="sample-select">Sample</label>
-            <select id="sample-select" aria-label="Sample"></select>
+            <label for="task-select">Task</label>
+            <select id="task-select" aria-label="Task"></select>
           </div>
           <div class="control">
             <label for="model-select">Model</label>
             <select id="model-select" aria-label="Model"></select>
           </div>
+          <div class="control">
+            <label for="type-select">Explanation</label>
+            <select id="type-select" aria-label="Explanation type"></select>
+          </div>
+          <div class="control">
+            <label for="scope-select">Scope</label>
+            <select id="scope-select" aria-label="Scope"></select>
+          </div>
+          <div class="control" id="sample-control">
+            <label for="sample-select">Sample</label>
+            <select id="sample-select" aria-label="Sample"></select>
+          </div>
           <div class="control control--methods">
             <label>Methods</label>
             <details class="methods-dropdown">
-              <summary>Select methods</summary>
+              <summary class="control-input methods-summary">Select methods</summary>
               <div class="methods-panel">
                 <div class="control-actions">
                   <button id="methods-select-all" type="button">Select all</button>
