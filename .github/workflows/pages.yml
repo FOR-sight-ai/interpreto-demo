@@ -25,10 +25,10 @@ jobs:
           python-version: "3.x"
       - name: Reduce html to necessary information (each file was self-contained)
         run: |
-          python tools/externalize_explanations.py
+          python scripts/externalize_explanations.py
       - name: Build manifest (if attributions exist)
         run: |
-          python tools/build_manifest.py
+          python scripts/build_manifest.py
       - name: Prepare Pages artifact
         run: |
           mkdir -p site

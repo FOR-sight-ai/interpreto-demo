@@ -11,7 +11,7 @@ This repository contains a static gallery for comparing precomputed explanation 
 
 - `index.html`, `styles.css`, `app.js`: Static UI (vanilla HTML/CSS/JS)
 - `manifest.json`: Generated index of available models and explanations
-- `tools/build_manifest.py`: Manifest builder script (run locally)
+- `scripts/build_manifest.py`: Manifest builder script (run locally)
 - `explanations/`: Precomputed explanation HTML files
 - `assets/`: Logos and static images
 
@@ -89,7 +89,7 @@ Use the filters to lock everything except the method:
 Run the manifest builder any time you add or remove explanation files:
 
 ```bash
-python tools/build_manifest.py
+python scripts/build_manifest.py
 ```
 
 This writes `manifest.json` at the repository root. Commit the updated manifest before uploading to Hugging Face Spaces.
@@ -99,13 +99,13 @@ This writes `manifest.json` at the repository root. Commit the updated manifest 
 Interpreto exports embed CSS and JS in every HTML file. To deduplicate and load those assets once, run:
 
 ```bash
-python tools/externalize_explanations.py
+python scripts/externalize_explanations.py
 ```
 
 This rewrites the files under `explanations/` to reference `assets/css/visualization.css` and the scripts under `assets/js/`. Re-run the script after regenerating explanations. To extract a single bundle from inline assets, run:
 
 ```bash
-python tools/externalize_explanations.py --mode extract --css-path assets/css/visualization.css --js-path assets/js/visualization_bundle.js
+python scripts/externalize_explanations.py --mode extract --css-path assets/css/visualization.css --js-path assets/js/visualization_bundle.js
 ```
 
 ## Run locally
@@ -121,7 +121,7 @@ Then visit `http://localhost:8000/` in your browser.
 ## Single line local deployment
 
 ```bash
-python tools/build_manifest.py; python tools/externalize_explanations.py; python -m http.server 8000 --bind 127.0.0.1
+python scripts/build_manifest.py; python scripts/externalize_explanations.py; python -m http.server 8000 --bind 127.0.0.1
 ```
 
 ## Deploy to Hugging Face Spaces (Static)

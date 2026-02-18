@@ -48,7 +48,7 @@ async function init() {
   const normalized = normalizeManifest(manifest);
   if (!normalized) {
     setStatus(
-      "manifest.json is missing or invalid. Run tools/build_manifest.py.",
+      "manifest.json is missing or invalid. Run scripts/build_manifest.py.",
       "error"
     );
     setControlsDisabled(true);
