@@ -410,6 +410,23 @@
       "model": "clf:ag-news:roberta",
       "task": "classification",
       "type": "concept",
+      "scope": "class-wise",
+      "sample": null,
+      "methods": [
+        "batch_top_k_sae.html",
+        "ica.html",
+        "mp_sae.html",
+        "neurons_as_concepts.html",
+        "pca.html",
+        "semi_nmf.html",
+        "svd.html",
+        "vanilla_sae.html"
+      ]
+    },
+    {
+      "model": "clf:ag-news:roberta",
+      "task": "classification",
+      "type": "concept",
       "scope": "general",
       "sample": null,
       "methods": [
@@ -801,6 +818,23 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
+      ]
+    },
+    {
+      "model": "clf:emotion:bert",
+      "task": "classification",
+      "type": "concept",
+      "scope": "class-wise",
+      "sample": null,
+      "methods": [
+        "batch_top_k_sae.html",
+        "ica.html",
+        "mp_sae.html",
+        "neurons_as_concepts.html",
+        "pca.html",
+        "semi_nmf.html",
+        "svd.html",
+        "vanilla_sae.html"
       ]
     },
     {
