@@ -413,7 +413,6 @@
       "scope": "class-wise",
       "sample": null,
       "methods": [
-        "batch_top_k_sae.html",
         "ica.html",
         "mp_sae.html",
         "neurons_as_concepts.html",
@@ -430,7 +429,6 @@
       "scope": "general",
       "sample": null,
       "methods": [
-        "batch_top_k_sae.html",
         "ica.html",
         "mp_sae.html",
         "neurons_as_concepts.html",
@@ -827,7 +825,6 @@
       "scope": "class-wise",
       "sample": null,
       "methods": [
-        "batch_top_k_sae.html",
         "ica.html",
         "mp_sae.html",
         "neurons_as_concepts.html",
@@ -844,7 +841,6 @@
       "scope": "general",
       "sample": null,
       "methods": [
-        "batch_top_k_sae.html",
         "ica.html",
         "mp_sae.html",
         "neurons_as_concepts.html",
@@ -1241,7 +1237,6 @@
       "scope": "class-wise",
       "sample": null,
       "methods": [
-        "batch_top_k_sae.html",
         "ica.html",
         "mp_sae.html",
         "neurons_as_concepts.html",
@@ -1258,7 +1253,6 @@
       "scope": "general",
       "sample": null,
       "methods": [
-        "batch_top_k_sae.html",
         "ica.html",
         "mp_sae.html",
         "neurons_as_concepts.html",
@@ -1323,6 +1317,45 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
+      ]
+    },
+    {
+      "model": "gen:gpt2",
+      "task": "generation",
+      "type": "concept",
+      "scope": "local",
+      "sample": "sample-000",
+      "methods": [
+        "batch_top_k_sae.html",
+        "mp_sae.html",
+        "neurons_as_concepts.html",
+        "vanilla_sae.html"
+      ]
+    },
+    {
+      "model": "gen:gpt2",
+      "task": "generation",
+      "type": "concept",
+      "scope": "local",
+      "sample": "sample-001",
+      "methods": [
+        "batch_top_k_sae.html",
+        "mp_sae.html",
+        "neurons_as_concepts.html",
+        "vanilla_sae.html"
+      ]
+    },
+    {
+      "model": "gen:gpt2",
+      "task": "generation",
+      "type": "concept",
+      "scope": "local",
+      "sample": "sample-002",
+      "methods": [
+        "batch_top_k_sae.html",
+        "mp_sae.html",
+        "neurons_as_concepts.html",
+        "vanilla_sae.html"
       ]
     },
     {

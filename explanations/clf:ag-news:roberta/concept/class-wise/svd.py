@@ -2,7 +2,7 @@ import torch
 from datasets import load_dataset
 from transformers import AutoModelForSequenceClassification
 from interpreto import ModelWithSplitPoints, plot_concepts
-from interpreto.concepts import SVDConcepts
+from interpreto.concepts import SVDConcepts, NeuronsAsConcepts
 from interpreto.concepts.interpretations import TopKInputs
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -34,7 +34,12 @@ for target, class_name in enumerate(['World', 'Sports', 'Business', 'Sci/Tech'])
     class_inputs = [inputs[i] for i in indices]
     class_activations = {k: v[indices] for k, v in activations.items()}
 
-    concept_explainer = SVDConcepts(model_with_split_points, nb_concepts=20, device=device)
+    concept_explainer = SVDConcepts(
+        model_with_split_points,
+        nb_concepts=20,
+        device=device,
+    )
+
     concept_explainer.fit(class_activations)
 
     topk_inputs_method = TopKInputs(

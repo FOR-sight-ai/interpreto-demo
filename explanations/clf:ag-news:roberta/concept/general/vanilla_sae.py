@@ -2,8 +2,9 @@ import torch
 from datasets import load_dataset
 from transformers import AutoModelForSequenceClassification
 from interpreto import ModelWithSplitPoints, plot_concepts
-from interpreto.concepts import VanillaSAEConcepts
+from interpreto.concepts import VanillaSAEConcepts, NeuronsAsConcepts
 from interpreto.concepts.interpretations import TopKInputs
+from interpreto.concepts.methods.overcomplete import DeadNeuronsReanimationLoss
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -15,7 +16,7 @@ model_with_split_points = ModelWithSplitPoints(
     batch_size=64,
 )
 
-inputs = load_dataset('fancyzhx/ag_news')['train'].shuffle(seed=SEED)["text"][:1000]
+inputs = load_dataset('fancyzhx/ag_news')['train'].shuffle(seed=0)["text"][:1000]
 
 granularity = ModelWithSplitPoints.activation_granularities.CLS_TOKEN
 activations = model_with_split_points.get_activations(
@@ -24,8 +25,23 @@ activations = model_with_split_points.get_activations(
     include_predicted_classes=True,
 )
 
-concept_explainer = VanillaSAEConcepts(model_with_split_points, nb_concepts=30, device=device)
-concept_explainer.fit(activations)
+concept_explainer = VanillaSAEConcepts(
+    model_with_split_points,
+    nb_concepts=30,
+    device=device,
+)
+
+concept_explainer.fit(
+    activations,
+    criterion=DeadNeuronsReanimationLoss,
+    optimizer_class=torch.optim.Adam,
+    scheduler_class=torch.optim.lr_scheduler.CosineAnnealingLR,
+    scheduler_kwargs={'T_max': 20, 'eta_min': 1e-06},
+    lr=0.001,
+    nb_epochs=30,
+    batch_size=2048,
+    monitoring=0,
+)
 
 topk_inputs_method = TopKInputs(
     concept_explainer=concept_explainer,

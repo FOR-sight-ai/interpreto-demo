@@ -2,7 +2,7 @@ import torch
 from datasets import load_dataset
 from transformers import AutoModelForSequenceClassification
 from interpreto import ModelWithSplitPoints, plot_concepts
-from interpreto.concepts import ICAConcepts
+from interpreto.concepts import ICAConcepts, NeuronsAsConcepts
 from interpreto.concepts.interpretations import TopKInputs
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -15,7 +15,7 @@ model_with_split_points = ModelWithSplitPoints(
     batch_size=64,
 )
 
-inputs = load_dataset('fancyzhx/ag_news')['train'].shuffle(seed=SEED)["text"][:1000]
+inputs = load_dataset('fancyzhx/ag_news')['train'].shuffle(seed=0)["text"][:1000]
 
 granularity = ModelWithSplitPoints.activation_granularities.CLS_TOKEN
 activations = model_with_split_points.get_activations(
@@ -24,8 +24,16 @@ activations = model_with_split_points.get_activations(
     include_predicted_classes=True,
 )
 
-concept_explainer = ICAConcepts(model_with_split_points, nb_concepts=30, device=device)
-concept_explainer.fit(activations)
+concept_explainer = ICAConcepts(
+    model_with_split_points,
+    nb_concepts=30,
+    device=device,
+)
+
+concept_explainer.fit(
+    activations,
+    max_iter=5000,
+)
 
 topk_inputs_method = TopKInputs(
     concept_explainer=concept_explainer,

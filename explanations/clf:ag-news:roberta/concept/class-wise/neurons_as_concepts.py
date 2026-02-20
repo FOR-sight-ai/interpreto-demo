@@ -34,8 +34,9 @@ for target, class_name in enumerate(['World', 'Sports', 'Business', 'Sci/Tech'])
     class_inputs = [inputs[i] for i in indices]
     class_activations = {k: v[indices] for k, v in activations.items()}
 
-    concept_explainer = NeuronsAsConcepts(model_with_split_points, nb_concepts=20, device=device)
-    concept_explainer.fit(class_activations)
+    concept_explainer = NeuronsAsConcepts(
+        model_with_split_points,
+    )
 
     topk_inputs_method = TopKInputs(
         concept_explainer=concept_explainer,
