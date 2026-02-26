@@ -9,23 +9,23 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from interpreto import (
     GradientShap,
+    Granularity,
     IntegratedGradients,
     KernelShap,
     Lime,
     Occlusion,
     Saliency,
     SmoothGrad,
-    SquareGrad,
     Sobol,
+    SquareGrad,
     VarGrad,
     plot_attributions,
 )
 
-
 # ----------------------------
 # Configuration (edit these)
 # ----------------------------
-model_id = "clf:emotion:bert"  # "clf:ag-news:roberta"  # "clf:imdb:distilbert"  # "clf:emotion:bert"
+model_id = "clf:imdb:distilbert"
 
 MODEL_CONFIGS = {
     "clf:emotion:bert": {
@@ -39,6 +39,7 @@ MODEL_CONFIGS = {
             "fear",
             "surprise",
         ],
+        "granularity": "WORD",
     },
     "clf:imdb:distilbert": {
         "hf_model_id": "lvwerra/distilbert-imdb",
@@ -47,6 +48,7 @@ MODEL_CONFIGS = {
             "negative",
             "positive",
         ],
+        "granularity": "SENTENCE",
     },
     "clf:ag-news:roberta": {
         "hf_model_id": "arman1o1/roberta_ag_news_model",
@@ -57,13 +59,15 @@ MODEL_CONFIGS = {
             "Business",
             "Sci/Tech",
         ],
+        "granularity": "WORD",
     },
 }
+config = MODEL_CONFIGS[model_id]
 
 NUM_SAMPLES = 10
 SEED = 0
 
-OUTPUT_ROOT = Path("explanations")
+OUTPUT_ROOT = Path("/home/antonin.poche/interpreto-demo/explanations")
 
 METHODS = {
     "kernel_shap": KernelShap,
@@ -82,8 +86,6 @@ METHODS = {
 def render_code_snippet(
     explainer_cls: type,
     sample_text: str,
-    model_hf_id: str,
-    classes_names: list[str],
     scope: str,
 ) -> str:
     if scope == "all-classes":
@@ -93,14 +95,14 @@ def render_code_snippet(
 
     return f"""import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from interpreto import {explainer_cls.__name__}, plot_attributions
+from interpreto import {explainer_cls.__name__}, Granularity, plot_attributions
 
-model_id = {model_hf_id!r}
-classes_names = {classes_names!r}
+model_id = {config["hf_model_id"]!r}
+classes_names = {config["classes_names"]!r}
 
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_id)
-explainer = {explainer_cls.__name__}(model, tokenizer)
+explainer = {explainer_cls.__name__}(model, tokenizer, granularity=Granularity.{config["granularity"]})
 
 attributions = explainer(
     model_inputs={sample_text!r},
@@ -142,8 +144,6 @@ def plot_and_snippet_save(
         render_code_snippet(
             explainer_cls=explainer_cls,
             sample_text=sample,
-            model_hf_id=config["hf_model_id"],
-            classes_names=classes_names,
             scope=scope,
         ),
         encoding="utf-8",
@@ -158,9 +158,7 @@ def main() -> None:
     # Load a fixed set of samples so outputs are reproducible.
     dataset = load_dataset(config["hf_dataset_id"])["test"].shuffle(seed=SEED)
     batch_inputs = list(dataset.select(list(range(NUM_SAMPLES)))["text"])
-    all_targets = (
-        torch.arange(len(classes_names)).view(1, -1).repeat((len(batch_inputs), 1))
-    )
+    all_targets = torch.arange(len(classes_names)).view(1, -1).repeat((len(batch_inputs), 1))
 
     # Load the classifier and reuse it across all methods.
     tokenizer = AutoTokenizer.from_pretrained(config["hf_model_id"], use_fast=True)
@@ -171,13 +169,14 @@ def main() -> None:
 
     for method_name, explainer_cls in METHODS.items():
         # Compute attributions for all samples in a batch.
-        explainer = explainer_cls(model, tokenizer)
+        if config["granularity"] == "WORD":
+            explainer = explainer_cls(model, tokenizer)
+        else:
+            explainer = explainer_cls(model, tokenizer, granularity=Granularity.SENTENCE)
         all_attributions = explainer(model_inputs=batch_inputs, targets=all_targets)
         single_attributions = explainer(model_inputs=batch_inputs)
 
-        for i, (sample, aa, sa) in enumerate(
-            zip(batch_inputs, all_attributions, single_attributions)
-        ):
+        for i, (sample, aa, sa) in enumerate(zip(batch_inputs, all_attributions, single_attributions, strict=False)):
             plot_and_snippet_save(
                 scope="all-classes",
                 output_root=output_root,

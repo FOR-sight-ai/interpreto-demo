@@ -10,13 +10,11 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from interpreto import (
     GradientShap,
     IntegratedGradients,
-    KernelShap,
     Lime,
     Occlusion,
     Saliency,
     SmoothGrad,
     SquareGrad,
-    Sobol,
     VarGrad,
     plot_attributions,
 )
@@ -24,13 +22,12 @@ from interpreto import (
 # ----------------------------
 # Configuration (edit these)
 # ----------------------------
-model_id = "gen:qwen3-0.6b"
+model_id = "gen:gpt2"
 
 HF_MODEL_IDS = {
     "gen:gpt2": "gpt2",
     "gen:qwen3-0.6b": "Qwen/Qwen3-0.6B",
     "gen:llama3.1-8b": "meta-llama/Llama-3.1-8B",
-    "gen:mistral7b-instruct": "mistralai/Mistral-7B-Instruct-v0.2",
 }
 
 SAMPLES = [
@@ -50,7 +47,7 @@ SAMPLES = [
 SEED = 0
 BATCH_SIZE = 1
 
-OUTPUT_ROOT = Path("explanations")
+OUTPUT_ROOT = Path("/home/antonin.poche/interpreto-demo/explanations")
 
 METHODS = {
     # "kernel_shap": KernelShap,
@@ -80,9 +77,7 @@ def main() -> None:
     batch_targets = [sample["target"] for sample in SAMPLES]
 
     tokenizer = AutoTokenizer.from_pretrained(hf_model_id, use_fast=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        hf_model_id, token=os.environ.get("HF_TOKEN")
-    )
+    model = AutoModelForCausalLM.from_pretrained(hf_model_id, token=os.environ.get("HF_TOKEN"))
     model.eval()
 
     output_root = OUTPUT_ROOT / model_id / "attribution" / "general"
@@ -98,9 +93,7 @@ def main() -> None:
         )
         attributions = explainer(model_inputs=batch_inputs, targets=batch_targets)
 
-        for i, (ipt, tgt, attribution) in enumerate(
-            zip(batch_inputs, batch_targets, attributions)
-        ):
+        for i, (ipt, tgt, attribution) in enumerate(zip(batch_inputs, batch_targets, attributions, strict=False)):
             sample_dir = output_root / f"sample-{i:03d}"
             sample_dir.mkdir(parents=True, exist_ok=True)
             html_path = sample_dir / f"{method_name}.html"

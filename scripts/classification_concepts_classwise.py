@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""Generate classification concept HTML files and minimal .py snippets."""
+"""Generate classification class-wise concept HTML files and minimal .py snippets."""
 
-import os
 from pathlib import Path
 
 import torch
@@ -65,11 +64,11 @@ MODEL_CONFIGS = {
     },
 }
 
-DATASET_SPLIT = "train"
-NUM_SAMPLES = 1000  # TODO: increase
+DATASET_SPLIT = "test"
+NUM_SAMPLES = 10000
 SEED = 0
 
-NB_CONCEPTS = 30
+NB_CONCEPTS = 20
 TOP_K = 10
 TOPK_WORDS = 5
 
@@ -170,8 +169,8 @@ def render_code_snippet(
     init_params: dict[str, object],
     fit_params: dict[str, object],
 ) -> str:
-    init_lines, init_imports = _format_kwargs_lines(init_params, indent="    ")
-    fit_lines, fit_imports = _format_kwargs_lines(fit_params, indent="    ")
+    init_lines, init_imports = _format_kwargs_lines(init_params, indent="        ")
+    fit_lines, fit_imports = _format_kwargs_lines(fit_params, indent="        ")
     extra_imports = sorted(init_imports | fit_imports)
 
     concept_imports = [explainer_cls.__name__, "NeuronsAsConcepts"]
@@ -204,9 +203,8 @@ def render_code_snippet(
     lines.append(f"    batch_size={BATCH_SIZE},")
     lines.append(")")
     lines.append("")
-    lines.append(
-        f'inputs = load_dataset({dataset_hf_id!r})[{DATASET_SPLIT!r}].shuffle(seed={SEED})["text"][:{NUM_SAMPLES}]'
-    )
+    lines.append(f"dataset = load_dataset({dataset_hf_id!r})[{DATASET_SPLIT!r}].shuffle(seed={SEED})")
+    lines.append(f'inputs = dataset["text"][:{NUM_SAMPLES}]')
     lines.append("")
     lines.append("granularity = ModelWithSplitPoints.activation_granularities.CLS_TOKEN")
     lines.append("activations = model_with_split_points.get_activations(")
@@ -215,52 +213,61 @@ def render_code_snippet(
     lines.append("    include_predicted_classes=True,")
     lines.append(")")
     lines.append("")
-    lines.append(f"concept_explainer = {explainer_cls.__name__}(")
-    lines.append("    model_with_split_points,")
+    lines.append("concepts_importances = {}")
+    lines.append("concepts_labels = {}")
+    lines.append("")
+    lines.append(f"for target, class_name in enumerate({classes_names!r}):")
+    lines.append('    indices = (activations["predictions"] == target).nonzero(as_tuple=True)[0].tolist()')
+    lines.append("")
+    lines.append("    class_inputs = [inputs[i] for i in indices]")
+    lines.append("    class_activations = {k: v[indices] for k, v in activations.items()}")
+    lines.append("")
+    lines.append(f"    concept_explainer = {explainer_cls.__name__}(")
+    lines.append("        model_with_split_points,")
     lines.extend(init_lines)
-    lines.append(")")
+    lines.append("    )")
     if explainer_cls is not NeuronsAsConcepts:
         lines.append("")
         if fit_lines:
-            lines.append("concept_explainer.fit(")
-            lines.append("    activations,")
+            lines.append("    concept_explainer.fit(")
+            lines.append("        class_activations,")
             lines.extend(fit_lines)
-            lines.append(")")
+            lines.append("    )")
         else:
-            lines.append("concept_explainer.fit(activations)")
+            lines.append("    concept_explainer.fit(class_activations)")
     lines.append("")
-    lines.append("topk_inputs_method = TopKInputs(")
-    lines.append("    concept_explainer=concept_explainer,")
-    lines.append(f"    k={TOPK_WORDS},")
-    lines.append("    activation_granularity=granularity,")
-    lines.append("    use_unique_words=True,")
-    lines.append("    unique_words_kwargs={")
-    lines.append('        "count_min_threshold": max(1, round(len(inputs) * 0.002)),')
-    lines.append('        "lemmatize": True,')
-    lines.append('        "words_to_ignore": [],')
-    lines.append("    },")
-    lines.append(")")
+    lines.append("    topk_inputs_method = TopKInputs(")
+    lines.append("        concept_explainer=concept_explainer,")
+    lines.append(f"        k={TOPK_WORDS},")
+    lines.append("        activation_granularity=granularity,")
+    lines.append("        use_unique_words=True,")
+    lines.append("        unique_words_kwargs={")
+    lines.append('            "count_min_threshold": max(1, round(len(class_inputs) * 0.002)),')
+    lines.append('            "lemmatize": True,')
+    lines.append('            "words_to_ignore": [],')
+    lines.append("        },")
+    lines.append("    )")
     lines.append("")
-    lines.append("topk_words = topk_inputs_method.interpret(")
-    lines.append("    inputs=inputs,")
-    lines.append('    concepts_indices="all",')
-    lines.append(")")
+    lines.append("    topk_words = topk_inputs_method.interpret(")
+    lines.append("        inputs=class_inputs,")
+    lines.append('        concepts_indices="all",')
+    lines.append("    )")
+    lines.append("    concepts_labels[target] = {k: list(v.keys()) for k, v in topk_words.items() if v}")
     lines.append("")
-    lines.append("gradients = concept_explainer.concept_output_gradient(")
-    lines.append("    inputs=inputs,")
-    lines.append("    targets=None,")
-    lines.append("    activation_granularity=granularity,")
-    lines.append("    concepts_x_gradients=True,")
-    lines.append(f"    batch_size={GRADIENT_BATCH_SIZE},")
-    lines.append(")")
+    lines.append("    gradients = concept_explainer.concept_output_gradient(")
+    lines.append("        inputs=class_inputs,")
+    lines.append("        targets=[target],")
+    lines.append("        activation_granularity=granularity,")
+    lines.append("        concepts_x_gradients=True,")
+    lines.append(f"        batch_size={GRADIENT_BATCH_SIZE},")
+    lines.append("    )")
     lines.append("")
-    lines.append("mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)")
-    lines.append("labels = {k: list(v.keys()) for k, v in topk_words.items()}")
+    lines.append("    concepts_importances[target] = torch.stack(gradients).abs().squeeze().mean(0)")
     lines.append("")
     lines.append("plot_concepts(")
     lines.append(f"    classes_names={classes_names!r},")
-    lines.append("    concepts_importances=mean_gradients,")
-    lines.append("    concepts_labels=labels,")
+    lines.append("    concepts_importances=concepts_importances,")
+    lines.append("    concepts_labels=concepts_labels,")
     lines.append(f"    top_k={TOP_K},")
     lines.append(")")
     lines.append("")
@@ -273,7 +280,7 @@ def main() -> None:
     classes_names = config["classes_names"]
     split_points = config["split_points"]
 
-    output_root = OUTPUT_ROOT / model_id / "concept" / "general"
+    output_root = OUTPUT_ROOT / model_id / "concept" / "class-wise"
     output_root.mkdir(parents=True, exist_ok=True)
 
     if WRITE_SNIPPETS_ONLY:
@@ -295,8 +302,8 @@ def main() -> None:
 
     torch.manual_seed(SEED)
 
-    dataset = load_dataset(config["hf_dataset_id"])["test"].shuffle(seed=SEED)["text"]
-    inputs: list[str] = dataset[:NUM_SAMPLES]  # type: ignore
+    dataset = load_dataset(config["hf_dataset_id"])[DATASET_SPLIT].shuffle(seed=SEED)
+    inputs: list[str] = dataset["text"][:NUM_SAMPLES]  # type: ignore
 
     model_with_split_points = ModelWithSplitPoints(
         config["hf_model_id"],
@@ -313,53 +320,77 @@ def main() -> None:
         include_predicted_classes=True,
     )
 
+    predictions = activations["predictions"]
+
     for method_name, explainer_cls in METHODS.items():
         html_path = output_root / f"{method_name}.html"
-        if os.path.exists(html_path):
+        if html_path.exists():
             continue
         print("\n", method_name)
         init_params = INIT_PARAMETERS.get(method_name, {})
         fit_params = FIT_PARAMETERS.get(method_name, {})
-        concept_explainer = explainer_cls(
-            model_with_split_points,
-            **init_params,
-        )
-        if method_name != "neurons_as_concepts":
-            concept_explainer.fit(activations, **fit_params)
 
-        topk_inputs_method = TopKInputs(
-            concept_explainer=concept_explainer,
-            k=TOPK_WORDS,
-            activation_granularity=granularity,
-            use_unique_words=True,
-            unique_words_kwargs={
-                "count_min_threshold": max(1, round(len(inputs) * 0.002)),
-                "lemmatize": True,
-                "words_to_ignore": [],
-            },
-        )
+        concepts_importances = {}
+        concepts_labels = {}
 
-        topk_words = topk_inputs_method.interpret(
-            inputs=inputs,
-            concepts_indices="all",
-        )
+        for target in range(len(classes_names)):
+            indices = (predictions == target).nonzero(as_tuple=True)[0].tolist()
 
-        gradients = concept_explainer.concept_output_gradient(
-            inputs=inputs,
-            targets=None,
-            activation_granularity=granularity,
-            concepts_x_gradients=True,
-            batch_size=GRADIENT_BATCH_SIZE,
-        )
+            class_inputs = [inputs[i] for i in indices]
+            class_wise_activations = {k: v[indices] for k, v in activations.items()}
 
-        mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)
-        labels = {k: list(v.keys()) for k, v in topk_words.items() if v}
+            concept_explainer = explainer_cls(
+                model_with_split_points,
+                **init_params,
+            )
+            if method_name != "neurons_as_concepts":
+                concept_explainer.fit(activations, **fit_params)
+
+            topk_inputs_method = TopKInputs(
+                concept_explainer=concept_explainer,
+                k=TOPK_WORDS,
+                activation_granularity=granularity,
+                use_unique_words=True,
+                unique_words_kwargs={
+                    "count_min_threshold": max(1, round(len(class_inputs) * 0.002)),
+                    "lemmatize": True,
+                    "words_to_ignore": [],
+                },
+            )
+
+            topk_words = topk_inputs_method.interpret(
+                inputs=class_inputs,
+                concepts_indices="all",
+            )
+
+            concepts_labels[target] = {k: list(v.keys()) for k, v in topk_words.items() if v}
+
+            gradients = concept_explainer.concept_output_gradient(
+                inputs=class_inputs,
+                targets=[target],
+                activation_granularity=granularity,
+                concepts_x_gradients=True,
+                batch_size=GRADIENT_BATCH_SIZE,
+            )
+
+            concepts_importances[target] = torch.stack(gradients).abs().squeeze().mean(0)
+
+            del (
+                concept_explainer,
+                topk_inputs_method,
+                topk_words,
+                gradients,
+            )
+
+        if not concepts_importances:
+            print("No classes had enough samples, skipping.")
+            continue
 
         print(f"Saving {html_path}")
         plot_concepts(
             classes_names=classes_names,
-            concepts_importances=mean_gradients,
-            concepts_labels=labels,
+            concepts_importances=concepts_importances,
+            concepts_labels=concepts_labels,
             top_k=TOP_K,
             save_path=str(html_path),
         )
@@ -374,14 +405,6 @@ def main() -> None:
             split_points=split_points,
             init_params=init_params,
             fit_params=fit_params,
-        )
-        del (
-            concept_explainer,
-            topk_inputs_method,
-            topk_words,
-            gradients,
-            mean_gradients,
-            labels,
         )
 
 
