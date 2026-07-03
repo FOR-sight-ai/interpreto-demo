@@ -1,2 +1,4 @@
 .venv
-example_notebooks
+references
+data
+__pycache__/
