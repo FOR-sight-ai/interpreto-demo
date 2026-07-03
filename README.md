@@ -92,7 +92,37 @@ Run the manifest builder any time you add or remove explanation files:
 python scripts/build_manifest.py
 ```
 
-This writes `manifest.json` at the repository root. Commit the updated manifest before uploading to Hugging Face Spaces.
+This writes `manifest.json` at the repository root. The manifest also
+carries the installed `interpreto` version (rendered as a small pill
+next to the title in the UI). Commit the updated manifest before
+uploading to Hugging Face Spaces.
+
+## Regenerate explanations
+
+The `scripts/` folder contains one script per explanation family. Each
+script writes both the visualization HTML and a matching minimal `.py`
+snippet under `explanations/<model_id>/...`.
+
+```bash
+# 10 samples, all 10 attribution methods, both single-class and all-classes
+python scripts/classification_attributions.py
+
+# 10 attribution methods on 3 fixed generation samples
+python scripts/generation_attributions.py
+
+# Concept methods on the full classification train sets
+python scripts/classification_concepts.py
+
+# Concept methods on Wikipedia (per-model sample counts in MODEL_CONFIGS)
+python scripts/generation_concepts.py
+```
+
+Model selection is done by editing the `model_id` variable at the top
+of each script. Activations are cached under `data/<model_id>/activations.pt`
+(float32 for classification, float16 for generation to shrink disk usage)
+and fitted concept explainers under `data/<model_id>/explainers/<method>.pt`,
+so re-running a script only trains what is missing. `NUM_SAMPLES` can be
+overridden per run via the `DEBUG_SAMPLES` environment variable.
 
 ## Shrink explanation HTML files
 
