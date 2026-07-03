@@ -127,9 +127,11 @@ must be reviewed by the user before moving on.
 - [ ] **Awaiting user review.**
 
 ### Step 7 – Delete `scripts/classification_concepts_classwise.py`
-- [ ] Delete script.
-- [ ] Delete leftover `explanations/*/concept/class-wise/` directories.
-- [ ] **Stop for user review.**
+- [x] Deleted `scripts/classification_concepts_classwise.py`.
+- [x] Confirmed no `explanations/*/concept/class-wise/` directories remain (only `all-classes/` and `single-class/` under `attribution/`, which are intentional).
+- [x] Confirmed the only remaining `class-wise` mentions in the tree are in `migration_plan.md` (planning doc).
+- [x] Manifest rebuild: still 75 entries.
+- [ ] **Awaiting user review.**
 
 ### Step 8 – Rewrite `scripts/generation_concepts.py`
 - [ ] Method set: `NeuronsAsConcepts`, `VanillaSAEConcepts`, `MpSAEConcepts`, `BatchTopKSAEConcepts`.
