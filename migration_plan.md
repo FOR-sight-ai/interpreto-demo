@@ -108,13 +108,23 @@ must be reviewed by the user before moving on.
 - [ ] **Awaiting user review.**
 
 ### Step 6 – Rewrite `scripts/classification_concepts.py`
-- [ ] Use `SplitterForClassification`, unpack `(activations, predictions)`.
-- [ ] Cache activations to `data/<model>/activations.pt`; cache explainers to `data/<model>/explainers/<method>.pt`.
-- [ ] `TopKInputs` without `activation_granularity=` (CLS forced by splitter).
-- [ ] Snippet template matches `classification_demonstration.ipynb`.
-- [ ] Debug flow: 1k samples, `ica` only, emotion → open HTML → run snippet.
-- [ ] Then all methods on emotion at 1k → then scale to 200k → repeat for imdb, ag-news.
-- [ ] **Stop for user review at every substep above.**
+- [x] Full rewrite (~340 lines). Uses `SplitterForClassification` (no `split_point`, no `automodel`).
+- [x] Unpacks `(activations, predictions)` tuple; no `activation_granularity=` argument (splitter forces CLS).
+- [x] `TopKInputs` without `activation_granularity=` — matches the tutorial notebook.
+- [x] Activations cached to `data/<model>/activations.pt`.
+- [x] Fitted explainers cached to `data/<model>/explainers/<method>.pt` (via `save_concept_model` / `load_concept_model` from `_common.py`). NeuronsAsConcepts skipped (no state).
+- [x] `DEBUG_SAMPLES` env var override honored.
+- [x] Per-model `forward_kwargs` (IMDB needs `{"truncation": True}` because reviews exceed DistilBERT's 512-token limit).
+- [x] Debug flow — done sequentially and confirmed at each substep:
+  - 1k emotion + ICA only → HTML + snippet + cache OK.
+  - Snippet reproduced standalone.
+  - 1k emotion + all 7 methods → all HTMLs + snippets + explainer caches OK.
+  - 16k emotion (full train) + all 7 methods → OK. 48 MB data.
+  - 120k ag-news (full train) + all 7 methods → OK. 354 MB data.
+  - 25k imdb (full train) + all 7 methods → after adding `forward_kwargs={"truncation": True}`, OK. 75 MB data.
+- [x] Manifest regenerated: still 75 entries; each classification model now has 7 concept methods.
+- [x] Snippets diffed against `classification_concept_tutorial.ipynb` — only cosmetic differences.
+- [ ] **Awaiting user review.**
 
 ### Step 7 – Delete `scripts/classification_concepts_classwise.py`
 - [ ] Delete script.

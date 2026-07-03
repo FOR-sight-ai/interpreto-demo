@@ -1,16 +1,33 @@
 #!/usr/bin/env python3
-"""Generate classification concept HTML files and minimal .py snippets."""
+"""Generate classification concept HTML files and minimal .py snippets.
+
+Interpreto 0.5.0 API. For each classification model, this script:
+
+1. Loads a ``SplitterForClassification`` (auto-detects the head, forces
+   the [CLS] granularity).
+2. Loads the dataset (capped at ``NUM_SAMPLES``) and computes the [CLS]
+   activations once. The tuple ``(activations, predictions)`` is cached
+   under ``data/<model_id>/activations.pt``.
+3. For every concept method, trains (or loads) the concept explainer,
+   interprets it with ``TopKInputs``, ranks concepts with
+   ``concept_output_gradient`` and writes ``<method>.html`` +
+   a matching minimal ``.py`` snippet.
+
+Set ``DEBUG_SAMPLES`` in the environment (``DEBUG_SAMPLES=1000``) to
+override ``NUM_SAMPLES`` for quick iteration.
+"""
+
+from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 import torch
 from datasets import load_dataset
-from transformers import AutoModelForSequenceClassification
 
-from interpreto import ModelWithSplitPoints, plot_concepts
+from interpreto import SplitterForClassification, plot_concepts
 from interpreto.concepts import (
-    BatchTopKSAEConcepts,
     ICAConcepts,
     MpSAEConcepts,
     NeuronsAsConcepts,
@@ -20,19 +37,35 @@ from interpreto.concepts import (
     VanillaSAEConcepts,
 )
 from interpreto.concepts.interpretations import TopKInputs
-from interpreto.concepts.methods.overcomplete import DeadNeuronsReanimationLoss, MSELoss
+from interpreto.concepts.methods.overcomplete import (
+    DeadNeuronsReanimationLoss,
+    MSELoss,
+)
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _common import (  # noqa: E402
+    activations_cache_path,
+    cache_activations,
+    explainers_cache_dir,
+    format_kwargs_lines,
+    load_concept_model,
+    save_concept_model,
+)
+
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+
 
 # ----------------------------
 # Configuration (edit these)
 # ----------------------------
-model_id = "clf:ag-news:roberta"
+model_id = "clf:emotion:bert"
 
 MODEL_CONFIGS = {
     "clf:emotion:bert": {
         "hf_model_id": "nateraw/bert-base-uncased-emotion",
         "hf_dataset_id": "dair-ai/emotion",
+        "hf_dataset_config": "split",
         "classes_names": [
             "sadness",
             "joy",
@@ -41,32 +74,35 @@ MODEL_CONFIGS = {
             "fear",
             "surprise",
         ],
-        "split_points": 11,
+        "forward_kwargs": None,
     },
     "clf:imdb:distilbert": {
         "hf_model_id": "lvwerra/distilbert-imdb",
         "hf_dataset_id": "stanfordnlp/imdb",
+        "hf_dataset_config": None,
         "classes_names": [
             "negative",
             "positive",
         ],
-        "split_points": 5,
+        # IMDB reviews are long; DistilBERT accepts up to 512 tokens.
+        "forward_kwargs": {"truncation": True},
     },
     "clf:ag-news:roberta": {
         "hf_model_id": "arman1o1/roberta_ag_news_model",
         "hf_dataset_id": "fancyzhx/ag_news",
+        "hf_dataset_config": None,
         "classes_names": [
             "World",
             "Sports",
             "Business",
             "Sci/Tech",
         ],
-        "split_points": 11,
+        "forward_kwargs": None,
     },
 }
 
 DATASET_SPLIT = "train"
-NUM_SAMPLES = 1000  # TODO: increase
+NUM_SAMPLES = 200_000  # cap; will be truncated if the dataset is smaller
 SEED = 0
 
 NB_CONCEPTS = 30
@@ -76,12 +112,9 @@ TOPK_WORDS = 5
 BATCH_SIZE = 64
 GRADIENT_BATCH_SIZE = 64
 
-WRITE_SNIPPETS_ONLY = True
-
-OUTPUT_ROOT = Path("/home/antonin.poche/interpreto-demo/explanations")
+OUTPUT_ROOT = Path(__file__).resolve().parents[1] / "explanations"
 
 METHODS = {
-    # "batch_top_k_sae": BatchTopKSAEConcepts,
     "ica": ICAConcepts,
     "mp_sae": MpSAEConcepts,
     "neurons_as_concepts": NeuronsAsConcepts,
@@ -92,11 +125,11 @@ METHODS = {
 }
 
 DEFAULT_INIT_PARAMETERS = {"nb_concepts": NB_CONCEPTS, "device": device}
-INIT_PARAMETERS = {k: DEFAULT_INIT_PARAMETERS.copy() for k in METHODS.keys()}
-# INIT_PARAMETERS["batch_top_k_sae"]["top_k"] = 10 * BATCH_SIZE
+INIT_PARAMETERS: dict[str, dict] = {k: DEFAULT_INIT_PARAMETERS.copy() for k in METHODS}
 INIT_PARAMETERS["neurons_as_concepts"] = {}
+
 SAES_FIT_PARAMETERS = {
-    "criterion": DeadNeuronsReanimationLoss,  # type: ignore
+    "criterion": DeadNeuronsReanimationLoss,
     "optimizer_class": torch.optim.Adam,
     "scheduler_class": torch.optim.lr_scheduler.CosineAnnealingLR,
     "scheduler_kwargs": {"T_max": 20, "eta_min": 1e-6},
@@ -105,120 +138,76 @@ SAES_FIT_PARAMETERS = {
     "batch_size": 32 * BATCH_SIZE,
     "monitoring": 0,
 }
-FIT_PARAMETERS = {k: SAES_FIT_PARAMETERS.copy() for k in METHODS.keys() if "sae" in k}
+FIT_PARAMETERS: dict[str, dict] = {
+    k: SAES_FIT_PARAMETERS.copy() for k in METHODS if "sae" in k
+}
 FIT_PARAMETERS["ica"] = {"max_iter": 5000}
 FIT_PARAMETERS["mp_sae"]["criterion"] = MSELoss
 
 
-def _format_param_value(value: object, param_name: str) -> tuple[str, set[str]]:
-    imports: set[str] = set()
-    if param_name == "device":
-        return "device", imports
-    if isinstance(value, type):
-        module = value.__module__
-        if module.startswith("torch.optim.lr_scheduler"):
-            return f"torch.optim.lr_scheduler.{value.__name__}", imports
-        if module.startswith("torch.optim"):
-            return f"torch.optim.{value.__name__}", imports
-        if module.startswith("interpreto."):
-            imports.add(value.__name__)
-            return value.__name__, imports
-        return value.__name__, imports
-    return repr(value), imports
-
-
-def _format_kwargs_lines(params: dict[str, object], indent: str) -> tuple[list[str], set[str]]:
-    lines: list[str] = []
-    imports: set[str] = set()
-    for key, value in params.items():
-        value_str, value_imports = _format_param_value(value, key)
-        imports.update(value_imports)
-        lines.append(f"{indent}{key}={value_str},")
-    return lines, imports
-
-
-def _write_code_snippet(
-    code_path: Path,
-    explainer_cls: type,
-    model_hf_id: str,
-    dataset_hf_id: str,
-    classes_names: list[str],
-    split_points: int,
-    init_params: dict[str, object],
-    fit_params: dict[str, object],
-) -> None:
-    code_path.write_text(
-        render_code_snippet(
-            explainer_cls=explainer_cls,
-            model_hf_id=model_hf_id,
-            dataset_hf_id=dataset_hf_id,
-            classes_names=classes_names,
-            split_points=split_points,
-            init_params=init_params,
-            fit_params=fit_params,
-        ),
-        encoding="utf-8",
-    )
+# ----------------------------------------------------------------------
+# Snippet rendering
+# ----------------------------------------------------------------------
 
 
 def render_code_snippet(
+    method_name: str,
     explainer_cls: type,
-    model_hf_id: str,
-    dataset_hf_id: str,
+    hf_model_id: str,
+    hf_dataset_id: str,
+    hf_dataset_config: str | None,
     classes_names: list[str],
-    split_points: int,
-    init_params: dict[str, object],
-    fit_params: dict[str, object],
+    init_params: dict,
+    fit_params: dict,
+    count_min_threshold: int,
+    forward_kwargs: dict | None,
 ) -> str:
-    init_lines, init_imports = _format_kwargs_lines(init_params, indent="    ")
-    fit_lines, fit_imports = _format_kwargs_lines(fit_params, indent="    ")
+    """Return a self-contained snippet reproducing one HTML file."""
+    init_lines, init_imports = format_kwargs_lines(init_params, indent="    ")
+    fit_lines, fit_imports = format_kwargs_lines(fit_params, indent="    ")
     extra_imports = sorted(init_imports | fit_imports)
 
-    concept_imports = [explainer_cls.__name__, "NeuronsAsConcepts"]
-    deduped_concept_imports: list[str] = []
-    seen: set[str] = set()
-    for name in concept_imports:
-        if name in seen:
-            continue
-        seen.add(name)
-        deduped_concept_imports.append(name)
-
-    lines = [
+    lines: list[str] = [
         "import torch",
         "from datasets import load_dataset",
-        "from transformers import AutoModelForSequenceClassification",
-        "from interpreto import ModelWithSplitPoints, plot_concepts",
-        f"from interpreto.concepts import {', '.join(deduped_concept_imports)}",
+        "from interpreto import SplitterForClassification, plot_concepts",
+        f"from interpreto.concepts import {explainer_cls.__name__}",
         "from interpreto.concepts.interpretations import TopKInputs",
     ]
     if extra_imports:
-        lines.append("from interpreto.concepts.methods.overcomplete import " + ", ".join(extra_imports))
+        lines.append(
+            "from interpreto.concepts.methods.overcomplete import "
+            + ", ".join(extra_imports)
+        )
     lines.append("")
     lines.append('device = "cuda" if torch.cuda.is_available() else "cpu"')
     lines.append("")
-    lines.append("model_with_split_points = ModelWithSplitPoints(")
-    lines.append(f"    {model_hf_id!r},")
-    lines.append("    automodel=AutoModelForSequenceClassification,")
-    lines.append(f"    split_points={split_points!r},")
-    lines.append("    device_map=device,")
-    lines.append(f"    batch_size={BATCH_SIZE},")
-    lines.append(")")
-    lines.append("")
     lines.append(
-        f'inputs = load_dataset({dataset_hf_id!r})[{DATASET_SPLIT!r}].shuffle(seed={SEED})["text"][:{NUM_SAMPLES}]'
+        f"splitter = SplitterForClassification({hf_model_id!r}, "
+        f"batch_size={BATCH_SIZE}, device_map=device)"
     )
+
+    if hf_dataset_config is None:
+        load_call = f"load_dataset({hf_dataset_id!r})"
+    else:
+        load_call = f"load_dataset({hf_dataset_id!r}, {hf_dataset_config!r})"
+    lines.append(f'inputs = {load_call}[{DATASET_SPLIT!r}]["text"]')
+    lines.append(f"classes_names = {classes_names!r}")
     lines.append("")
-    lines.append("granularity = ModelWithSplitPoints.activation_granularities.CLS_TOKEN")
-    lines.append("activations = model_with_split_points.get_activations(")
-    lines.append("    inputs=inputs,")
-    lines.append("    activation_granularity=granularity,")
-    lines.append("    include_predicted_classes=True,")
-    lines.append(")")
+
+    if forward_kwargs:
+        lines.append(
+            f"activations, _ = splitter.get_activations(inputs, forward_kwargs={forward_kwargs!r})"
+        )
+    else:
+        lines.append("activations, _ = splitter.get_activations(inputs)")
     lines.append("")
+
     lines.append(f"concept_explainer = {explainer_cls.__name__}(")
-    lines.append("    model_with_split_points,")
+    lines.append("    splitter,")
     lines.extend(init_lines)
     lines.append(")")
+
     if explainer_cls is not NeuronsAsConcepts:
         lines.append("")
         if fit_lines:
@@ -228,37 +217,29 @@ def render_code_snippet(
             lines.append(")")
         else:
             lines.append("concept_explainer.fit(activations)")
+
     lines.append("")
-    lines.append("topk_inputs_method = TopKInputs(")
+    lines.append("topk = TopKInputs(")
     lines.append("    concept_explainer=concept_explainer,")
     lines.append(f"    k={TOPK_WORDS},")
-    lines.append("    activation_granularity=granularity,")
-    lines.append("    use_unique_words=True,")
-    lines.append("    unique_words_kwargs={")
-    lines.append('        "count_min_threshold": max(1, round(len(inputs) * 0.002)),')
-    lines.append('        "lemmatize": True,')
-    lines.append('        "words_to_ignore": [],')
-    lines.append("    },")
+    lines.append("    use_unique_words=3,")
+    lines.append(
+        f'    unique_words_kwargs={{"count_min_threshold": {count_min_threshold}, "lemmatize": True}},'
+    )
     lines.append(")")
-    lines.append("")
-    lines.append("topk_words = topk_inputs_method.interpret(")
-    lines.append("    inputs=inputs,")
-    lines.append('    concepts_indices="all",')
-    lines.append(")")
+    lines.append(
+        'labels = {k: list(v.keys()) for k, v in topk.interpret(inputs=inputs, concepts_indices="all").items()}'
+    )
     lines.append("")
     lines.append("gradients = concept_explainer.concept_output_gradient(")
-    lines.append("    inputs=inputs,")
+    lines.append("    inputs=activations,")
     lines.append("    targets=None,")
-    lines.append("    activation_granularity=granularity,")
-    lines.append("    concepts_x_gradients=True,")
     lines.append(f"    batch_size={GRADIENT_BATCH_SIZE},")
     lines.append(")")
-    lines.append("")
     lines.append("mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)")
-    lines.append("labels = {k: list(v.keys()) for k, v in topk_words.items()}")
     lines.append("")
     lines.append("plot_concepts(")
-    lines.append(f"    classes_names={classes_names!r},")
+    lines.append("    classes_names=classes_names,")
     lines.append("    concepts_importances=mean_gradients,")
     lines.append("    concepts_labels=labels,")
     lines.append(f"    top_k={TOP_K},")
@@ -268,94 +249,103 @@ def render_code_snippet(
     return "\n".join(lines)
 
 
+# ----------------------------------------------------------------------
+# Main
+# ----------------------------------------------------------------------
+
+
+def load_inputs(config: dict) -> list[str]:
+    num_samples = int(os.environ.get("DEBUG_SAMPLES", NUM_SAMPLES))
+    dataset_kwargs = (
+        {"name": config["hf_dataset_config"]}
+        if config["hf_dataset_config"] is not None
+        else {}
+    )
+    dataset = load_dataset(config["hf_dataset_id"], **dataset_kwargs)[DATASET_SPLIT]
+    dataset = dataset.shuffle(seed=SEED)
+    n = min(num_samples, len(dataset))
+    print(f"Using {n} inputs (out of {len(dataset)} in {DATASET_SPLIT} split)")
+    return list(dataset.select(range(n))["text"])
+
+
 def main() -> None:
     config = MODEL_CONFIGS[model_id]
     classes_names = config["classes_names"]
-    split_points = config["split_points"]
+
+    torch.manual_seed(SEED)
 
     output_root = OUTPUT_ROOT / model_id / "concept" / "general"
     output_root.mkdir(parents=True, exist_ok=True)
 
-    if WRITE_SNIPPETS_ONLY:
-        for method_name, explainer_cls in METHODS.items():
-            init_params = INIT_PARAMETERS.get(method_name, {})
-            fit_params = FIT_PARAMETERS.get(method_name, {})
-            code_path = output_root / f"{method_name}.py"
-            _write_code_snippet(
-                code_path=code_path,
-                explainer_cls=explainer_cls,
-                model_hf_id=config["hf_model_id"],
-                dataset_hf_id=config["hf_dataset_id"],
-                classes_names=classes_names,
-                split_points=split_points,
-                init_params=init_params,
-                fit_params=fit_params,
-            )
-        return
-
-    torch.manual_seed(SEED)
-
-    dataset = load_dataset(config["hf_dataset_id"])["test"].shuffle(seed=SEED)["text"]
-    inputs: list[str] = dataset[:NUM_SAMPLES]  # type: ignore
-
-    model_with_split_points = ModelWithSplitPoints(
+    # ------------------------------------------------------------------
+    # 1. Splitter + inputs + cached activations
+    # ------------------------------------------------------------------
+    splitter = SplitterForClassification(
         config["hf_model_id"],
-        automodel=AutoModelForSequenceClassification,  # type: ignore
-        split_points=split_points,
-        device_map=device,
         batch_size=BATCH_SIZE,
+        device_map=device,
+    )
+    inputs = load_inputs(config)
+    count_min_threshold = max(1, round(len(inputs) * 0.002))
+
+    activations, _predictions = cache_activations(
+        splitter,
+        inputs,
+        activations_cache_path(model_id),
+        tqdm_bar=True,
+        forward_kwargs=config["forward_kwargs"] or {},
     )
 
-    granularity = ModelWithSplitPoints.activation_granularities.CLS_TOKEN
-    activations = model_with_split_points.get_activations(
-        inputs=inputs,  # type: ignore
-        activation_granularity=granularity,
-        include_predicted_classes=True,
-    )
-
+    # ------------------------------------------------------------------
+    # 2. Iterate over concept methods
+    # ------------------------------------------------------------------
     for method_name, explainer_cls in METHODS.items():
         html_path = output_root / f"{method_name}.html"
-        if os.path.exists(html_path):
-            continue
-        print("\n", method_name)
+        code_path = html_path.with_suffix(".py")
         init_params = INIT_PARAMETERS.get(method_name, {})
         fit_params = FIT_PARAMETERS.get(method_name, {})
-        concept_explainer = explainer_cls(
-            model_with_split_points,
-            **init_params,
-        )
-        if method_name != "neurons_as_concepts":
-            concept_explainer.fit(activations, **fit_params)
 
-        topk_inputs_method = TopKInputs(
+        print(f"\n== {method_name}")
+        concept_explainer = explainer_cls(splitter, **init_params)
+
+        explainer_path = explainers_cache_dir(model_id) / f"{method_name}.pt"
+        if explainer_cls is NeuronsAsConcepts:
+            pass  # nothing to fit
+        elif explainer_path.exists():
+            print(f"   loading fitted explainer from {explainer_path}")
+            load_concept_model(concept_explainer, explainer_path, device)
+        else:
+            print(f"   fitting on {activations.shape[0]} activations")
+            concept_explainer.fit(activations, **fit_params)
+            try:
+                save_concept_model(concept_explainer, explainer_path)
+                print(f"   saved to {explainer_path}")
+            except NotImplementedError as exc:
+                print(f"   (skipped save: {exc})")
+
+        # ---- interpretation ------------------------------------------
+        topk = TopKInputs(
             concept_explainer=concept_explainer,
             k=TOPK_WORDS,
-            activation_granularity=granularity,
-            use_unique_words=True,
+            use_unique_words=3,
             unique_words_kwargs={
-                "count_min_threshold": max(1, round(len(inputs) * 0.002)),
+                "count_min_threshold": count_min_threshold,
                 "lemmatize": True,
-                "words_to_ignore": [],
             },
         )
-
-        topk_words = topk_inputs_method.interpret(
-            inputs=inputs,
-            concepts_indices="all",
-        )
-
-        gradients = concept_explainer.concept_output_gradient(
-            inputs=inputs,
-            targets=None,
-            activation_granularity=granularity,
-            concepts_x_gradients=True,
-            batch_size=GRADIENT_BATCH_SIZE,
-        )
-
-        mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)
+        topk_words = topk.interpret(inputs=inputs, concepts_indices="all")
         labels = {k: list(v.keys()) for k, v in topk_words.items() if v}
 
-        print(f"Saving {html_path}")
+        # ---- importance ---------------------------------------------
+        gradients = concept_explainer.concept_output_gradient(
+            inputs=activations,
+            targets=None,
+            batch_size=GRADIENT_BATCH_SIZE,
+        )
+        mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)
+
+        # ---- HTML ---------------------------------------------------
+        print(f"   saving {html_path}")
         plot_concepts(
             classes_names=classes_names,
             concepts_importances=mean_gradients,
@@ -364,24 +354,21 @@ def main() -> None:
             save_path=str(html_path),
         )
 
-        code_path = html_path.with_suffix(".py")
-        _write_code_snippet(
-            code_path=code_path,
-            explainer_cls=explainer_cls,
-            model_hf_id=config["hf_model_id"],
-            dataset_hf_id=config["hf_dataset_id"],
-            classes_names=classes_names,
-            split_points=split_points,
-            init_params=init_params,
-            fit_params=fit_params,
-        )
-        del (
-            concept_explainer,
-            topk_inputs_method,
-            topk_words,
-            gradients,
-            mean_gradients,
-            labels,
+        # ---- snippet ------------------------------------------------
+        code_path.write_text(
+            render_code_snippet(
+                method_name=method_name,
+                explainer_cls=explainer_cls,
+                hf_model_id=config["hf_model_id"],
+                hf_dataset_id=config["hf_dataset_id"],
+                hf_dataset_config=config["hf_dataset_config"],
+                classes_names=classes_names,
+                init_params=init_params,
+                fit_params=fit_params,
+                count_min_threshold=count_min_threshold,
+                forward_kwargs=config["forward_kwargs"],
+            ),
+            encoding="utf-8",
         )
 
 
