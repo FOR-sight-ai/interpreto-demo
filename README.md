@@ -12,7 +12,9 @@ This repository contains a static gallery for comparing precomputed explanation 
 - `index.html`, `styles.css`, `app.js`: Static UI (vanilla HTML/CSS/JS)
 - `manifest.json`: Generated index of available models and explanations
 - `scripts/build_manifest.py`: Manifest builder script (run locally)
+- `scripts/_common.py`: Shared helpers used by the explanation-generation scripts (activation caching, concept model save/load, snippet formatters)
 - `explanations/`: Precomputed explanation HTML files
+- `data/`: Cached activations and fitted concept explainers (git-ignored). Populated by the explanation-generation scripts to avoid recomputing on every run.
 - `assets/`: Logos and static images
 
 ## Model identifiers
@@ -44,20 +46,18 @@ explanations/
         <sample_id>/
           <method>.html
     concept/
-      class-wise/
-        <sample_id>/
-          <method>.html
-      general/
+      general/                       # classification: model-level
+        <method>.html
+      local/                         # generation: sample-linked
         <sample_id>/
           <method>.html
 ```
 
 Notes:
 
-- All explanations are linked to a sample except **classification + concept**, which is model-level.
-- For classification concepts, omit the `<sample_id>` folder and place methods directly under the scope.
-- For generation models, concept explanations are still sample-linked:
-  `explanations/gen:gpt2/concept/general/<sample_id>/<method>.html`
+- Classification concepts are model-level: place methods directly under `concept/general/`, no `<sample_id>` folder.
+- Generation concepts are sample-linked: use `concept/local/<sample_id>/<method>.html`.
+- Attribution explanations are always sample-linked.
 - Methods are derived from the HTML filenames, so use consistent names (e.g. `lime.html`, `kernel_shap.html`).
 
 ### Examples
@@ -66,12 +66,12 @@ Notes:
   `explanations/clf:emotion:bert-base/attribution/all-classes/sample-001/lime.html`
 - Classification, attribution, single class:
   `explanations/clf:emotion:bert-base/attribution/single-class/sample-001/lime.html`
-- Classification, concept, class-wise:
-  `explanations/clf:emotion:bert-base/concept/class-wise/tcav.html`
+- Classification, concept (model-level):
+  `explanations/clf:emotion:bert-base/concept/general/semi_nmf.html`
 - Generation, attribution, general:
   `explanations/gen:gpt2/attribution/general/sample-001/integrated_gradients.html`
-- Generation, concept, general:
-  `explanations/gen:gpt2/concept/general/sample-001/concept_excitation.html`
+- Generation, concept, local:
+  `explanations/gen:gpt2/concept/local/sample-001/vanilla_sae.html`
 
 ## Select explanations in the UI
 
@@ -80,7 +80,7 @@ Use the filters to lock everything except the method:
 1. Task
 2. Model
 3. Explanation type (attribution vs concept)
-4. Scope (single-class vs all-classes, class-wise vs general)
+4. Scope (single-class vs all-classes for attribution; general or local for concept)
 5. Sample (when applicable)
 6. Methods (multi-select for comparison)
 

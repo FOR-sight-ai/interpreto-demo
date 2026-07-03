@@ -76,11 +76,13 @@ must be reviewed by the user before moving on.
 - [ ] **Awaiting user review.**
 
 ### Step 3 – Rewrite `scripts/build_manifest.py` and UI to drop `class-wise`
-- [ ] Trim `class-wise` handling in `build_manifest.py` (mostly deletion of folders).
-- [ ] Remove `class-wise` mentions in `app.js`, `index.html`, `README.md`.
-- [ ] Delete `explanations/*/concept/class-wise/` directories.
-- [ ] Regenerate `manifest.json`; smoke test with `python -m http.server`.
-- [ ] **Stop for user review.**
+- [x] `build_manifest.py` was already generic (scope name inferred from directory) — no code change needed once the folders are gone.
+- [x] `app.js`, `index.html`, `styles.css` were already scope-agnostic — no code change needed.
+- [x] Deleted `explanations/{clf:ag-news:roberta, clf:emotion:bert, clf:imdb:distilbert}/concept/class-wise/`.
+- [x] Updated `README.md` hierarchy diagram: removed class-wise, fixed the stale generation-concept path (`concept/local/` not `concept/general/`), added `data/` under Project layout, added `scripts/_common.py` mention.
+- [x] Regenerated `manifest.json`: 78 → 75 entries; no `class-wise` scope; interpreto_version still present.
+- [x] Confirmed the only remaining `class-wise` string outside `migration_plan.md` is in `scripts/classification_concepts_classwise.py`, which is deleted in Step 7.
+- [ ] **Awaiting user review.**
 
 ### Step 4 – Rewrite `scripts/classification_attributions.py`
 - [ ] Keep 10 samples, both `single-class` and `all-classes`.
