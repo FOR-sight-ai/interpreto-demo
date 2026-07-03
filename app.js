@@ -59,6 +59,8 @@ async function init() {
   state.entries = normalized.entries;
   state.models = normalized.models;
 
+  renderInterpretoVersion(normalized.manifest);
+
   if (!state.entries.length || !state.models.length) {
     setStatus(
       "manifest.json is empty. Add explanation files and rebuild the manifest.",
@@ -97,6 +99,24 @@ async function loadManifest() {
   } catch (error) {
     return null;
   }
+}
+
+function renderInterpretoVersion(manifest) {
+  const badge = document.getElementById("interpreto-version");
+  if (!badge) {
+    return;
+  }
+  const version =
+    manifest && typeof manifest.interpreto_version === "string"
+      ? manifest.interpreto_version
+      : null;
+  if (!version) {
+    badge.textContent = "";
+    badge.hidden = true;
+    return;
+  }
+  badge.textContent = `interpreto v${version}`;
+  badge.hidden = false;
 }
 
 function normalizeManifest(manifest) {

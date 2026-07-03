@@ -118,6 +118,19 @@ body::before {
   color: var(--accent-3);
 }
 
+.version-badge {
+  align-self: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
 .eyebrow {
   font-size: 0.85rem;
   text-transform: uppercase;
