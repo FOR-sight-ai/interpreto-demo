@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Generate classification attribution HTML files and minimal .py snippets."""
+"""Generate classification attribution HTML files and minimal .py snippets.
+
+Interpreto 0.5.0 API. For each classification model, this script:
+
+1. Loads the model + tokenizer once.
+2. Runs each attribution method on ``NUM_SAMPLES`` fixed test samples.
+3. Emits, for every (sample, method) pair, two HTML files (``single-class``
+   for the predicted class, ``all-classes`` for all classes) and their
+   matching minimal ``.py`` snippet.
+"""
 
 from pathlib import Path
 
@@ -22,10 +31,11 @@ from interpreto import (
     plot_attributions,
 )
 
+
 # ----------------------------
 # Configuration (edit these)
 # ----------------------------
-model_id = "clf:imdb:distilbert"
+model_id = "clf:emotion:bert"
 
 MODEL_CONFIGS = {
     "clf:emotion:bert": {
@@ -39,7 +49,7 @@ MODEL_CONFIGS = {
             "fear",
             "surprise",
         ],
-        "granularity": "WORD",
+        "granularity": Granularity.WORD,
     },
     "clf:imdb:distilbert": {
         "hf_model_id": "lvwerra/distilbert-imdb",
@@ -48,7 +58,7 @@ MODEL_CONFIGS = {
             "negative",
             "positive",
         ],
-        "granularity": "SENTENCE",
+        "granularity": Granularity.SENTENCE,
     },
     "clf:ag-news:roberta": {
         "hf_model_id": "arman1o1/roberta_ag_news_model",
@@ -59,15 +69,15 @@ MODEL_CONFIGS = {
             "Business",
             "Sci/Tech",
         ],
-        "granularity": "WORD",
+        "granularity": Granularity.WORD,
     },
 }
-config = MODEL_CONFIGS[model_id]
 
 NUM_SAMPLES = 10
 SEED = 0
+BATCH_SIZE = 4
 
-OUTPUT_ROOT = Path("/home/antonin.poche/interpreto-demo/explanations")
+OUTPUT_ROOT = Path(__file__).resolve().parents[1] / "explanations"
 
 METHODS = {
     "kernel_shap": KernelShap,
@@ -87,64 +97,77 @@ def render_code_snippet(
     explainer_cls: type,
     sample_text: str,
     scope: str,
+    hf_model_id: str,
+    classes_names: list[str],
+    granularity: Granularity,
 ) -> str:
+    """Return a minimal, self-contained snippet reproducing one HTML."""
     if scope == "all-classes":
-        targets = "torch.arange(len(classes_names))"
+        targets_line = f"    targets=torch.tensor([{list(range(len(classes_names)))!r}]),\n"
     else:
-        targets = "None"
+        targets_line = ""
+
+    if granularity is Granularity.WORD:
+        # Default in 0.5.0; keep the snippet minimal.
+        explainer_line = f"explainer = {explainer_cls.__name__}(model, tokenizer)"
+        granularity_import = ""
+    else:
+        explainer_line = (
+            f"explainer = {explainer_cls.__name__}("
+            f"model, tokenizer, granularity=Granularity.{granularity.name})"
+        )
+        granularity_import = ", Granularity"
 
     return f"""import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from interpreto import {explainer_cls.__name__}, Granularity, plot_attributions
+from interpreto import {explainer_cls.__name__}{granularity_import}, plot_attributions
 
-model_id = {config["hf_model_id"]!r}
-classes_names = {config["classes_names"]!r}
+model_id = {hf_model_id!r}
+classes_names = {classes_names!r}
 
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_id)
-explainer = {explainer_cls.__name__}(model, tokenizer, granularity=Granularity.{config["granularity"]})
 
+{explainer_line}
 attributions = explainer(
     model_inputs={sample_text!r},
-    targets={targets}
-)
+{targets_line})
+
 plot_attributions(attributions[0], classes_names=classes_names)
 """
 
 
-def plot_and_snippet_save(
-    scope,
-    output_root,
-    i,
+def save_scope(
+    scope: str,
+    output_root: Path,
+    i: int,
     attribution,
-    method_name,
-    classes_names,
-    explainer_cls,
-    sample,
-    config,
-):
-    if scope == "all-classes":
-        sample_dir = output_root / "all-classes" / f"sample-{i:03d}"
-    else:
-        sample_dir = output_root / "single-class" / f"sample-{i:03d}"
-
+    method_name: str,
+    classes_names: list[str],
+    explainer_cls: type,
+    sample: str,
+    hf_model_id: str,
+    granularity: Granularity,
+) -> None:
+    sample_dir = output_root / scope / f"sample-{i:03d}"
     sample_dir.mkdir(parents=True, exist_ok=True)
-    html_path = sample_dir / f"{method_name}.html"
 
-    # Plot the attributions to html.
+    html_path = sample_dir / f"{method_name}.html"
     plot_attributions(
         attribution,
         classes_names=classes_names,
         save_path=str(html_path),
     )
 
-    # Write a code snippet for the attributions.
     code_path = html_path.with_suffix(".py")
     code_path.write_text(
         render_code_snippet(
             explainer_cls=explainer_cls,
             sample_text=sample,
             scope=scope,
+            hf_model_id=hf_model_id,
+            classes_names=classes_names,
+            granularity=granularity,
         ),
         encoding="utf-8",
     )
@@ -153,31 +176,39 @@ def plot_and_snippet_save(
 def main() -> None:
     config = MODEL_CONFIGS[model_id]
     classes_names = config["classes_names"]
-    torch.manual_seed(0)
+    granularity = config["granularity"]
+    hf_model_id = config["hf_model_id"]
 
-    # Load a fixed set of samples so outputs are reproducible.
+    torch.manual_seed(SEED)
+
+    # Fixed sample set so outputs are reproducible.
     dataset = load_dataset(config["hf_dataset_id"])["test"].shuffle(seed=SEED)
     batch_inputs = list(dataset.select(list(range(NUM_SAMPLES)))["text"])
-    all_targets = torch.arange(len(classes_names)).view(1, -1).repeat((len(batch_inputs), 1))
+    all_targets = (
+        torch.arange(len(classes_names))
+        .view(1, -1)
+        .repeat((len(batch_inputs), 1))
+    )
 
-    # Load the classifier and reuse it across all methods.
-    tokenizer = AutoTokenizer.from_pretrained(config["hf_model_id"], use_fast=True)
-    model = AutoModelForSequenceClassification.from_pretrained(config["hf_model_id"])
+    # Reuse the classifier across every method.
+    tokenizer = AutoTokenizer.from_pretrained(hf_model_id, use_fast=True)
+    model = AutoModelForSequenceClassification.from_pretrained(hf_model_id)
     model.eval()
 
     output_root = OUTPUT_ROOT / model_id / "attribution"
 
     for method_name, explainer_cls in METHODS.items():
-        # Compute attributions for all samples in a batch.
-        if config["granularity"] == "WORD":
-            explainer = explainer_cls(model, tokenizer)
-        else:
-            explainer = explainer_cls(model, tokenizer, granularity=Granularity.SENTENCE)
+        print(f"\n== {method_name}")
+        explainer = explainer_cls(
+            model, tokenizer, granularity=granularity, batch_size=BATCH_SIZE
+        )
         all_attributions = explainer(model_inputs=batch_inputs, targets=all_targets)
         single_attributions = explainer(model_inputs=batch_inputs)
 
-        for i, (sample, aa, sa) in enumerate(zip(batch_inputs, all_attributions, single_attributions, strict=False)):
-            plot_and_snippet_save(
+        for i, (sample, aa, sa) in enumerate(
+            zip(batch_inputs, all_attributions, single_attributions, strict=False)
+        ):
+            save_scope(
                 scope="all-classes",
                 output_root=output_root,
                 i=i,
@@ -186,9 +217,10 @@ def main() -> None:
                 classes_names=classes_names,
                 explainer_cls=explainer_cls,
                 sample=sample,
-                config=config,
+                hf_model_id=hf_model_id,
+                granularity=granularity,
             )
-            plot_and_snippet_save(
+            save_scope(
                 scope="single-class",
                 output_root=output_root,
                 i=i,
@@ -197,7 +229,8 @@ def main() -> None:
                 classes_names=classes_names,
                 explainer_cls=explainer_cls,
                 sample=sample,
-                config=config,
+                hf_model_id=hf_model_id,
+                granularity=granularity,
             )
 
 

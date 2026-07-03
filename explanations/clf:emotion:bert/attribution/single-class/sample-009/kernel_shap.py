@@ -7,10 +7,10 @@ classes_names = ['sadness', 'joy', 'love', 'anger', 'fear', 'surprise']
 
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_id)
-explainer = KernelShap(model, tokenizer)
 
+explainer = KernelShap(model, tokenizer)
 attributions = explainer(
     model_inputs='im feeling really really sarcastic caustic or theres been an influx of idiots into my flists daily lives',
-    targets=None
 )
+
 plot_attributions(attributions[0], classes_names=classes_names)

@@ -7,7 +7,10 @@ classes_names = ['World', 'Sports', 'Business', 'Sci/Tech']
 
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_id)
-explainer = IntegratedGradients(model, tokenizer)
 
-attributions = explainer(model_inputs='Spawn of X Prize on Horizon Innovators take note: The folks behind the X Prize vow there will soon be more competitions in several disciplines. Also: The da Vinci team presses ahead in Canada.... Rubicon team plans another launch attempt. By Dan Brekke.', targets=None)
+explainer = IntegratedGradients(model, tokenizer)
+attributions = explainer(
+    model_inputs='Spawn of X Prize on Horizon Innovators take note: The folks behind the X Prize vow there will soon be more competitions in several disciplines. Also: The da Vinci team presses ahead in Canada.... Rubicon team plans another launch attempt. By Dan Brekke.',
+)
+
 plot_attributions(attributions[0], classes_names=classes_names)

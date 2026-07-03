@@ -7,10 +7,10 @@ classes_names = ['sadness', 'joy', 'love', 'anger', 'fear', 'surprise']
 
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_id)
-explainer = Lime(model, tokenizer)
 
+explainer = Lime(model, tokenizer)
 attributions = explainer(
     model_inputs='im feeling good these days and my only complaints are that its getting harder and harder to move around and chase after stone and its getting harder and harder to find clothes that fit',
-    targets=None
 )
+
 plot_attributions(attributions[0], classes_names=classes_names)

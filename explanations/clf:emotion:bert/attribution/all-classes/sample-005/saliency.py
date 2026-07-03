@@ -7,10 +7,11 @@ classes_names = ['sadness', 'joy', 'love', 'anger', 'fear', 'surprise']
 
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_id)
-explainer = Saliency(model, tokenizer)
 
+explainer = Saliency(model, tokenizer)
 attributions = explainer(
     model_inputs='i feel bitchy saying it but i think that next saturday i just want to be alone',
-    targets=torch.arange(len(classes_names))
+    targets=torch.tensor([[0, 1, 2, 3, 4, 5]]),
 )
+
 plot_attributions(attributions[0], classes_names=classes_names)

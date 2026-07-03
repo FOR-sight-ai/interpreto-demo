@@ -7,7 +7,11 @@ classes_names = ['World', 'Sports', 'Business', 'Sci/Tech']
 
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_id)
-explainer = SmoothGrad(model, tokenizer)
 
-attributions = explainer(model_inputs='Dollar Stabilizes Above Recent Lows (Reuters) Reuters - The dollar edged up against the yen and\\steadied against the euro on Friday, but kept within sight of\\multi-month lows hit this week on worries about the U.S.\\economy and its ability to attract global investors.', targets=torch.arange(len(classes_names)))
+explainer = SmoothGrad(model, tokenizer)
+attributions = explainer(
+    model_inputs='Dollar Stabilizes Above Recent Lows (Reuters) Reuters - The dollar edged up against the yen and\\steadied against the euro on Friday, but kept within sight of\\multi-month lows hit this week on worries about the U.S.\\economy and its ability to attract global investors.',
+    targets=torch.tensor([[0, 1, 2, 3]]),
+)
+
 plot_attributions(attributions[0], classes_names=classes_names)

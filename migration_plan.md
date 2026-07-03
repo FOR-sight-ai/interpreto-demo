@@ -85,12 +85,16 @@ must be reviewed by the user before moving on.
 - [ ] **Awaiting user review.**
 
 ### Step 4 – Rewrite `scripts/classification_attributions.py`
-- [ ] Keep 10 samples, both `single-class` and `all-classes`.
-- [ ] Fix snippet `targets` argument shape.
-- [ ] Confirm imports available in 0.5.0.
-- [ ] Debug flow: run on `clf:emotion:bert` with `NUM_SAMPLES=2`, open one HTML, run the snippet standalone.
-- [ ] Then run the full 10 samples for all three classification models.
-- [ ] **Stop for user review.**
+- [x] Rewritten as a clean 0.5.0 script. `Granularity` is now an enum value in the config (not a string).
+- [x] Fixed snippet `targets` argument: was `torch.arange(len(classes_names))` (1-D), now `torch.tensor([[0, 1, ...]])` matching the demo notebook.
+- [x] Snippet omits `granularity=` when it equals the 0.5.0 default (`Granularity.WORD`); only imports `Granularity` when needed.
+- [x] Single-class snippet has no `targets=` line (default is predicted class).
+- [x] Debug run (emotion, 2 samples × 2 methods) succeeded; standalone snippet run confirmed HTML reproduction.
+- [x] SENTENCE-granularity debug run (imdb occlusion) succeeded and produced the correct snippet.
+- [x] Full runs completed for all three classification models: emotion (10×10×2), ag-news (10×10×2), imdb (10×10×2). Sobol worked on all three.
+- [x] Manifest regenerated: 75 entries, all 10 attribution methods per classification sample.
+- [x] Snippet diff against `classification_demonstration.ipynb` matches.
+- [ ] **Awaiting user review.**
 
 ### Step 5 – Rewrite `scripts/generation_attributions.py`
 - [ ] Remove `KernelShap` and `Sobol` (already commented out).
