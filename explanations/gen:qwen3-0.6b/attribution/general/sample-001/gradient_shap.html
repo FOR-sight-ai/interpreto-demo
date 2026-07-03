@@ -1,8 +1,2554 @@
-<head><link rel="stylesheet" href="../../../../../assets/css/visualization.css"><script src="../../../../../assets/js/core/dom_renderer.js"></script><script src="../../../../../assets/js/core/state_manager.js"></script><script src="../../../../../assets/js/core/style_computer.js"></script><script src="../../../../../assets/js/core/view_updater.js"></script><script src="../../../../../assets/js/visualizations/attribution_classification.js"></script><script src="../../../../../assets/js/visualizations/attribution_generation.js"></script><script src="../../../../../assets/js/visualizations/concepts_classification_global.js"></script><script src="../../../../../assets/js/visualizations/concepts_classification_local.js"></script><script src="../../../../../assets/js/visualizations/concepts_generation_local.js"></script></head><body class="body-visualization"><h3>Inputs</h3><div id='inputs-6856771a-29c5-47e1-8838-2c24b07fdc2b'></div>
-<h3>Outputs</h3><div class='line-style'><div id='outputs-6856771a-29c5-47e1-8838-2c24b07fdc2b'></div></div>
+<head><style>
+/*
+*   CSS styling for explanation visualizations
+*/
+
+/* Light mode */
+:root {
+  --default-background-color: white;
+  --default-text-color: black;
+  --visualization-font-family: "IBM Plex Sans", "Fira Sans", "Segoe UI", sans-serif;
+  --visualization-font-size: 14px;
+  --visualization-token-font-size: 1.1em;
+  --visualization-heading-font-size: 1.15em;
+  --visualization-tooltip-font-size: 0.85em;
+  --visualization-line-height: 1.5;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --default-background-color: hsl(225, 10%, 15%);
+    --default-text-color: hsl(230, 10%, 85%);
+  }
+}
+
+:root {
+  /* Set the text color and background color depending on the current
+  * vscode theme if available, or on the current light/dark mode if in 
+  * a browser
+  */
+  --background-color: var(--vscode-editor-background,
+      var(--default-background-color));
+  --text-color: var(--vscode-editor-foreground, var(--default-text-color));
+
+  --positive-color: #ff0000;
+  --negative-color: #0000ff;
+
+  /* Reversed colors  */
+  --reversed-background-color: var(--text-color);
+  --reversed-text-color: var(--background-color);
+}
+
+.body-visualization {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--visualization-font-family);
+  font-size: var(--visualization-font-size);
+  line-height: var(--visualization-line-height);
+  margin: 0;
+  padding: 0;
+}
+
+.body-visualization button,
+.body-visualization input,
+.body-visualization select,
+.body-visualization textarea {
+  font-family: var(--visualization-font-family);
+  font-size: inherit;
+}
+
+.body-visualization h3 {
+  font-size: var(--visualization-heading-font-size);
+  font-weight: 600;
+  margin: 0.8em 0 0.4em;
+}
+
+.body-visualization > :first-child {
+  margin-top: 0;
+}
+
+.body-visualization > :first-child > h3 {
+  margin-top: 0;
+}
+
+/* Style of the main element containing all the input sentences */
+.line-style {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  /* line-height: 1.5em; */
+  padding-left: 1em;
+  margin-bottom: 0.2em;
+}
+
+/* Common style for all the words displayed (inputs, outputs, concepts) */
+.common-word-style {
+  font-family: var(--visualization-font-family) !important;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: var(--visualization-token-font-size);
+  padding: 0;
+  margin-right: 0.2em;
+  white-space: pre-wrap;
+  border-radius: 0.5em;
+  background-color: transparent;
+  border: 0px solid transparent;
+  outline: 1px solid transparent;
+  color: var(--text-color);
+  z-index: 0;
+}
+
+/*
+* Styles of the highlighted words with attribution colors: the inputs and some of the outputs.
+*/
+.highlighted-word-style {
+  position: relative;
+  /* mandatory for the tooltip to be positioned correctly */
+}
+
+/* Highlighted words tooltips style */
+.highlighted-word-style .tooltiptext {
+  visibility: hidden;
+  text-align: center;
+  padding: 0.2em 0.45em;
+  border-radius: 0.5em;
+  white-space: nowrap;
+  font-family: var(--visualization-font-family);
+  font-size: var(--visualization-tooltip-font-size);
+  line-height: 1.2;
+  color: #222;
+  background-color: #e6e6e6;
+  /* Position of the tooltip w/r to the parent element */
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 125%;
+  transform: translateX(-50%);
+}
+
+.highlighted-word-style .tooltiptext::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  /* Triangle at the bottom of the tooltip */
+  left: 50%;
+  margin-left: -0.3em;
+  border-width: 0.3em;
+  border-style: solid;
+  border-color: #e6e6e6 transparent transparent transparent;
+}
+
+.highlighted-word-style:hover .tooltiptext {
+  visibility: visible;
+}
+
+/*
+* Style of the reactive/clickable elements.
+*/
+.reactive-word-style:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/*
+* Style of the words (concepts & outputs) currently selected by the user.
+*/
+.selected-style {
+  outline: 2px solid red !important;
+}
+
+.is-emphasized {
+  font-weight: 600;
+}
+
+.is-hidden {
+  display: none;
+}
+
+/*
+* Style of the concepts in the concept menu.
+*/
+.concept-style {
+  margin-right: 0.75em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  outline: 2px solid transparent;
+}
+
+/*
+* Style of the class buttons/labels.
+*/
+.class-style {
+  margin-right: 0.75em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  outline: 2px solid transparent;
+  cursor: pointer;
+}
+
+/*
+* Style for class buttons with colored backgrounds (default multi-class view)
+*/
+.class-style-colored-border {
+  outline-width: 2px;
+  outline-style: solid;
+}
+
+</style><script>
+(function () {
+    /**
+     * StateManager - Manages visualization state and transitions
+     */
+    window.StateManager = class StateManager {
+        constructor() {
+            this.activatedClassId = null;
+            this.selectedClassId = null;
+            this.currentOutputId = null;
+            this.selectedOutputId = null;
+        }
+
+        /**
+         * Set the active class (on hover)
+         * @param {number|null} classId - The class ID to activate
+         * @returns {object} What changed: { classChanged: boolean }
+         */
+        setActiveClass(classId) {
+            const changed = this.activatedClassId !== classId;
+            this.activatedClassId = classId;
+            return { classChanged: changed };
+        }
+
+        /**
+         * Toggle the selected class (on click)
+         * @param {number} classId - The class ID to toggle
+         * @returns {object} What changed: { classChanged: boolean, wasDeselected: boolean }
+         */
+        toggleSelectedClass(classId) {
+            const wasSelected = this.selectedClassId === classId;
+            if (wasSelected) {
+                this.selectedClassId = null;
+                this.activatedClassId = null;
+            } else {
+                this.selectedClassId = classId;
+                this.activatedClassId = classId;
+            }
+            return { classChanged: true, wasDeselected: wasSelected };
+        }
+
+        /**
+         * Restore active class to selected class (on mouse out)
+         * @returns {object} What changed: { classChanged: boolean }
+         */
+        restoreSelectedClass() {
+            const changed = this.activatedClassId !== this.selectedClassId;
+            this.activatedClassId = this.selectedClassId;
+            return { classChanged: changed };
+        }
+
+        /**
+         * Set the active output (on hover)
+         * @param {number|null} outputId - The output ID to activate
+         * @param {boolean} resetClass - Whether to reset class selection
+         * @returns {object} What changed: { outputChanged: boolean, classChanged: boolean }
+         */
+        setActiveOutput(outputId, resetClass = false) {
+            // Do not override a selected output on hover.
+            if (this.selectedOutputId !== null && this.selectedOutputId !== outputId) {
+                return { outputChanged: false, classChanged: false };
+            }
+            const outputChanged = this.currentOutputId !== outputId;
+            const classChanged = resetClass && (this.activatedClassId !== null || this.selectedClassId !== null);
+
+            this.currentOutputId = outputId;
+            if (resetClass) {
+                this.activatedClassId = null;
+                this.selectedClassId = null;
+            }
+
+            return { outputChanged, classChanged };
+        }
+
+        /**
+         * Toggle the selected output (on click)
+         * @param {number} outputId - The output ID to toggle
+         * @param {boolean} resetClass - Whether to reset class selection
+         * @returns {object} What changed: { outputChanged: boolean, classChanged: boolean, wasDeselected: boolean }
+         */
+        toggleSelectedOutput(outputId, resetClass = false) {
+            const wasSelected = this.selectedOutputId === outputId;
+            const outputChanged = true;
+
+            if (wasSelected) {
+                this.selectedOutputId = null;
+                this.currentOutputId = null;
+            } else {
+                this.selectedOutputId = outputId;
+                this.currentOutputId = outputId;
+            }
+
+            const classChanged = resetClass;
+            if (resetClass) {
+                this.selectedClassId = null;
+                this.activatedClassId = null;
+            }
+
+            return { outputChanged, classChanged, wasDeselected: wasSelected };
+        }
+
+        /**
+         * Restore active output to selected output (on mouse out)
+         * @returns {object} What changed: { outputChanged: boolean }
+         */
+        restoreSelectedOutput() {
+            const changed = this.currentOutputId !== this.selectedOutputId;
+            this.currentOutputId = this.selectedOutputId;
+            return { outputChanged: changed };
+        }
+
+        /**
+         * Check if an output and class are both locked (selected)
+         * @returns {boolean}
+         */
+        isFullyLocked() {
+            return this.selectedOutputId !== null && this.selectedClassId !== null;
+        }
+
+        /**
+         * Check if a class is selected
+         * @returns {boolean}
+         */
+        hasSelectedClass() {
+            return this.selectedClassId !== null;
+        }
+
+        /**
+         * Check if an output is selected
+         * @returns {boolean}
+         */
+        hasSelectedOutput() {
+            return this.selectedOutputId !== null;
+        }
+
+        /**
+         * Get current state snapshot
+         * @returns {object}
+         */
+        getState() {
+            return {
+                activatedClassId: this.activatedClassId,
+                selectedClassId: this.selectedClassId,
+                currentOutputId: this.currentOutputId,
+                selectedOutputId: this.selectedOutputId,
+            };
+        }
+
+        /**
+         * Log current state for debugging
+         * @param {string} prefix - Log prefix
+         */
+        trace(prefix = "") {
+            console.log(
+                `\t[${prefix}]` +
+                `\tclass: selected=${this.selectedClassId}/activated=${this.activatedClassId}` +
+                `\toutput: selected=${this.selectedOutputId}/current=${this.currentOutputId}`
+            );
+        }
+    };
+})();
+
+(function () {
+    /**
+     * StyleComputer - Pure functions for computing styles
+     */
+    window.StyleComputer = {
+        /**
+         * Convert a hex color string to an RGB array
+         * @param {string} hex - The hex color string (e.g. "#ff0000")
+         * @returns {number[]} An array of RGB values [r, g, b]
+         */
+        hexToRgb(hex) {
+            hex = hex.replace("#", "");
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            return [r, g, b];
+        },
+
+        /**
+         * Resolve a color from a colormap object
+         * @param {object|null} colormap - Object mapping ids to colors
+         * @param {number|string} id - Id to resolve
+         * @returns {string|null} Color string or null if missing
+         */
+        getColorFromMap(colormap, id) {
+            if (!colormap) {
+                return null;
+            }
+            const key = String(id);
+            return colormap[key] || colormap[id] || null;
+        },
+
+        /**
+         * Check whether a color is in the tab10 palette
+         * @param {string|null} colorHex - Hex color string
+         * @returns {boolean}
+         */
+        isTab10Color(colorHex) {
+            if (!colorHex) {
+                return false;
+            }
+            const normalized = colorHex.toLowerCase();
+            const withHash = normalized.startsWith('#') ? normalized : `#${normalized}`;
+            return [
+                '#1f77b4',
+                '#ff7f0e',
+                '#2ca02c',
+                '#d62728',
+                '#9467bd',
+                '#8c564b',
+                '#e377c2',
+                '#7f7f7f',
+                '#bcbd22',
+                '#17becf',
+            ].includes(withHash);
+        },
+
+
+        /**
+         * Normalize an alpha value based on min/max
+         * @param {number} alpha - The raw alpha value
+         * @param {number} min - The minimum value (for negative normalization)
+         * @param {number} max - The maximum value (for positive normalization)
+         * @returns {number} Normalized alpha between -1 and 1
+         */
+        normalizeAlpha(alpha, min, max) {
+            if (alpha < 0) {
+                return -(alpha / min);
+            }
+            return alpha / max;
+        },
+
+        /**
+         * Compute the CSS style for a word based on attribution value
+         * @param {number} alpha - The attribution value
+         * @param {object} classMeta - Class metadata { positive_color, negative_color, min, max }
+         * @param {object} options - Style options { normalize: boolean, highlightBorder: boolean }
+         * @returns {string} A CSS style string
+         */
+        computeWordStyle(alpha, classMeta, options = {}) {
+            const { normalize = true, highlightBorder = false } = options;
+
+            let normalizedAlpha = alpha;
+            if (normalize) {
+                normalizedAlpha = this.normalizeAlpha(alpha, classMeta.min, classMeta.max);
+            }
+
+            // Select color based on sign
+            const colorHex = normalizedAlpha < 0 ? classMeta.negative_color : classMeta.positive_color;
+            const color = this.hexToRgb(colorHex);
+
+            const absAlpha = Math.abs(normalizedAlpha);
+            const alphaRatio = highlightBorder ? 0.5 : 1.0;
+
+            const borderColor = [...color, absAlpha];
+            const backgroundColor = [...color, absAlpha * alphaRatio];
+
+            // Compute perceived brightness for text color
+            const brightness = 0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2];
+            const effectiveAlpha = absAlpha * alphaRatio;
+
+            let style = `background-color: rgba(${backgroundColor.join(",")});`;
+
+            if (highlightBorder) {
+                style += `outline-color: rgba(${borderColor.join(",")});`;
+            } else {
+                style += "outline-color: transparent;";
+            }
+
+            // Switch to white text for dark backgrounds
+            if (effectiveAlpha >= 0.35 && brightness < 150) {
+                style += "color: white;";
+            }
+
+            return style;
+        },
+
+        /**
+         * Build custom style string from style object
+         * @param {object|null} customStyle - Custom style object { property: value }
+         * @returns {string} CSS style string
+         */
+        buildCustomStyle(customStyle) {
+            if (!customStyle) return "";
+
+            let style = "";
+            for (const [key, value] of Object.entries(customStyle)) {
+                style += `${key}: ${value};`;
+            }
+            return style;
+        },
+
+        /**
+         * Format a tooltip value
+         * @param {number} alpha - The attribution value
+         * @param {number} precision - Decimal precision
+         * @returns {string} Formatted tooltip text
+         */
+        formatTooltip(alpha, precision = 3) {
+            return alpha.toFixed(precision);
+        },
+
+        /**
+         * Get readable text color for a background color
+         * @param {number[]|null} rgb - RGB array
+         * @returns {string} CSS color value
+         */
+        getReadableTextColor(rgb) {
+            if (
+                !Array.isArray(rgb) ||
+                rgb.length < 3 ||
+                rgb.some((value) => !Number.isFinite(value))
+            ) {
+                return "#fff";
+            }
+            const brightness = this.getBrightness(rgb);
+            return brightness < 150 ? "#fff" : "#000";
+        },
+
+        /**
+         * Build label style for selectable items (classes/concepts)
+         * @param {string|null} baseColor - Default color for the label
+         * @param {boolean} isActive - Whether the label is hovered
+         * @param {boolean} isSelected - Whether the label is selected
+         * @param {object} options - { onClickColorMap, enableHighlight, showDefaultBackground, backgroundRgb }
+         * @returns {string} CSS style string
+         */
+        buildLabelStyle(baseColor, isActive, isSelected, options = {}) {
+            const {
+                onClickColorMap = null,
+                enableHighlight = true,
+                showDefaultBackground = true,
+                backgroundRgb = null,
+            } = options;
+
+            const shouldHighlight = enableHighlight && (isActive || isSelected);
+            const showBackground = showDefaultBackground && baseColor && !shouldHighlight;
+
+            let outlineColor = "transparent";
+            if (shouldHighlight) {
+                if (Array.isArray(onClickColorMap) && onClickColorMap.length >= 2) {
+                    outlineColor = isSelected ? onClickColorMap[0] : onClickColorMap[1];
+                } else if (baseColor) {
+                    outlineColor = baseColor;
+                }
+            }
+
+            let textColor;
+            if (showBackground && baseColor && this.isTab10Color(baseColor)) {
+                textColor = '#fff';
+            } else {
+                const textRgb = showBackground && baseColor
+                    ? this.hexToRgb(baseColor)
+                    : (backgroundRgb || this.getBackgroundRgb());
+                textColor = this.getReadableTextColor(textRgb);
+            }
+
+            return (
+                `background-color: ${showBackground ? baseColor : "transparent"};` +
+                "text-shadow: none;" +
+                `color: ${textColor};` +
+                `outline-color: ${outlineColor};`
+            );
+        },
+
+        /**
+         * Find the dominant class for a token (class with highest positive attribution)
+         * @param {Array} attributionsPerClass - Array of attribution values for each class
+         * @returns {object} { classId: number|null, value: number|null } - null if no positive values
+         */
+        findDominantClass(attributionsPerClass) {
+            let maxValue = -Infinity;
+            let dominantClassId = null;
+
+            for (let classId = 0; classId < attributionsPerClass.length; classId++) {
+                const value = attributionsPerClass[classId];
+                if (value > 0 && value > maxValue) {
+                    maxValue = value;
+                    dominantClassId = classId;
+                }
+            }
+
+            if (dominantClassId === null) {
+                return { classId: null, value: null };
+            }
+
+            return { classId: dominantClassId, value: maxValue };
+        },
+
+        /**
+         * Compute the CSS style for a word in default multi-class view
+         * @param {number} alpha - The attribution value (already the max positive)
+         * @param {string} colorHex - The class color
+         * @param {number} max - The max value for normalization
+         * @param {object} options - Style options { highlightBorder: boolean }
+         * @returns {string} A CSS style string
+         */
+        computeDefaultClassStyle(alpha, colorHex, max, options = {}) {
+            const { highlightBorder = false } = options;
+
+            // Normalize to 0-1 range (alpha is already positive)
+            const normalizedAlpha = max > 0 ? alpha / max : 0;
+            const color = this.hexToRgb(colorHex);
+
+            const alphaRatio = highlightBorder ? 0.5 : 1.0;
+            const borderColor = [...color, normalizedAlpha];
+            const backgroundColor = [...color, normalizedAlpha * alphaRatio];
+
+            // Compute perceived brightness for text color
+            const brightness = 0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2];
+            const effectiveAlpha = normalizedAlpha * alphaRatio;
+            const isTab10 = this.isTab10Color(colorHex);
+
+            let style = `background-color: rgba(${backgroundColor.join(",")});`;
+
+            if (highlightBorder) {
+                style += `outline-color: rgba(${borderColor.join(",")});`;
+            } else {
+                style += "outline-color: transparent;";
+            }
+
+            // Switch to white text for dark backgrounds
+            if (effectiveAlpha >= 0.35 && (brightness < 150 || isTab10)) {
+                style += "color: white;";
+            }
+
+            return style;
+        },
+
+        /**
+         * Parse an rgb/rgba CSS string into an RGB array
+         * @param {string} value - CSS rgb/rgba string
+         * @returns {number[]|null} RGB array or null if not parsed
+         */
+        parseRgb(value) {
+            const match = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!match) {
+                return null;
+            }
+            return [
+                parseInt(match[1], 10),
+                parseInt(match[2], 10),
+                parseInt(match[3], 10),
+            ];
+        },
+
+        /**
+         * Read the computed background color for an element
+         * @param {HTMLElement} element - Element to read from
+         * @param {number[]} fallback - Fallback RGB value
+         * @returns {number[]} RGB array
+         */
+        getBackgroundRgb(element = document.body, fallback = [255, 255, 255]) {
+            const rgb = this.parseRgb(window.getComputedStyle(element).backgroundColor);
+            return rgb || fallback;
+        },
+
+        /**
+         * Mix two RGB colors based on a ratio
+         * @param {number[]} background - Background RGB
+         * @param {number[]} foreground - Foreground RGB
+         * @param {number} ratio - Ratio in [0, 1]
+         * @returns {number[]} Mixed RGB
+         */
+        mixColors(background, foreground, ratio) {
+            const mix = [];
+            for (let i = 0; i < 3; i++) {
+                const value = Math.round(background[i] + (foreground[i] - background[i]) * ratio);
+                mix.push(Math.max(0, Math.min(255, value)));
+            }
+            return mix;
+        },
+
+        /**
+         * Compute perceived brightness for readability decisions
+         * @param {number[]} rgb - RGB array
+         * @returns {number} Brightness value
+         */
+        getBrightness(rgb) {
+            return 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2];
+        },
+
+        /**
+         * Build a readable style for a solid background color
+         * @param {number[]} rgb - RGB array
+         * @returns {string} CSS style string
+         */
+        buildReadableStyle(rgb) {
+            const brightness = this.getBrightness(rgb);
+            let style = `background-color: rgb(${rgb.join(",")});`;
+            style += `outline-color: rgb(${rgb.join(",")});`;
+            if (brightness < 150) {
+                style += "color: white;";
+            }
+            return style;
+        },
+
+        /**
+         * Compute the CSS style for a concept value using a mixed background
+         * @param {number} value - Raw concept value
+         * @param {number} maxValue - Max value for normalization
+         * @param {string} colorHex - Base color
+         * @param {number[]} backgroundRgb - Background color
+         * @returns {string} CSS style string
+         */
+        computeConceptStyle(value, maxValue, colorHex, backgroundRgb) {
+            const baseColor = this.hexToRgb(colorHex);
+            const clampedValue = Math.max(0, Math.min(value, maxValue));
+            const ratio = maxValue > 0 ? clampedValue / maxValue : 0;
+            const mixed = this.mixColors(backgroundRgb, baseColor, ratio);
+            return this.buildReadableStyle(mixed);
+        },
+
+        /**
+         * Compute the CSS style for a solid concept color
+         * @param {string} colorHex - Base color
+         * @returns {string} CSS style string
+         */
+        computeSolidStyle(colorHex) {
+            const baseColor = this.hexToRgb(colorHex);
+            return this.buildReadableStyle(baseColor);
+        },
+    };
+})();
+
+(function () {
+    /**
+     * DOMRenderer - Creates DOM elements for visualizations
+     */
+    window.DOMRenderer = {
+        /**
+         * Normalize special characters in a word for display
+         * @param {string} word - The word to normalize
+         * @returns {string} The normalized word
+         */
+        normalizeSpecialChars(word) {
+            return word
+                .replace(/\n/g, "\\n")
+                .replace(/\r/g, "\\r")
+                .replace(/\t/g, "\\t");
+        },
+
+        /**
+         * Create a single class label element (for single-class display)
+         * @param {HTMLElement} container - The container element
+         * @param {object} classData - The class data { name }
+         * @returns {HTMLElement} The created element
+         */
+        renderClassLabel(container, classData) {
+            const element = document.createElement("div");
+            element.classList.add("common-word-style", "class-style");
+            element.textContent = classData.name;
+            element.dataset.classId = "0";
+            container.appendChild(element);
+            return element;
+        },
+
+        /**
+         * Create class button elements (for multi-class display)
+         * @param {HTMLElement} container - The container element
+         * @param {Array} classesData - Array of class data objects
+         * @param {object} callbacks - Event callbacks { onClick, onMouseOver, onMouseOut }
+         * @returns {HTMLElement[]} Array of created elements
+         */
+        renderClassButtons(container, classesData, callbacks, options = {}) {
+            const { useColors = false } = options;
+            const elements = [];
+
+            for (let i = 0; i < classesData.length; i++) {
+                const classData = classesData[i];
+                const element = document.createElement("button");
+                element.classList.add(
+                    "common-word-style",
+                    "highlighted-word-style",
+                    "reactive-word-style",
+                    "class-style"
+                );
+                element.textContent = classData.name;
+                element.dataset.classId = i.toString();
+                element.type = "button"; // Ensure it's not a submit button
+                if (useColors && classData.color) {
+                    element.dataset.classColor = classData.color;
+                }
+
+                if (callbacks.onClick) {
+                    element.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        callbacks.onClick(i);
+                    });
+                }
+                if (callbacks.onMouseOver) {
+                    element.addEventListener("mouseover", () => callbacks.onMouseOver(i));
+                }
+                if (callbacks.onMouseOut) {
+                    element.addEventListener("mouseout", () => callbacks.onMouseOut(i));
+                }
+
+                container.appendChild(element);
+                elements.push(element);
+            }
+
+            return elements;
+        },
+
+        /**
+         * Create class button elements with color indicators (for multi-class display)
+         * @param {HTMLElement} container - The container element
+         * @param {Array} classesData - Array of class data objects
+         * @param {object} callbacks - Event callbacks { onClick, onMouseOver, onMouseOut }
+         * @returns {HTMLElement[]} Array of created elements
+         */
+        renderClassButtonsWithColors(container, classesData, callbacks) {
+            return this.renderClassButtons(container, classesData, callbacks, { useColors: true });
+        },
+
+        /**
+         * Create input word elements
+         * @param {HTMLElement} container - The container element
+         * @param {Array} words - Array of words
+         * @returns {object} { sentenceElement, wordElements }
+         */
+        renderInputs(container, words) {
+            const sentenceElement = document.createElement("div");
+            sentenceElement.classList.add("line-style");
+
+            const wordElements = [];
+            for (let j = 0; j < words.length; j++) {
+                const word = this.normalizeSpecialChars(words[j]);
+                const wordElement = document.createElement("div");
+                wordElement.classList.add("common-word-style", "highlighted-word-style");
+                wordElement.textContent = word;
+                wordElement.dataset.wordIndex = j.toString();
+                sentenceElement.appendChild(wordElement);
+                wordElements.push(wordElement);
+            }
+
+            container.appendChild(sentenceElement);
+            return { sentenceElement, wordElements };
+        },
+
+        /**
+         * Create output word button elements
+         * @param {HTMLElement} container - The container element
+         * @param {Array} words - Array of words
+         * @param {object} callbacks - Event callbacks { onClick, onMouseOver, onMouseOut }
+         * @returns {HTMLElement[]} Array of created elements
+         */
+        renderOutputs(container, words, callbacks) {
+            const elements = [];
+
+            for (let i = 0; i < words.length; i++) {
+                const word = this.normalizeSpecialChars(words[i]);
+                const element = document.createElement("button");
+                element.classList.add(
+                    "common-word-style",
+                    "highlighted-word-style",
+                    "reactive-word-style"
+                );
+                element.textContent = word;
+                element.dataset.outputIndex = i.toString();
+
+                if (callbacks.onClick) {
+                    element.onclick = () => callbacks.onClick(i);
+                }
+                if (callbacks.onMouseOver) {
+                    element.onmouseover = () => callbacks.onMouseOver(i);
+                }
+                if (callbacks.onMouseOut) {
+                    element.onmouseout = () => callbacks.onMouseOut(i);
+                }
+
+                container.appendChild(element);
+                elements.push(element);
+            }
+
+            return elements;
+        },
+
+        /**
+         * Create concept label elements
+         * @param {HTMLElement} container - The container element
+         * @param {Array} concepts - Array of concept objects { label }
+         * @returns {object} { lineElement, conceptElements }
+         */
+        renderConcepts(container, concepts) {
+            const lineElement = document.createElement("div");
+            lineElement.classList.add("line-style");
+
+            const conceptElements = [];
+            for (let i = 0; i < concepts.length; i++) {
+                const concept = concepts[i];
+                const label = Array.isArray(concept.label)
+                    ? concept.label.join("\n")
+                    : String(concept.label);
+
+                const element = document.createElement("div");
+                element.classList.add(
+                    "common-word-style",
+                    "highlighted-word-style",
+                    "concept-style"
+                );
+                element.textContent = label;
+                if (concept.id !== undefined && concept.id !== null) {
+                    element.dataset.conceptId = concept.id.toString();
+                }
+                if (concept.color) {
+                    element.dataset.conceptColor = concept.color;
+                }
+                element.dataset.conceptIndex = i.toString();
+                lineElement.appendChild(element);
+                conceptElements.push(element);
+            }
+
+            container.appendChild(lineElement);
+            return { lineElement, conceptElements };
+        },
+
+        /**
+         * Create or update a tooltip on an element
+         * @param {HTMLElement} element - The element to attach tooltip to
+         * @param {string|null} text - Tooltip text, or null to remove
+         */
+        setTooltip(element, text) {
+            // Remove existing tooltip
+            const existing = element.querySelector(".tooltiptext");
+            if (existing) {
+                existing.remove();
+            }
+
+            // Add new tooltip if text provided
+            if (text !== null) {
+                const tooltip = document.createElement("span");
+                tooltip.classList.add("tooltiptext");
+                tooltip.textContent = text;
+                element.appendChild(tooltip);
+            }
+        },
+    };
+})();
+
+(function () {
+    /**
+     * ViewUpdater - Applies styles and tooltips to DOM elements based on state
+     */
+    window.ViewUpdater = {
+        /**
+         * Update class elements styles
+         * @param {HTMLElement[]} elements - Array of class elements
+         * @param {object} state - Current state { activatedClassId }
+         */
+        updateClasses(elements, state, options = {}) {
+            const {
+                showClassColorsWhenInactive = true,
+                highlightActiveText = false,
+                useSelectedStyle = true,
+                onClickColorMap = null,
+            } = options;
+            const hasActiveClass = state.activatedClassId !== null;
+            const showDefaultBackground = showClassColorsWhenInactive && !hasActiveClass;
+
+            for (const element of elements) {
+                const classId = parseInt(element.dataset.classId, 10);
+                const isActive = classId === state.activatedClassId;
+                const isSelected = classId === state.selectedClassId;
+                const classColor = showClassColorsWhenInactive
+                    ? element.dataset.classColor
+                    : null;
+
+                if (useSelectedStyle) {
+                    element.classList.toggle("selected-style", isSelected);
+                } else {
+                    element.classList.remove("selected-style");
+                }
+
+                const style = StyleComputer.buildLabelStyle(
+                    classColor,
+                    isActive,
+                    isSelected,
+                    {
+                        onClickColorMap,
+                        enableHighlight: highlightActiveText,
+                        showDefaultBackground,
+                    }
+                );
+                element.style.cssText = style;
+                element.classList.toggle("is-emphasized", isActive || isSelected);
+            }
+        },
+
+        /**
+         * Update input word elements styles
+         * @param {HTMLElement[]} wordElements - Array of word elements
+         * @param {object} state - Current state { activatedClassId, currentOutputId }
+         * @param {object} data - Data { inputs, classes, custom_style }
+         * @param {object} options - Style options { highlightBorder }
+         */
+        updateInputs(wordElements, state, data, options = {}) {
+            const customStyle = StyleComputer.buildCustomStyle(data.custom_style);
+            const { highlightBorder = false } = options;
+
+            for (let j = 0; j < wordElements.length; j++) {
+                const wordElement = wordElements[j];
+
+                if (state.activatedClassId === null || state.currentOutputId === null) {
+                    // Reset style
+                    wordElement.style = customStyle;
+                    DOMRenderer.setTooltip(wordElement, null);
+                } else {
+                    // Compute and apply attribution style
+                    const alpha = data.inputs.attributions[state.currentOutputId][j][state.activatedClassId];
+                    const classMeta = data.classes[state.activatedClassId];
+
+                    const style = StyleComputer.computeWordStyle(alpha, classMeta, {
+                        normalize: true,
+                        highlightBorder,
+                    });
+                    wordElement.style = style + customStyle;
+
+                    // Update tooltip
+                    DOMRenderer.setTooltip(wordElement, StyleComputer.formatTooltip(alpha));
+                }
+            }
+        },
+
+        /**
+         * Update input word elements styles for default multi-class view
+         * Each token is colored by its dominant class (highest positive attribution)
+         * @param {HTMLElement[]} wordElements - Array of word elements
+         * @param {object} state - Current state { currentOutputId }
+         * @param {object} data - Data { inputs, classes, custom_style }
+         * @param {object} options - Style options { highlightBorder }
+         */
+        updateInputsDefaultMultiClass(wordElements, state, data, options = {}) {
+            const customStyle = StyleComputer.buildCustomStyle(data.custom_style);
+            const { highlightBorder = false } = options;
+
+            // Compute global max for normalization across all classes
+            let globalMax = 0;
+            for (let j = 0; j < wordElements.length; j++) {
+                for (let c = 0; c < data.classes.length; c++) {
+                    const val = data.inputs.attributions[state.currentOutputId][j][c];
+                    if (val > globalMax) {
+                        globalMax = val;
+                    }
+                }
+            }
+
+            for (let j = 0; j < wordElements.length; j++) {
+                const wordElement = wordElements[j];
+
+                // Get attributions for all classes for this token
+                const attributionsPerClass = data.inputs.attributions[state.currentOutputId][j];
+
+                // Find dominant class (highest positive attribution)
+                const { classId: dominantClassId, value: dominantValue } =
+                    StyleComputer.findDominantClass(attributionsPerClass);
+
+                if (dominantClassId === null) {
+                    // No positive attributions - reset style
+                    wordElement.style = customStyle;
+                    DOMRenderer.setTooltip(wordElement, null);
+                } else {
+                    // Apply color of dominant class
+                    const classMeta = data.classes[dominantClassId];
+                    const style = StyleComputer.computeDefaultClassStyle(
+                        dominantValue,
+                        classMeta.color,
+                        globalMax,
+                        { highlightBorder }
+                    );
+                    wordElement.style = style + customStyle;
+
+                    // Show tooltip with value only
+                    DOMRenderer.setTooltip(
+                        wordElement,
+                        StyleComputer.formatTooltip(dominantValue)
+                    );
+                }
+            }
+        },
+
+        /**
+         * Update output word elements styles
+         * @param {HTMLElement[]} elements - Array of output elements
+         * @param {object} state - Current state { activatedClassId, currentOutputId }
+         * @param {object} data - Data { outputs, classes, custom_style }
+         * @param {object} options - Style options { highlightBorder }
+         */
+        updateOutputs(elements, state, data, options = {}) {
+            const customStyle = StyleComputer.buildCustomStyle(data.custom_style);
+            const { highlightBorder = false } = options;
+
+            for (let i = 0; i < elements.length; i++) {
+                const element = elements[i];
+
+                // Update CSS classes for position-based styling
+                const isBeforeCurrent = state.currentOutputId !== null && i < state.currentOutputId;
+                const isCurrent = i === state.currentOutputId;
+
+                element.classList.toggle("highlighted-word-style", isBeforeCurrent);
+                element.classList.toggle("selected-style", isCurrent);
+
+                if (state.activatedClassId !== null && isBeforeCurrent && data.outputs.attributions) {
+                    // Compute and apply attribution style
+                    const alpha = data.outputs.attributions[state.currentOutputId][i][state.activatedClassId];
+                    const classMeta = data.classes[state.activatedClassId];
+
+                    const style = StyleComputer.computeWordStyle(alpha, classMeta, {
+                        normalize: true,
+                        highlightBorder,
+                    });
+                    element.style = style + customStyle;
+
+                    // Update tooltip
+                    DOMRenderer.setTooltip(element, StyleComputer.formatTooltip(alpha));
+                } else {
+                    // Reset style
+                    element.style = customStyle;
+                    DOMRenderer.setTooltip(element, null);
+                }
+            }
+        },
+    };
+})();
+
+(function () {
+    /**
+     * ClassificationConceptsVisualization - Visualization for global concept importances
+     */
+    window.ClassificationConceptsVisualization = class ClassificationConceptsVisualization {
+        /**
+         * @param {string} uniqueIdClasses - The unique id of the div containing the classes
+         * @param {string} uniqueIdConcepts - The unique id of the div containing the concepts
+         * @param {string} uniqueIdConceptsWrapper - The unique id of the concepts wrapper div
+         * @param {string} jsonData - The JSON data containing classes and concepts
+         */
+        constructor(uniqueIdClasses, uniqueIdConcepts, uniqueIdConceptsWrapper, jsonData) {
+            console.log("Creating ClassificationConceptsVisualization");
+
+            this.uniqueIdClasses = uniqueIdClasses;
+            this.uniqueIdConcepts = uniqueIdConcepts;
+            this.uniqueIdConceptsWrapper = uniqueIdConceptsWrapper;
+            this.data = JSON.parse(jsonData);
+
+            // State management
+            this.state = new StateManager();
+
+            // DOM element references
+            this.classElements = [];
+            this.conceptElements = [];
+            this.currentConceptClassId = null;
+
+            this.conceptColor = this.data.concept_color || "#f39c12";
+            this.onClickColorMap =
+                Array.isArray(this.data.onclick_colormap) &&
+                this.data.onclick_colormap.length >= 2
+                    ? this.data.onclick_colormap
+                    : null;
+
+            // Create DOM
+            this._createClasses();
+
+            // Initial render
+            this._refreshAll();
+        }
+
+        /**
+         * Create class elements in the DOM
+         */
+        _createClasses() {
+            const container = document.getElementById(this.uniqueIdClasses);
+            if (!container) return;
+
+            this.classElements = DOMRenderer.renderClassButtons(
+                container,
+                this.data.classes,
+                {
+                    onClick: (id) => this._onClassClick(id),
+                    onMouseOver: (id) => this._onClassMouseOver(id),
+                    onMouseOut: (id) => this._onClassMouseOut(id),
+                },
+                { useColors: true }
+            );
+        }
+
+        /**
+         * Handle class click event
+         * @param {number} classId
+         */
+        _onClassClick(classId) {
+            console.log("Class clicked:", classId);
+            this.state.trace("before click");
+
+            this.state.toggleSelectedClass(classId);
+            this._refreshAll();
+        }
+
+        /**
+         * Handle class mouse over event
+         * @param {number} classId
+         */
+        _onClassMouseOver(classId) {
+            console.log("Class hover:", classId);
+
+            this.state.setActiveClass(classId);
+            this._refreshAll();
+        }
+
+        /**
+         * Handle class mouse out event
+         * @param {number} classId
+         */
+        _onClassMouseOut(classId) {
+            console.log("Class mouse out:", classId);
+
+            this.state.restoreSelectedClass();
+            this._refreshAll();
+        }
+
+        /**
+         * Refresh all view components
+         */
+        _refreshAll() {
+            this._refreshClasses();
+            this._refreshConcepts();
+        }
+
+        /**
+         * Refresh class elements styles
+         */
+        _refreshClasses() {
+            ViewUpdater.updateClasses(this.classElements, this.state.getState(), {
+                highlightActiveText: true,
+                useSelectedStyle: false,
+                onClickColorMap: this.onClickColorMap,
+            });
+        }
+
+        /**
+         * Refresh concept elements and styles
+         */
+        _refreshConcepts() {
+            const wrapper = document.getElementById(this.uniqueIdConceptsWrapper);
+            const container = document.getElementById(this.uniqueIdConcepts);
+            if (!wrapper || !container) return;
+
+            if (this.state.activatedClassId === null) {
+                wrapper.classList.add("is-hidden");
+                container.innerHTML = "";
+                this.conceptElements = [];
+                this.currentConceptClassId = null;
+                return;
+            }
+
+            wrapper.classList.remove("is-hidden");
+
+            if (this.currentConceptClassId !== this.state.activatedClassId) {
+                container.innerHTML = "";
+                const concepts = this.data.concepts[this.state.activatedClassId] || [];
+                const { conceptElements } = DOMRenderer.renderConcepts(container, concepts);
+                this.conceptElements = conceptElements;
+                this.currentConceptClassId = this.state.activatedClassId;
+            }
+
+            this._updateConceptStyles();
+        }
+
+        /**
+         * Update concept styles based on importance
+         */
+        _updateConceptStyles() {
+            if (this.currentConceptClassId === null) return;
+            const concepts = this.data.concepts[this.currentConceptClassId] || [];
+            const classMeta = this.data.classes[this.currentConceptClassId] || {};
+            const classColor = classMeta.color || this.conceptColor;
+
+            let maxImportance = 0;
+            for (const concept of concepts) {
+                const rawValue = typeof concept.importance === "number"
+                    ? concept.importance
+                    : 0;
+                const value = Math.abs(rawValue);
+                if (value > maxImportance) {
+                    maxImportance = value;
+                }
+            }
+
+            for (let i = 0; i < this.conceptElements.length; i++) {
+                const element = this.conceptElements[i];
+                const concept = concepts[i];
+                const rawValue = concept && typeof concept.importance === "number"
+                    ? concept.importance
+                    : 0;
+                const value = Math.abs(rawValue);
+                element.style.cssText = StyleComputer.computeDefaultClassStyle(
+                    value,
+                    classColor,
+                    maxImportance
+                );
+                DOMRenderer.setTooltip(
+                    element,
+                    StyleComputer.formatTooltip(rawValue)
+                );
+            }
+        }
+
+    };
+})();
+
+(function () {
+    /**
+     * GenerationLocalConceptsVisualization - Visualization for local concept activations
+     */
+    window.GenerationLocalConceptsVisualization = class GenerationLocalConceptsVisualization {
+        /**
+         * @param {string} uniqueIdSample - The unique id of the div containing the sample
+         * @param {string} uniqueIdConcepts - The unique id of the div containing the concepts
+         * @param {string} uniqueIdConceptsWrapper - The unique id of the concepts wrapper div
+         * @param {string} jsonData - The JSON data containing the sample and activations
+         */
+        constructor(
+            uniqueIdSample,
+            uniqueIdConcepts,
+            uniqueIdConceptsWrapper,
+            jsonData
+        ) {
+            console.log("Creating GenerationLocalConceptsVisualization");
+
+            this.uniqueIdSample = uniqueIdSample;
+            this.uniqueIdConcepts = uniqueIdConcepts;
+            this.uniqueIdConceptsWrapper = uniqueIdConceptsWrapper;
+            this.data = JSON.parse(jsonData);
+
+            this.sample = Array.isArray(this.data.sample) ? this.data.sample : [];
+            this.activations = Array.isArray(this.data.activations)
+                ? this.data.activations
+                : [];
+            this.importances = Array.isArray(this.data.importances)
+                ? this.data.importances
+                : [];
+            this.labels = Array.isArray(this.data.labels) ? this.data.labels : [];
+            this.outputStartIndex = Math.max(
+                0,
+                this.sample.length - this.importances.length
+            );
+
+            this.sampleElements = [];
+            this.conceptElements = [];
+            this.topConcepts = [];
+
+            this.topK = Math.max(0, parseInt(this.data.top_k || 0, 10));
+            this.conceptColor = this.data.concept_color || "#f39c12";
+            this.backgroundColor = StyleComputer.getBackgroundRgb();
+            this.defaultColormap = this.data.default_colormap || {};
+            this.onClickColorMap =
+                Array.isArray(this.data.onclick_colormap) &&
+                this.data.onclick_colormap.length >= 2
+                    ? this.data.onclick_colormap
+                    : null;
+
+            this.state = new StateManager();
+
+            // Create DOM
+            this._createSample();
+            this._setTopConcepts(this._computeDefaultTopConcepts());
+            this._renderConcepts();
+
+            // Initial render
+            this._refreshAll();
+        }
+
+        /**
+         * Create sample elements in the DOM
+         */
+        _createSample() {
+            const container = document.getElementById(this.uniqueIdSample);
+            if (!container) return;
+
+            const { wordElements } = DOMRenderer.renderInputs(container, this.sample);
+            this.sampleElements = wordElements;
+
+            const outputCount = this.importances.length;
+            for (let i = this.outputStartIndex; i < this.sampleElements.length; i++) {
+                const outputIndex = i - this.outputStartIndex;
+                if (outputIndex < 0 || outputIndex >= outputCount) {
+                    continue;
+                }
+                const element = this.sampleElements[i];
+                element.classList.add("reactive-word-style");
+                element.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    this._onOutputClick(outputIndex);
+                });
+            }
+        }
+
+        /**
+         * Render concept elements in the DOM
+         */
+        _renderConcepts() {
+            const wrapper = document.getElementById(this.uniqueIdConceptsWrapper);
+            const container = document.getElementById(this.uniqueIdConcepts);
+            if (!wrapper || !container) return;
+
+            container.innerHTML = "";
+
+            if (!this.topConcepts.length) {
+                wrapper.classList.add("is-hidden");
+                this.conceptElements = [];
+                return;
+            }
+
+            wrapper.classList.remove("is-hidden");
+
+            const concepts = this.topConcepts.map((concept) => ({
+                label: concept.label,
+                id: concept.id,
+                color: concept.color,
+            }));
+            const { conceptElements } = DOMRenderer.renderConcepts(container, concepts);
+            this.conceptElements = conceptElements;
+
+            for (let i = 0; i < conceptElements.length; i++) {
+                const element = conceptElements[i];
+                element.classList.add("reactive-word-style");
+                element.dataset.conceptIndex = i.toString();
+                element.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    this._onConceptClick(i);
+                });
+                element.addEventListener("mouseover", () => this._onConceptMouseOver(i));
+                element.addEventListener("mouseout", () => this._onConceptMouseOut(i));
+            }
+        }
+
+        /**
+         * Refresh all view components
+         */
+        _refreshAll() {
+            this._refreshSampleSelections();
+            this._refreshConcepts();
+            this._refreshTokens();
+        }
+
+        /**
+         * Handle output click event
+         * @param {number} outputIndex
+         */
+        _onOutputClick(outputIndex) {
+            const wasSelected = this.state.selectedOutputId === outputIndex;
+            this.state.toggleSelectedOutput(outputIndex, true);
+
+            if (wasSelected) {
+                this._setTopConcepts(this._computeDefaultTopConcepts());
+            } else {
+                this._setTopConcepts(this._computeOutputTopConcepts(outputIndex));
+            }
+
+            this._renderConcepts();
+            this._refreshAll();
+        }
+
+        /**
+         * Handle concept click event
+         * @param {number} conceptIndex
+         */
+        _onConceptClick(conceptIndex) {
+            this.state.toggleSelectedClass(conceptIndex);
+            this._refreshAll();
+        }
+
+        /**
+         * Handle concept mouse over event
+         * @param {number} conceptIndex
+         */
+        _onConceptMouseOver(conceptIndex) {
+            this.state.setActiveClass(conceptIndex);
+            this._refreshAll();
+        }
+
+        /**
+         * Handle concept mouse out event
+         * @param {number} conceptIndex
+         */
+        _onConceptMouseOut(conceptIndex) {
+            if (this.state.activatedClassId === conceptIndex) {
+                this.state.restoreSelectedClass();
+                this._refreshAll();
+            }
+        }
+
+        /**
+         * Refresh sample styles for output selection
+         */
+        _refreshSampleSelections() {
+            const outputCount = this.importances.length;
+            for (let i = 0; i < this.sampleElements.length; i++) {
+                const element = this.sampleElements[i];
+                const outputIndex = i - this.outputStartIndex;
+                const isOutput = outputIndex >= 0 && outputIndex < outputCount;
+                if (!isOutput) {
+                    element.classList.remove("selected-style");
+                    continue;
+                }
+                const isSelected = outputIndex === this.state.selectedOutputId;
+                element.classList.toggle("selected-style", isSelected);
+            }
+        }
+
+        /**
+         * Refresh concept list styles
+         */
+        _refreshConcepts() {
+            if (!this.conceptElements.length) {
+                return;
+            }
+
+            const showDefaultBackground = this.state.activatedClassId === null;
+
+            for (let i = 0; i < this.conceptElements.length; i++) {
+                const element = this.conceptElements[i];
+                const concept = this.topConcepts[i];
+                const isActive = i === this.state.activatedClassId;
+                const isSelected = i === this.state.selectedClassId;
+
+                element.classList.remove("selected-style");
+
+                element.style.cssText = StyleComputer.buildLabelStyle(
+                    concept.color,
+                    isActive,
+                    isSelected,
+                    {
+                        onClickColorMap: this.onClickColorMap,
+                        enableHighlight: true,
+                        showDefaultBackground,
+                    }
+                );
+                element.classList.toggle("is-emphasized", isActive || isSelected);
+
+                DOMRenderer.setTooltip(
+                    element,
+                    StyleComputer.formatTooltip(concept.score)
+                );
+            }
+        }
+
+        /**
+         * Refresh sample token highlights
+         */
+        _refreshTokens() {
+            if (!this.topConcepts.length) {
+                this._clearTokenStyles(this.sampleElements);
+                return;
+            }
+
+            if (this.state.activatedClassId === null) {
+                this._updateTokensDefault(this.sampleElements, this.activations);
+            } else {
+                const concept = this.topConcepts[this.state.activatedClassId];
+                if (!concept) {
+                    this._clearTokenStyles(this.sampleElements);
+                    return;
+                }
+                this._updateTokensForConcept(
+                    this.sampleElements,
+                    this.activations,
+                    concept
+                );
+            }
+        }
+
+        _updateTokensDefault(elements, activations) {
+            for (let tokenIndex = 0; tokenIndex < elements.length; tokenIndex++) {
+                const element = elements[tokenIndex];
+                const row = activations[tokenIndex] || [];
+
+                let bestConceptIndex = null;
+                let bestValue = 0;
+                let bestRawValue = 0;
+
+                for (let i = 0; i < this.topConcepts.length; i++) {
+                    const concept = this.topConcepts[i];
+                    const rawValue = typeof row[concept.id] === "number" ? row[concept.id] : 0;
+                    const absValue = Math.abs(rawValue);
+                    if (absValue > bestValue) {
+                        bestValue = absValue;
+                        bestRawValue = rawValue;
+                        bestConceptIndex = i;
+                    }
+                }
+
+                if (bestConceptIndex === null || bestValue === 0) {
+                    element.style = "";
+                    DOMRenderer.setTooltip(element, null);
+                    continue;
+                }
+
+                const concept = this.topConcepts[bestConceptIndex];
+                const style = StyleComputer.computeConceptStyle(
+                    bestValue,
+                    concept.maxAbs,
+                    concept.color,
+                    this.backgroundColor
+                );
+                element.style = style;
+                DOMRenderer.setTooltip(
+                    element,
+                    StyleComputer.formatTooltip(bestRawValue)
+                );
+            }
+        }
+
+        _updateTokensForConcept(elements, activations, concept) {
+            for (let tokenIndex = 0; tokenIndex < elements.length; tokenIndex++) {
+                const element = elements[tokenIndex];
+                const row = activations[tokenIndex] || [];
+                const rawValue = typeof row[concept.id] === "number" ? row[concept.id] : 0;
+                const absValue = Math.abs(rawValue);
+
+                if (absValue === 0) {
+                    element.style = "";
+                    DOMRenderer.setTooltip(element, null);
+                    continue;
+                }
+
+                const style = StyleComputer.computeConceptStyle(
+                    absValue,
+                    concept.maxAbs,
+                    concept.color,
+                    this.backgroundColor
+                );
+                element.style = style;
+                DOMRenderer.setTooltip(element, StyleComputer.formatTooltip(rawValue));
+            }
+        }
+
+        _clearTokenStyles(elements) {
+            for (const element of elements) {
+                element.style = "";
+                DOMRenderer.setTooltip(element, null);
+            }
+        }
+
+        _setTopConcepts(concepts) {
+            this.topConcepts = concepts;
+            this.state.activatedClassId = null;
+            this.state.selectedClassId = null;
+        }
+
+        _computeDefaultTopConcepts() {
+            if (!this.importances.length || this.topK <= 0) {
+                return [];
+            }
+            const aggregated = this._aggregateImportances();
+            return this._buildTopConcepts(aggregated);
+        }
+
+        _computeOutputTopConcepts(outputIndex) {
+            if (!this.importances.length || this.topK <= 0) {
+                return [];
+            }
+            const row = this.importances[outputIndex] || [];
+            return this._buildTopConcepts(row);
+        }
+
+        _aggregateImportances() {
+            if (!this.importances.length) {
+                return [];
+            }
+            const nbConcepts = this.importances[0].length || 0;
+            const totals = new Array(nbConcepts).fill(0);
+            for (let outputIndex = 0; outputIndex < this.importances.length; outputIndex++) {
+                const row = this.importances[outputIndex] || [];
+                for (let conceptId = 0; conceptId < nbConcepts; conceptId++) {
+                    const value = typeof row[conceptId] === "number" ? row[conceptId] : 0;
+                    totals[conceptId] += Math.abs(value);
+                }
+            }
+            return totals;
+        }
+
+        _buildTopConcepts(scores) {
+            const entries = [];
+            for (let conceptId = 0; conceptId < scores.length; conceptId++) {
+                const rawValue = typeof scores[conceptId] === "number" ? scores[conceptId] : 0;
+                const value = Math.abs(rawValue);
+                if (value === 0) {
+                    continue;
+                }
+                entries.push({ id: conceptId, score: value });
+            }
+
+            entries.sort((a, b) => b.score - a.score);
+            const limit = Math.min(this.topK, entries.length);
+            const selected = entries.slice(0, limit);
+
+            return selected.map((entry) => {
+                const label = this.labels[entry.id] || `Concept #${entry.id}`;
+                const maxAbs = this._getMaxAbsForConcept(entry.id);
+                const color = this._getConceptColor(entry.id);
+                return {
+                    id: entry.id,
+                    label,
+                    score: entry.score,
+                    maxAbs,
+                    color,
+                };
+            });
+        }
+
+        _getMaxAbsForConcept(conceptId) {
+            let maxValue = 0;
+            for (let tokenIndex = 0; tokenIndex < this.activations.length; tokenIndex++) {
+                const row = this.activations[tokenIndex] || [];
+                const rawValue = typeof row[conceptId] === "number" ? row[conceptId] : 0;
+                const absValue = Math.abs(rawValue);
+                if (absValue > maxValue) {
+                    maxValue = absValue;
+                }
+            }
+            return maxValue;
+        }
+
+        _getConceptColor(conceptId) {
+            const mapped = StyleComputer.getColorFromMap(this.defaultColormap, conceptId);
+            return mapped || this.conceptColor;
+        }
+
+    };
+})();
+
+(function () {
+    /**
+     * ClassificationLocalConceptsVisualization - Visualization for local concepts in classification tasks
+     */
+    window.ClassificationLocalConceptsVisualization = class ClassificationLocalConceptsVisualization {
+        /**
+         * @param {string} uniqueIdClasses - The unique id of the div containing the classes
+         * @param {string} uniqueIdConcepts - The unique id of the div containing the concepts
+         * @param {string} uniqueIdConceptsWrapper - The unique id of the concepts wrapper div
+         * @param {string} uniqueIdSample - The unique id of the div containing the sample
+         * @param {string} jsonData - The JSON data containing classes, concepts, and sample
+         */
+        constructor(
+            uniqueIdClasses,
+            uniqueIdConcepts,
+            uniqueIdConceptsWrapper,
+            uniqueIdSample,
+            jsonData
+        ) {
+            console.log("Creating ClassificationLocalConceptsVisualization");
+
+            this.uniqueIdClasses = uniqueIdClasses;
+            this.uniqueIdConcepts = uniqueIdConcepts;
+            this.uniqueIdConceptsWrapper = uniqueIdConceptsWrapper;
+            this.uniqueIdSample = uniqueIdSample;
+            this.data = JSON.parse(jsonData);
+
+            this.sample = Array.isArray(this.data.sample) ? this.data.sample : [];
+            this.activations = Array.isArray(this.data.activations)
+                ? this.data.activations
+                : [];
+            this.activationsByClass = this.data.activations_by_class || null;
+            this.importances = Array.isArray(this.data.importances)
+                ? this.data.importances
+                : [];
+            this.labels = Array.isArray(this.data.labels) ? this.data.labels : [];
+            this.labelsByClass = this.data.labels_by_class || null;
+
+            this.topK = Math.max(0, parseInt(this.data.top_k || 0, 10));
+            this.conceptColor = this.data.concept_color || "#f39c12";
+            this.defaultColormap = this.data.default_colormap || {};
+            this.onClickColorMap =
+                Array.isArray(this.data.onclick_colormap) &&
+                this.data.onclick_colormap.length >= 2
+                    ? this.data.onclick_colormap
+                    : null;
+
+            this.backgroundColor = StyleComputer.getBackgroundRgb();
+            this.classElements = [];
+            this.sampleElements = [];
+            this.conceptElements = [];
+            this.topConcepts = [];
+
+            this.hoveredClassId = null;
+            this.selectedClassId = null;
+            this.hoveredConceptIndex = null;
+            this.selectedConceptIndex = null;
+
+            // Create DOM
+            this._createClasses();
+            this._createSample();
+            this._setTopConcepts(this._computeDefaultTopConcepts());
+            this._renderConcepts();
+
+            // Initial render
+            this._refreshAll();
+        }
+
+        /**
+         * Create class elements in the DOM
+         */
+        _createClasses() {
+            const container = document.getElementById(this.uniqueIdClasses);
+            if (!container) return;
+
+            this.classElements = DOMRenderer.renderClassButtons(
+                container,
+                this.data.classes || [],
+                {
+                    onClick: (id) => this._onClassClick(id),
+                    onMouseOver: (id) => this._onClassMouseOver(id),
+                    onMouseOut: (id) => this._onClassMouseOut(id),
+                },
+                { useColors: false }
+            );
+        }
+
+        /**
+         * Create sample elements in the DOM
+         */
+        _createSample() {
+            const container = document.getElementById(this.uniqueIdSample);
+            if (!container) return;
+
+            const { wordElements } = DOMRenderer.renderInputs(container, this.sample);
+            this.sampleElements = wordElements;
+        }
+
+        /**
+         * Render concept elements in the DOM
+         */
+        _renderConcepts() {
+            const wrapper = document.getElementById(this.uniqueIdConceptsWrapper);
+            const container = document.getElementById(this.uniqueIdConcepts);
+            if (!wrapper || !container) return;
+
+            container.innerHTML = "";
+
+            if (!this.topConcepts.length) {
+                wrapper.classList.add("is-hidden");
+                this.conceptElements = [];
+                return;
+            }
+
+            wrapper.classList.remove("is-hidden");
+
+            const concepts = this.topConcepts.map((concept) => ({
+                label: concept.label,
+                id: concept.id,
+                color: concept.color,
+            }));
+            const { conceptElements } = DOMRenderer.renderConcepts(container, concepts);
+            this.conceptElements = conceptElements;
+
+            for (let i = 0; i < conceptElements.length; i++) {
+                const element = conceptElements[i];
+                element.classList.add("reactive-word-style");
+                element.dataset.conceptIndex = i.toString();
+                element.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    this._onConceptClick(i);
+                });
+                element.addEventListener("mouseover", () => this._onConceptMouseOver(i));
+                element.addEventListener("mouseout", () => this._onConceptMouseOut(i));
+            }
+        }
+
+        /**
+         * Refresh all view components
+         */
+        _refreshAll() {
+            this._refreshClasses();
+            this._refreshConcepts();
+            this._refreshTokens();
+        }
+
+        /**
+         * Handle class click event
+         * @param {number} classId
+         */
+        _onClassClick(classId) {
+            const wasSelected = this.selectedClassId === classId;
+            this.selectedClassId = wasSelected ? null : classId;
+            this.hoveredClassId = null;
+
+            if (wasSelected) {
+                this._setTopConcepts(this._computeDefaultTopConcepts());
+            } else {
+                this._setTopConcepts(this._computeClassTopConcepts(classId));
+            }
+
+            this._renderConcepts();
+            this._refreshAll();
+        }
+
+        /**
+         * Handle class mouse over event
+         * @param {number} classId
+         */
+        _onClassMouseOver(classId) {
+            this.hoveredClassId = classId;
+            this._refreshClasses();
+        }
+
+        /**
+         * Handle class mouse out event
+         * @param {number} classId
+         */
+        _onClassMouseOut(classId) {
+            if (this.hoveredClassId === classId) {
+                this.hoveredClassId = null;
+            }
+            this._refreshClasses();
+        }
+
+        /**
+         * Handle concept click event
+         * @param {number} conceptIndex
+         */
+        _onConceptClick(conceptIndex) {
+            const wasSelected = this.selectedConceptIndex === conceptIndex;
+            this.selectedConceptIndex = wasSelected ? null : conceptIndex;
+            if (wasSelected) {
+                this.hoveredConceptIndex = null;
+            }
+            this._refreshAll();
+        }
+
+        /**
+         * Handle concept mouse over event
+         * @param {number} conceptIndex
+         */
+        _onConceptMouseOver(conceptIndex) {
+            this.hoveredConceptIndex = conceptIndex;
+            this._refreshAll();
+        }
+
+        /**
+         * Handle concept mouse out event
+         * @param {number} conceptIndex
+         */
+        _onConceptMouseOut(conceptIndex) {
+            if (this.hoveredConceptIndex === conceptIndex) {
+                this.hoveredConceptIndex = null;
+            }
+            this._refreshAll();
+        }
+
+        /**
+         * Refresh class styles
+         */
+        _refreshClasses() {
+            for (const element of this.classElements) {
+                const classId = parseInt(element.dataset.classId, 10);
+                const isActive = classId === this.hoveredClassId;
+                const isSelected = classId === this.selectedClassId;
+
+                let style = StyleComputer.buildLabelStyle(null, isActive, isSelected, {
+                    onClickColorMap: this.onClickColorMap,
+                    enableHighlight: true,
+                    showDefaultBackground: false,
+                });
+                if (!isActive && !isSelected) {
+                    style += "outline-color: currentColor;";
+                }
+                element.style.cssText = style;
+                element.classList.toggle("is-emphasized", isActive || isSelected);
+            }
+        }
+
+        /**
+         * Refresh concept list styles
+         */
+        _refreshConcepts() {
+            if (!this.conceptElements.length) {
+                return;
+            }
+
+            const activeIndex = this._getActiveConceptIndex();
+            const showDefaultBackground = activeIndex === null;
+
+            for (let i = 0; i < this.conceptElements.length; i++) {
+                const element = this.conceptElements[i];
+                const concept = this.topConcepts[i];
+                const isActive = i === activeIndex;
+                const isSelected = i === this.selectedConceptIndex;
+
+                element.classList.remove("selected-style");
+
+                element.style.cssText = StyleComputer.buildLabelStyle(
+                    concept.color,
+                    isActive,
+                    isSelected,
+                    {
+                        onClickColorMap: this.onClickColorMap,
+                        enableHighlight: true,
+                        showDefaultBackground,
+                    }
+                );
+                element.classList.toggle("is-emphasized", isActive || isSelected);
+
+                DOMRenderer.setTooltip(
+                    element,
+                    StyleComputer.formatTooltip(concept.score)
+                );
+            }
+        }
+
+        /**
+         * Refresh sample token highlights
+         */
+        _refreshTokens() {
+            const activations = this._getActiveActivations();
+            const hasTokenActivations =
+                Array.isArray(activations) &&
+                activations.length > 1 &&
+                activations.length === this.sample.length;
+
+            if (!hasTokenActivations || !this.topConcepts.length) {
+                this._clearTokenStyles(this.sampleElements);
+                return;
+            }
+
+            const activeIndex = this._getActiveConceptIndex();
+            if (activeIndex === null) {
+                this._updateTokensDefault(this.sampleElements, activations);
+            } else {
+                const concept = this.topConcepts[activeIndex];
+                if (!concept) {
+                    this._clearTokenStyles(this.sampleElements);
+                    return;
+                }
+                this._updateTokensForConcept(
+                    this.sampleElements,
+                    activations,
+                    concept
+                );
+            }
+        }
+
+        _updateTokensDefault(elements, activations) {
+            for (let tokenIndex = 0; tokenIndex < elements.length; tokenIndex++) {
+                const element = elements[tokenIndex];
+                const row = activations[tokenIndex] || [];
+
+                let bestConceptIndex = null;
+                let bestValue = 0;
+                let bestRawValue = 0;
+
+                for (let i = 0; i < this.topConcepts.length; i++) {
+                    const concept = this.topConcepts[i];
+                    const rawValue = typeof row[concept.id] === "number" ? row[concept.id] : 0;
+                    const absValue = Math.abs(rawValue);
+                    if (absValue > bestValue) {
+                        bestValue = absValue;
+                        bestRawValue = rawValue;
+                        bestConceptIndex = i;
+                    }
+                }
+
+                if (bestConceptIndex === null || bestValue === 0) {
+                    element.style = "";
+                    DOMRenderer.setTooltip(element, null);
+                    continue;
+                }
+
+                const concept = this.topConcepts[bestConceptIndex];
+                const style = StyleComputer.computeConceptStyle(
+                    bestValue,
+                    concept.maxAbs,
+                    concept.color,
+                    this.backgroundColor
+                );
+                element.style = style;
+                DOMRenderer.setTooltip(
+                    element,
+                    StyleComputer.formatTooltip(bestRawValue)
+                );
+            }
+        }
+
+        _updateTokensForConcept(elements, activations, concept) {
+            for (let tokenIndex = 0; tokenIndex < elements.length; tokenIndex++) {
+                const element = elements[tokenIndex];
+                const row = activations[tokenIndex] || [];
+                const rawValue = typeof row[concept.id] === "number" ? row[concept.id] : 0;
+                const absValue = Math.abs(rawValue);
+
+                if (absValue === 0) {
+                    element.style = "";
+                    DOMRenderer.setTooltip(element, null);
+                    continue;
+                }
+
+                const style = StyleComputer.computeConceptStyle(
+                    absValue,
+                    concept.maxAbs,
+                    concept.color,
+                    this.backgroundColor
+                );
+                element.style = style;
+                DOMRenderer.setTooltip(element, StyleComputer.formatTooltip(rawValue));
+            }
+        }
+
+        _clearTokenStyles(elements) {
+            for (const element of elements) {
+                element.style = "";
+                DOMRenderer.setTooltip(element, null);
+            }
+        }
+
+        _setTopConcepts(concepts) {
+            this.topConcepts = concepts;
+            this.hoveredConceptIndex = null;
+            this.selectedConceptIndex = null;
+        }
+
+        _computeDefaultTopConcepts() {
+            if (!this.activations.length) {
+                return [];
+            }
+            const nbConcepts = this.activations[0].length || 0;
+            const totals = new Array(nbConcepts).fill(0);
+            for (let tokenIndex = 0; tokenIndex < this.activations.length; tokenIndex++) {
+                const row = this.activations[tokenIndex] || [];
+                for (let conceptId = 0; conceptId < nbConcepts; conceptId++) {
+                    const value = typeof row[conceptId] === "number" ? row[conceptId] : 0;
+                    totals[conceptId] += Math.abs(value);
+                }
+            }
+            return this._buildTopConcepts(totals, this.labels, this.activations);
+        }
+
+        _computeClassTopConcepts(classId) {
+            const row = this.importances[classId] || [];
+            return this._buildTopConcepts(
+                row,
+                this._getLabelsForClass(classId),
+                this._getClassActivations(classId)
+            );
+        }
+
+        _buildTopConcepts(scores, labels, activationsForMaxAbs = null) {
+            const entries = [];
+            for (let conceptId = 0; conceptId < scores.length; conceptId++) {
+                const rawValue = typeof scores[conceptId] === "number" ? scores[conceptId] : 0;
+                const rankValue = Math.abs(rawValue);
+                if (rankValue === 0) {
+                    continue;
+                }
+                entries.push({ id: conceptId, score: rawValue, rank: rankValue });
+            }
+
+            entries.sort((a, b) => b.rank - a.rank);
+
+            const limitedEntries = this.topK > 0
+                ? entries.slice(0, this.topK)
+                : entries;
+
+            return limitedEntries.map((entry) => {
+                const label = Array.isArray(labels) && labels[entry.id] !== undefined
+                    ? labels[entry.id]
+                    : `Concept #${entry.id}`;
+                const maxAbs = this._getMaxAbsForConcept(entry.id, activationsForMaxAbs);
+                const color = this._getConceptColor(entry.id);
+                return {
+                    id: entry.id,
+                    label,
+                    score: entry.score,
+                    maxAbs,
+                    color,
+                };
+            });
+        }
+
+        _getMaxAbsForConcept(conceptId, activationsOverride = null) {
+            let maxValue = 0;
+            const activations = activationsOverride || this.activations;
+            for (let tokenIndex = 0; tokenIndex < activations.length; tokenIndex++) {
+                const row = activations[tokenIndex] || [];
+                const rawValue = typeof row[conceptId] === "number" ? row[conceptId] : 0;
+                const absValue = Math.abs(rawValue);
+                if (absValue > maxValue) {
+                    maxValue = absValue;
+                }
+            }
+            return maxValue;
+        }
+
+        _getConceptColor(conceptId) {
+            const mapped = StyleComputer.getColorFromMap(this.defaultColormap, conceptId);
+            return mapped || this.conceptColor;
+        }
+
+        _getClassActivations(classId) {
+            if (!this.activationsByClass) {
+                return null;
+            }
+            return (
+                this.activationsByClass[classId] ||
+                this.activationsByClass[String(classId)] ||
+                null
+            );
+        }
+
+        _getActiveActivations() {
+            if (this.selectedClassId !== null) {
+                const classActivations = this._getClassActivations(this.selectedClassId);
+                if (classActivations) {
+                    return classActivations;
+                }
+            }
+            return this.activations;
+        }
+
+        _getLabelsForClass(classId) {
+            if (!this.labelsByClass) {
+                return this.labels;
+            }
+            const key = String(classId);
+            const labels = this.labelsByClass[key] || this.labelsByClass[classId];
+            return Array.isArray(labels) ? labels : this.labels;
+        }
+
+        _getActiveConceptIndex() {
+            if (this.hoveredConceptIndex !== null) {
+                return this.hoveredConceptIndex;
+            }
+            if (this.selectedConceptIndex !== null) {
+                return this.selectedConceptIndex;
+            }
+            return null;
+        }
+    };
+})();
+
+(function () {
+    /**
+     * ClassificationVisualization - Visualization for classification tasks
+     * Handles both single-class and multi-class attribution display
+     */
+    window.ClassificationVisualization = class ClassificationVisualization {
+        /**
+         * @param {string} uniqueIdClasses - The unique id of the div containing the classes
+         * @param {string} uniqueIdInputs - The unique id of the div containing the inputs
+         * @param {boolean} highlightBorder - Whether to highlight the border of the words
+         * @param {string} jsonData - The JSON data containing classes and inputs
+         */
+        constructor(uniqueIdClasses, uniqueIdInputs, highlightBorder, jsonData) {
+            console.log("Creating ClassificationVisualization");
+
+            this.uniqueIdClasses = uniqueIdClasses;
+            this.uniqueIdInputs = uniqueIdInputs;
+            this.highlightBorder = highlightBorder === "True";
+            this.data = JSON.parse(jsonData);
+            this.onClickColorMap =
+                Array.isArray(this.data.onclick_colormap) &&
+                this.data.onclick_colormap.length >= 2
+                    ? this.data.onclick_colormap
+                    : null;
+
+            // State management
+            this.state = new StateManager();
+
+            // Determine if single or multi-class
+            this.isMultiClass = this.data.classes.length > 1;
+
+            // DOM element references
+            this.classElements = [];
+            this.inputWordElements = [];
+
+            // Initialize state
+            this.state.currentOutputId = 0; // Always 0 for classification
+            if (!this.isMultiClass) {
+                this.state.activatedClassId = 0;
+                this.state.selectedClassId = 0;
+            }
+            // For multi-class: activatedClassId and selectedClassId remain null initially
+            // This triggers the default multi-class view
+
+            // Create DOM
+            this._createClasses();
+            this._createInputs();
+
+            // Initial render
+            this._refreshAll();
+        }
+
+        /**
+         * Create class elements in the DOM
+         */
+        _createClasses() {
+            const container = document.getElementById(this.uniqueIdClasses);
+            if (!container) return;
+
+            if (this.isMultiClass) {
+                this.classElements = DOMRenderer.renderClassButtonsWithColors(
+                    container,
+                    this.data.classes,
+                    {
+                        onClick: (id) => this._onClassClick(id),
+                        onMouseOver: (id) => this._onClassMouseOver(id),
+                        onMouseOut: (id) => this._onClassMouseOut(id),
+                    }
+                );
+            } else {
+                const element = DOMRenderer.renderClassLabel(container, this.data.classes[0]);
+                this.classElements = [element];
+            }
+        }
+
+        /**
+         * Create input elements in the DOM
+         */
+        _createInputs() {
+            const container = document.getElementById(this.uniqueIdInputs);
+            if (!container) return;
+
+            const { wordElements } = DOMRenderer.renderInputs(container, this.data.inputs.words);
+            this.inputWordElements = wordElements;
+        }
+
+        /**
+         * Handle class click event
+         * @param {number} classId
+         */
+        _onClassClick(classId) {
+            console.log("Class clicked:", classId);
+            this.state.trace("before click");
+
+            this.state.toggleSelectedClass(classId);
+            this._refreshAll();
+        }
+
+        /**
+         * Handle class mouse over event
+         * @param {number} classId
+         */
+        _onClassMouseOver(classId) {
+            console.log("Class hover:", classId);
+
+            // Only activate if no class is selected (allow hover preview)
+            // Or if a class is already selected (allow switching preview)
+            this.state.setActiveClass(classId);
+            this._refreshAll();
+        }
+
+        /**
+         * Handle class mouse out event
+         * @param {number} classId
+         */
+        _onClassMouseOut(classId) {
+            console.log("Class mouse out:", classId);
+
+            this.state.restoreSelectedClass();
+            this._refreshAll();
+        }
+
+        /**
+         * Refresh all view components
+         */
+        _refreshAll() {
+            this._refreshClasses();
+            this._refreshInputs();
+        }
+
+        /**
+         * Refresh class elements styles
+         */
+        _refreshClasses() {
+            if (this.isMultiClass) {
+                ViewUpdater.updateClasses(this.classElements, this.state.getState(), {
+                    highlightActiveText: true,
+                    useSelectedStyle: false,
+                    onClickColorMap: this.onClickColorMap,
+                });
+            }
+        }
+
+        /**
+         * Refresh input elements styles
+         */
+        _refreshInputs() {
+            if (this.isMultiClass && this.state.activatedClassId === null) {
+                // Default multi-class view: show dominant class colors
+                ViewUpdater.updateInputsDefaultMultiClass(
+                    this.inputWordElements,
+                    this.state.getState(),
+                    this.data,
+                    { highlightBorder: this.highlightBorder }
+                );
+            } else {
+                // Single class selected/hovered: show that class's attributions
+                ViewUpdater.updateInputs(
+                    this.inputWordElements,
+                    this.state.getState(),
+                    this.data,
+                    { highlightBorder: this.highlightBorder }
+                );
+            }
+        }
+    };
+})();
+
+(function () {
+    /**
+     * GenerationVisualization - Visualization for generation tasks
+     * Handles attribution display for input and output tokens in generative models
+     */
+    window.GenerationVisualization = class GenerationVisualization {
+        /**
+         * @param {string} uniqueIdInputs - The unique id of the div containing the inputs
+         * @param {string} uniqueIdOutputs - The unique id of the div containing the outputs
+         * @param {boolean} highlightBorder - Whether to highlight the border of the words
+         * @param {string} jsonData - The JSON data containing classes, inputs and outputs
+         */
+        constructor(uniqueIdInputs, uniqueIdOutputs, highlightBorder, jsonData) {
+            console.log("Creating GenerationVisualization");
+
+            this.uniqueIdInputs = uniqueIdInputs;
+            this.uniqueIdOutputs = uniqueIdOutputs;
+            this.highlightBorder = highlightBorder === "True";
+            this.data = JSON.parse(jsonData);
+
+            // State management
+            this.state = new StateManager();
+
+            // DOM element references
+            this.inputWordElements = [];
+            this.outputElements = [];
+
+            // Initialize state - generation has a single implicit class (index 0)
+            this.state.activatedClassId = 0;
+            this.state.selectedClassId = 0;
+            this.state.currentOutputId = null;
+
+            // Create DOM
+            this._createInputs();
+            this._createOutputs();
+
+            // Initial render
+            this._refreshAll();
+        }
+
+        /**
+         * Create input elements in the DOM
+         */
+        _createInputs() {
+            const container = document.getElementById(this.uniqueIdInputs);
+            if (!container) return;
+
+            const { wordElements } = DOMRenderer.renderInputs(container, this.data.inputs.words);
+            this.inputWordElements = wordElements;
+        }
+
+        /**
+         * Create output elements in the DOM
+         */
+        _createOutputs() {
+            const container = document.getElementById(this.uniqueIdOutputs);
+            if (!container) return;
+
+            this.outputElements = DOMRenderer.renderOutputs(
+                container,
+                this.data.outputs.words,
+                {
+                    onClick: (id) => this._onOutputClick(id),
+                    onMouseOver: (id) => this._onOutputMouseOver(id),
+                    onMouseOut: (id) => this._onOutputMouseOut(id),
+                }
+            );
+        }
+
+        /**
+         * Handle output click event
+         * @param {number} outputId
+         */
+        _onOutputClick(outputId) {
+            console.log("Output clicked:", outputId);
+            this.state.trace("before click");
+
+            this.state.toggleSelectedOutput(outputId, false);
+
+            this.state.trace("after click");
+            this._refreshAll();
+        }
+
+        /**
+         * Handle output mouse over event
+         * @param {number} outputId
+         */
+        _onOutputMouseOver(outputId) {
+            console.log("Output hover:", outputId);
+
+            this.state.setActiveOutput(outputId, false);
+            this._refreshAll();
+        }
+
+        /**
+         * Handle output mouse out event
+         * @param {number} outputId
+         */
+        _onOutputMouseOut(outputId) {
+            console.log("Output mouse out:", outputId);
+
+            this.state.restoreSelectedOutput();
+            this._refreshAll();
+        }
+
+        /**
+         * Refresh all visual elements based on current state
+         */
+        _refreshAll() {
+            this._refreshInputs();
+            this._refreshOutputs();
+        }
+
+        /**
+         * Refresh input word highlighting based on current state
+         */
+        _refreshInputs() {
+            ViewUpdater.updateInputs(
+                this.inputWordElements,
+                this.state.getState(),
+                this.data,
+                { highlightBorder: this.highlightBorder }
+            );
+        }
+
+        /**
+         * Refresh output element states based on current state
+         */
+        _refreshOutputs() {
+            ViewUpdater.updateOutputs(
+                this.outputElements,
+                this.state.getState(),
+                this.data,
+                { highlightBorder: this.highlightBorder }
+            );
+        }
+    };
+})();
+
+
+</script></head><body class="body-visualization"><h3>Inputs</h3><div id='inputs-aac7f448-22fe-4d92-888b-9e6cb53092c8'></div>
+<h3>Outputs</h3><div class='line-style'><div id='outputs-aac7f448-22fe-4d92-888b-9e6cb53092c8'></div></div>
 
     <script>
-        var viz = new GenerationVisualization('inputs-6856771a-29c5-47e1-8838-2c24b07fdc2b', 'outputs-6856771a-29c5-47e1-8838-2c24b07fdc2b', 'False', "{\n  \"classes\": [\n    {\n      \"name\": \"None\",\n      \"description\": \"This is the description of class #None\",\n      \"positive_color\": \"#ff0000\",\n      \"negative_color\": \"#0000ff\",\n      \"min\": -0.8801017999649048,\n      \"max\": 0.8801017999649048\n    }\n  ],\n  \"inputs\": {\n    \"words\": [\n      \"We\",\n      \" called\",\n      \" our\",\n      \" library\",\n      \" Interpreto\",\n      \" is\",\n      \" a\",\n      \" good\",\n      \" name\",\n      \"?\"\n    ],\n    \"attributions\": [\n      [\n        [\n          0.4701753258705139\n        ],\n        [\n          0.4366385042667389\n        ],\n        [\n          0.5588304400444031\n        ],\n        [\n          0.409645140171051\n        ],\n        [\n          0.35949039459228516\n        ],\n        [\n          0.47240281105041504\n        ],\n        [\n          0.4720500409603119\n        ],\n        [\n          0.2761148512363434\n        ],\n        [\n          0.3183216452598572\n        ],\n        [\n          0.5834441781044006\n        ]\n      ],\n      [\n        [\n          0.34189140796661377\n        ],\n        [\n          0.31453847885131836\n        ],\n        [\n          0.35749611258506775\n        ],\n        [\n          0.30415546894073486\n        ],\n        [\n          0.31041768193244934\n        ],\n        [\n          0.2890649139881134\n        ],\n        [\n          0.24143938720226288\n        ],\n        [\n          0.1698921173810959\n        ],\n        [\n          0.24946092069149017\n        ],\n        [\n          0.20102562010288239\n        ]\n      ],\n      [\n        [\n          0.3397218585014343\n        ],\n        [\n          0.314730703830719\n        ],\n        [\n          0.35451754927635193\n        ],\n        [\n          0.2776922881603241\n        ],\n        [\n          0.2492082118988037\n        ],\n        [\n          0.34016185998916626\n        ],\n        [\n          0.23540446162223816\n        ],\n        [\n          0.18993112444877625\n        ],\n        [\n          0.16294176876544952\n        ],\n        [\n          0.19440114498138428\n        ]\n      ],\n      [\n        [\n          0.3061838746070862\n        ],\n        [\n          0.2955951690673828\n        ],\n        [\n          0.30007031559944153\n        ],\n        [\n          0.30769622325897217\n        ],\n        [\n          0.2912018299102783\n        ],\n        [\n          0.20482122898101807\n        ],\n        [\n          0.24513685703277588\n        ],\n        [\n          0.17289616167545319\n        ],\n        [\n          0.3416687548160553\n        ],\n        [\n          0.19773997366428375\n        ]\n      ],\n      [\n        [\n          0.2932608723640442\n        ],\n        [\n          0.3144339621067047\n        ],\n        [\n          0.32276585698127747\n        ],\n        [\n          0.3005700707435608\n        ],\n        [\n          0.276243656873703\n        ],\n        [\n          0.2499653846025467\n        ],\n        [\n          0.2740190625190735\n        ],\n        [\n          0.18042954802513123\n        ],\n        [\n          0.29236048460006714\n        ],\n        [\n          0.23639130592346191\n        ]\n      ],\n      [\n        [\n          0.2594892382621765\n        ],\n        [\n          0.24356572329998016\n        ],\n        [\n          0.2333793342113495\n        ],\n        [\n          0.22378167510032654\n        ],\n        [\n          0.2433641403913498\n        ],\n        [\n          0.24755699932575226\n        ],\n        [\n          0.24614164233207703\n        ],\n        [\n          0.1412663459777832\n        ],\n        [\n          0.2848409116268158\n        ],\n        [\n          0.15844225883483887\n        ]\n      ],\n      [\n        [\n          0.24123141169548035\n        ],\n        [\n          0.25638478994369507\n        ],\n        [\n          0.22222724556922913\n        ],\n        [\n          0.26058438420295715\n        ],\n        [\n          0.21497875452041626\n        ],\n        [\n          0.2486729621887207\n        ],\n        [\n          0.22859427332878113\n        ],\n        [\n          0.13915760815143585\n        ],\n        [\n          0.1825750172138214\n        ],\n        [\n          0.18052524328231812\n        ]\n      ],\n      [\n        [\n          0.4079363942146301\n        ],\n        [\n          0.479288250207901\n        ],\n        [\n          0.4586041569709778\n        ],\n        [\n          0.35994216799736023\n        ],\n        [\n          0.41399964690208435\n        ],\n        [\n          0.3589649498462677\n        ],\n        [\n          0.37899667024612427\n        ],\n        [\n          0.29413098096847534\n        ],\n        [\n          0.3169060945510864\n        ],\n        [\n          0.2920655608177185\n        ]\n      ],\n      [\n        [\n          0.3072585165500641\n        ],\n        [\n          0.2776404023170471\n        ],\n        [\n          0.38231799006462097\n        ],\n        [\n          0.3420167863368988\n        ],\n        [\n          0.3500315248966217\n        ],\n        [\n          0.3531954884529114\n        ],\n        [\n          0.14319905638694763\n        ],\n        [\n          0.1769324094057083\n        ],\n        [\n          0.20106878876686096\n        ],\n        [\n          0.19545264542102814\n        ]\n      ],\n      [\n        [\n          0.391273558139801\n        ],\n        [\n          0.35494479537010193\n        ],\n        [\n          0.4128420352935791\n        ],\n        [\n          0.3877187669277191\n        ],\n        [\n          0.34867119789123535\n        ],\n        [\n          0.3463159501552582\n        ],\n        [\n          0.32309937477111816\n        ],\n        [\n          0.34694817662239075\n        ],\n        [\n          0.2808854877948761\n        ],\n        [\n          0.3095194101333618\n        ]\n      ],\n      [\n        [\n          0.22238226234912872\n        ],\n        [\n          0.22308573126792908\n        ],\n        [\n          0.2075718194246292\n        ],\n        [\n          0.196541428565979\n        ],\n        [\n          0.20162981748580933\n        ],\n        [\n          0.22154894471168518\n        ],\n        [\n          0.17193476855754852\n        ],\n        [\n          0.12242672592401505\n        ],\n        [\n          0.25474661588668823\n        ],\n        [\n          0.13424421846866608\n        ]\n      ],\n      [\n        [\n          0.2440950870513916\n        ],\n        [\n          0.23602648079395294\n        ],\n        [\n          0.2746644616127014\n        ],\n        [\n          0.2775283753871918\n        ],\n        [\n          0.22484232485294342\n        ],\n        [\n          0.27575844526290894\n        ],\n        [\n          0.26880910992622375\n        ],\n        [\n          0.25301122665405273\n        ],\n        [\n          0.22252531349658966\n        ],\n        [\n          0.2191758155822754\n        ]\n      ],\n      [\n        [\n          0.2843763828277588\n        ],\n        [\n          0.3184373378753662\n        ],\n        [\n          0.2818637192249298\n        ],\n        [\n          0.27164512872695923\n        ],\n        [\n          0.31167903542518616\n        ],\n        [\n          0.2346036434173584\n        ],\n        [\n          0.1690453737974167\n        ],\n        [\n          0.11085183918476105\n        ],\n        [\n          0.17190587520599365\n        ],\n        [\n          0.14479568600654602\n        ]\n      ],\n      [\n        [\n          0.3360554277896881\n        ],\n        [\n          0.3537558317184448\n        ],\n        [\n          0.2800663709640503\n        ],\n        [\n          0.2529887855052948\n        ],\n        [\n          0.2531245946884155\n        ],\n        [\n          0.24936775863170624\n        ],\n        [\n          0.3485577702522278\n        ],\n        [\n          0.1797594577074051\n        ],\n        [\n          0.1484484225511551\n        ],\n        [\n          0.19824552536010742\n        ]\n      ],\n      [\n        [\n          0.27859294414520264\n        ],\n        [\n          0.2892208397388458\n        ],\n        [\n          0.2922903597354889\n        ],\n        [\n          0.23752276599407196\n        ],\n        [\n          0.2500431537628174\n        ],\n        [\n          0.22060588002204895\n        ],\n        [\n          0.21540801227092743\n        ],\n        [\n          0.16422542929649353\n        ],\n        [\n          0.20615637302398682\n        ],\n        [\n          0.202226921916008\n        ]\n      ],\n      [\n        [\n          0.225327730178833\n        ],\n        [\n          0.212779238820076\n        ],\n        [\n          0.28064101934432983\n        ],\n        [\n          0.26552334427833557\n        ],\n        [\n          0.2488333135843277\n        ],\n        [\n          0.2262878715991974\n        ],\n        [\n          0.2205875664949417\n        ],\n        [\n          0.2067442685365677\n        ],\n        [\n          0.1773548573255539\n        ],\n        [\n          0.1795078068971634\n        ]\n      ],\n      [\n        [\n          0.2734038233757019\n        ],\n        [\n          0.2571915090084076\n        ],\n        [\n          0.2823905646800995\n        ],\n        [\n          0.24728329479694366\n        ],\n        [\n          0.253485769033432\n        ],\n        [\n          0.19841411709785461\n        ],\n        [\n          0.22536206245422363\n        ],\n        [\n          0.17620868980884552\n        ],\n        [\n          0.2579842507839203\n        ],\n        [\n          0.21857699751853943\n        ]\n      ],\n      [\n        [\n          0.3025042414665222\n        ],\n        [\n          0.32005733251571655\n        ],\n        [\n          0.34480947256088257\n        ],\n        [\n          0.2771149277687073\n        ],\n        [\n          0.2804776132106781\n        ],\n        [\n          0.27787184715270996\n        ],\n        [\n          0.3515125513076782\n        ],\n        [\n          0.2800368666648865\n        ],\n        [\n          0.24214981496334076\n        ],\n        [\n          0.27886348962783813\n        ]\n      ],\n      [\n        [\n          0.2263747751712799\n        ],\n        [\n          0.24609223008155823\n        ],\n        [\n          0.1960539072751999\n        ],\n        [\n          0.20065569877624512\n        ],\n        [\n          0.20371131598949432\n        ],\n        [\n          0.19689226150512695\n        ],\n        [\n          0.17724701762199402\n        ],\n        [\n          0.11705710738897324\n        ],\n        [\n          0.159840926527977\n        ],\n        [\n          0.1318444311618805\n        ]\n      ]\n    ]\n  },\n  \"outputs\": {\n    \"words\": [\n      \" \\u201c\",\n      \"Interpreto\",\n      \"\\u201d\",\n      \" is\",\n      \" a\",\n      \" solid\",\n      \" name\",\n      \":\",\n      \" short\",\n      \",\",\n      \" distinctive\",\n      \",\",\n      \" and\",\n      \" it\",\n      \" strongly\",\n      \" cues\",\n      \" \\u201c\",\n      \"interpretability\",\n      \".\\u201d\"\n    ],\n    \"attributions\": [\n      [\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.24991710484027863\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.16300520300865173\n        ],\n        [\n          0.2406577616930008\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.14648021757602692\n        ],\n        [\n          0.2609025835990906\n        ],\n        [\n          0.604718804359436\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.1982993483543396\n        ],\n        [\n          0.23372261226177216\n        ],\n        [\n          0.23839178681373596\n        ],\n        [\n          0.5470582842826843\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.12610061466693878\n        ],\n        [\n          0.1939689666032791\n        ],\n        [\n          0.1848684698343277\n        ],\n        [\n          0.25480711460113525\n        ],\n        [\n          0.3475521206855774\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.13668084144592285\n        ],\n        [\n          0.16722123324871063\n        ],\n        [\n          0.13738051056861877\n        ],\n        [\n          0.16841694712638855\n        ],\n        [\n          0.15729506313800812\n        ],\n        [\n          0.4011431634426117\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.29442262649536133\n        ],\n        [\n          0.32543420791625977\n        ],\n        [\n          0.37481629848480225\n        ],\n        [\n          0.2810421586036682\n        ],\n        [\n          0.3799412250518799\n        ],\n        [\n          0.4325043261051178\n        ],\n        [\n          0.8801017999649048\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.18660686910152435\n        ],\n        [\n          0.20878617465496063\n        ],\n        [\n          0.21758095920085907\n        ],\n        [\n          0.18645325303077698\n        ],\n        [\n          0.1645229309797287\n        ],\n        [\n          0.2582336962223053\n        ],\n        [\n          0.3536249101161957\n        ],\n        [\n          0.47524046897888184\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.14225631952285767\n        ],\n        [\n          0.1800188571214676\n        ],\n        [\n          0.1641385406255722\n        ],\n        [\n          0.27999570965766907\n        ],\n        [\n          0.1456361562013626\n        ],\n        [\n          0.2668289840221405\n        ],\n        [\n          0.31495219469070435\n        ],\n        [\n          0.3048350214958191\n        ],\n        [\n          0.662018895149231\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.11897643655538559\n        ],\n        [\n          0.12873835861682892\n        ],\n        [\n          0.10730984061956406\n        ],\n        [\n          0.11188597977161407\n        ],\n        [\n          0.10086150467395782\n        ],\n        [\n          0.13303491473197937\n        ],\n        [\n          0.13810743391513824\n        ],\n        [\n          0.13093121349811554\n        ],\n        [\n          0.16821613907814026\n        ],\n        [\n          0.2643752098083496\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.15856176614761353\n        ],\n        [\n          0.19968171417713165\n        ],\n        [\n          0.13128459453582764\n        ],\n        [\n          0.2511923909187317\n        ],\n        [\n          0.13741174340248108\n        ],\n        [\n          0.2598080337047577\n        ],\n        [\n          0.24089674651622772\n        ],\n        [\n          0.22701887786388397\n        ],\n        [\n          0.2749786972999573\n        ],\n        [\n          0.11627443879842758\n        ],\n        [\n          0.36562177538871765\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.1393408626317978\n        ],\n        [\n          0.13682252168655396\n        ],\n        [\n          0.10948178917169571\n        ],\n        [\n          0.13009358942508698\n        ],\n        [\n          0.1010940819978714\n        ],\n        [\n          0.17349693179130554\n        ],\n        [\n          0.1389300674200058\n        ],\n        [\n          0.13401193916797638\n        ],\n        [\n          0.12260489165782928\n        ],\n        [\n          0.1059156060218811\n        ],\n        [\n          0.15897555649280548\n        ],\n        [\n          0.18269892036914825\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.13897745311260223\n        ],\n        [\n          0.15793876349925995\n        ],\n        [\n          0.1561318188905716\n        ],\n        [\n          0.19410473108291626\n        ],\n        [\n          0.10879752784967422\n        ],\n        [\n          0.220530703663826\n        ],\n        [\n          0.160295769572258\n        ],\n        [\n          0.09073219448328018\n        ],\n        [\n          0.17026206851005554\n        ],\n        [\n          0.09772638231515884\n        ],\n        [\n          0.16705338656902313\n        ],\n        [\n          0.13241489231586456\n        ],\n        [\n          0.3760591447353363\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.13216683268547058\n        ],\n        [\n          0.19893519580364227\n        ],\n        [\n          0.14883407950401306\n        ],\n        [\n          0.2166580706834793\n        ],\n        [\n          0.1846020370721817\n        ],\n        [\n          0.22905585169792175\n        ],\n        [\n          0.17596186697483063\n        ],\n        [\n          0.22824330627918243\n        ],\n        [\n          0.14555421471595764\n        ],\n        [\n          0.24562111496925354\n        ],\n        [\n          0.12652496993541718\n        ],\n        [\n          0.09580408036708832\n        ],\n        [\n          0.13518239557743073\n        ],\n        [\n          0.2798684239387512\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.12106376886367798\n        ],\n        [\n          0.1534903198480606\n        ],\n        [\n          0.10814090073108673\n        ],\n        [\n          0.16544365882873535\n        ],\n        [\n          0.11766217648983002\n        ],\n        [\n          0.22468045353889465\n        ],\n        [\n          0.17656131088733673\n        ],\n        [\n          0.1307704746723175\n        ],\n        [\n          0.15559014678001404\n        ],\n        [\n          0.17848655581474304\n        ],\n        [\n          0.1055457815527916\n        ],\n        [\n          0.10399432480335236\n        ],\n        [\n          0.11616678535938263\n        ],\n        [\n          0.09676278382539749\n        ],\n        [\n          0.28089582920074463\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.15422137081623077\n        ],\n        [\n          0.18580687046051025\n        ],\n        [\n          0.12386985868215561\n        ],\n        [\n          0.1808977872133255\n        ],\n        [\n          0.1064000278711319\n        ],\n        [\n          0.20055583119392395\n        ],\n        [\n          0.17065957188606262\n        ],\n        [\n          0.12808004021644592\n        ],\n        [\n          0.11804547160863876\n        ],\n        [\n          0.11208294332027435\n        ],\n        [\n          0.16709156334400177\n        ],\n        [\n          0.10396219789981842\n        ],\n        [\n          0.13646788895130157\n        ],\n        [\n          0.158792644739151\n        ],\n        [\n          0.1678018867969513\n        ],\n        [\n          0.319631427526474\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.17826983332633972\n        ],\n        [\n          0.22714030742645264\n        ],\n        [\n          0.15251654386520386\n        ],\n        [\n          0.22710241377353668\n        ],\n        [\n          0.14298859238624573\n        ],\n        [\n          0.22961878776550293\n        ],\n        [\n          0.22056150436401367\n        ],\n        [\n          0.18585312366485596\n        ],\n        [\n          0.2797940671443939\n        ],\n        [\n          0.14201606810092926\n        ],\n        [\n          0.165847510099411\n        ],\n        [\n          0.11877612769603729\n        ],\n        [\n          0.17967109382152557\n        ],\n        [\n          0.1399862915277481\n        ],\n        [\n          0.16948652267456055\n        ],\n        [\n          0.19050443172454834\n        ],\n        [\n          0.21410918235778809\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.11690406501293182\n        ],\n        [\n          0.11025512963533401\n        ],\n        [\n          0.09145967662334442\n        ],\n        [\n          0.13877061009407043\n        ],\n        [\n          0.08541148900985718\n        ],\n        [\n          0.13469555974006653\n        ],\n        [\n          0.09338760375976562\n        ],\n        [\n          0.10696282237768173\n        ],\n        [\n          0.08543334156274796\n        ],\n        [\n          0.07546133548021317\n        ],\n        [\n          0.08702684193849564\n        ],\n        [\n          0.05797813460230827\n        ],\n        [\n          0.0692497044801712\n        ],\n        [\n          0.0584256574511528\n        ],\n        [\n          0.08049015700817108\n        ],\n        [\n          0.080497145652771\n        ],\n        [\n          0.09268288314342499\n        ],\n        [\n          0.12974858283996582\n        ],\n        [\n          null\n        ]\n      ]\n    ]\n  },\n  \"custom_style\": {\n    \"margin-right\": \"0.2em\"\n  }\n}");
+        var viz = new GenerationVisualization('inputs-aac7f448-22fe-4d92-888b-9e6cb53092c8', 'outputs-aac7f448-22fe-4d92-888b-9e6cb53092c8', 'False', "{\n  \"classes\": [\n    {\n      \"name\": \"None\",\n      \"description\": \"This is the description of class #None\",\n      \"positive_color\": \"#ff0000\",\n      \"negative_color\": \"#0000ff\",\n      \"min\": -0.9095970988273621,\n      \"max\": 0.9095970988273621\n    }\n  ],\n  \"inputs\": {\n    \"words\": [\n      \"We\",\n      \" called\",\n      \" our\",\n      \" library\",\n      \" Interpreto\",\n      \" is\",\n      \" a\",\n      \" good\",\n      \" name\",\n      \"?\"\n    ],\n    \"attributions\": [\n      [\n        [\n          0.29955577850341797\n        ],\n        [\n          0.35143330693244934\n        ],\n        [\n          0.271232008934021\n        ],\n        [\n          0.22769908607006073\n        ],\n        [\n          0.15530215203762054\n        ],\n        [\n          0.14894317090511322\n        ],\n        [\n          0.1520312875509262\n        ],\n        [\n          0.15003147721290588\n        ],\n        [\n          0.1807147115468979\n        ],\n        [\n          0.31729185581207275\n        ]\n      ],\n      [\n        [\n          0.22295112907886505\n        ],\n        [\n          0.28846266865730286\n        ],\n        [\n          0.2595018744468689\n        ],\n        [\n          0.20399832725524902\n        ],\n        [\n          0.2199476957321167\n        ],\n        [\n          0.17790710926055908\n        ],\n        [\n          0.19398808479309082\n        ],\n        [\n          0.18144772946834564\n        ],\n        [\n          0.23724733293056488\n        ],\n        [\n          0.20700784027576447\n        ]\n      ],\n      [\n        [\n          0.5675680041313171\n        ],\n        [\n          0.5040058493614197\n        ],\n        [\n          0.3604343831539154\n        ],\n        [\n          0.2730827033519745\n        ],\n        [\n          0.2516167461872101\n        ],\n        [\n          0.2840442359447479\n        ],\n        [\n          0.5641410946846008\n        ],\n        [\n          0.20395617187023163\n        ],\n        [\n          0.2421524077653885\n        ],\n        [\n          0.24604515731334686\n        ]\n      ],\n      [\n        [\n          0.4375061094760895\n        ],\n        [\n          0.3682994842529297\n        ],\n        [\n          0.2956748902797699\n        ],\n        [\n          0.36193862557411194\n        ],\n        [\n          0.28891387581825256\n        ],\n        [\n          0.36182790994644165\n        ],\n        [\n          0.39505645632743835\n        ],\n        [\n          0.3093549907207489\n        ],\n        [\n          0.3274640440940857\n        ],\n        [\n          0.3457339406013489\n        ]\n      ],\n      [\n        [\n          0.2895754277706146\n        ],\n        [\n          0.3258891999721527\n        ],\n        [\n          0.2400059998035431\n        ],\n        [\n          0.21660462021827698\n        ],\n        [\n          0.1327788531780243\n        ],\n        [\n          0.16464905440807343\n        ],\n        [\n          0.21960687637329102\n        ],\n        [\n          0.15170574188232422\n        ],\n        [\n          0.16592542827129364\n        ],\n        [\n          0.13962200284004211\n        ]\n      ],\n      [\n        [\n          0.5312866568565369\n        ],\n        [\n          0.6628838777542114\n        ],\n        [\n          0.4202708303928375\n        ],\n        [\n          0.33389756083488464\n        ],\n        [\n          0.2421913594007492\n        ],\n        [\n          0.23573119938373566\n        ],\n        [\n          0.25761452317237854\n        ],\n        [\n          0.2111743539571762\n        ],\n        [\n          0.217568501830101\n        ],\n        [\n          0.29630032181739807\n        ]\n      ],\n      [\n        [\n          0.31833603978157043\n        ],\n        [\n          0.37778088450431824\n        ],\n        [\n          0.24402014911174774\n        ],\n        [\n          0.27414125204086304\n        ],\n        [\n          0.13155120611190796\n        ],\n        [\n          0.1107490211725235\n        ],\n        [\n          0.13685525953769684\n        ],\n        [\n          0.1332787573337555\n        ],\n        [\n          0.1575808972120285\n        ],\n        [\n          0.14808009564876556\n        ]\n      ],\n      [\n        [\n          0.20071354508399963\n        ],\n        [\n          0.31572526693344116\n        ],\n        [\n          0.2386832982301712\n        ],\n        [\n          0.16615808010101318\n        ],\n        [\n          0.15391366183757782\n        ],\n        [\n          0.12630905210971832\n        ],\n        [\n          0.15925370156764984\n        ],\n        [\n          0.13719521462917328\n        ],\n        [\n          0.18121159076690674\n        ],\n        [\n          0.159920334815979\n        ]\n      ],\n      [\n        [\n          0.39095696806907654\n        ],\n        [\n          0.5075823068618774\n        ],\n        [\n          0.31175723671913147\n        ],\n        [\n          0.2818938195705414\n        ],\n        [\n          0.167776420712471\n        ],\n        [\n          0.14951208233833313\n        ],\n        [\n          0.1521417647600174\n        ],\n        [\n          0.1704777032136917\n        ],\n        [\n          0.15855824947357178\n        ],\n        [\n          0.1374063491821289\n        ]\n      ],\n      [\n        [\n          0.2308557778596878\n        ],\n        [\n          0.34957751631736755\n        ],\n        [\n          0.15225665271282196\n        ],\n        [\n          0.1593204289674759\n        ],\n        [\n          0.12979431450366974\n        ],\n        [\n          0.12511053681373596\n        ],\n        [\n          0.16825726628303528\n        ],\n        [\n          0.14656709134578705\n        ],\n        [\n          0.13360796868801117\n        ],\n        [\n          0.10531582683324814\n        ]\n      ],\n      [\n        [\n          0.24229402840137482\n        ],\n        [\n          0.36468514800071716\n        ],\n        [\n          0.27857571840286255\n        ],\n        [\n          0.29423069953918457\n        ],\n        [\n          0.22833935916423798\n        ],\n        [\n          0.21080151200294495\n        ],\n        [\n          0.27480316162109375\n        ],\n        [\n          0.20269107818603516\n        ],\n        [\n          0.19529864192008972\n        ],\n        [\n          0.16703878343105316\n        ]\n      ],\n      [\n        [\n          0.21509850025177002\n        ],\n        [\n          0.30551937222480774\n        ],\n        [\n          0.2693513035774231\n        ],\n        [\n          0.18792390823364258\n        ],\n        [\n          0.22187387943267822\n        ],\n        [\n          0.1610192507505417\n        ],\n        [\n          0.21329031884670258\n        ],\n        [\n          0.1775851994752884\n        ],\n        [\n          0.23068106174468994\n        ],\n        [\n          0.14174728095531464\n        ]\n      ],\n      [\n        [\n          0.35050177574157715\n        ],\n        [\n          0.4851413667201996\n        ],\n        [\n          0.23853622376918793\n        ],\n        [\n          0.22161339223384857\n        ],\n        [\n          0.17034588754177094\n        ],\n        [\n          0.18666763603687286\n        ],\n        [\n          0.29933786392211914\n        ],\n        [\n          0.18236380815505981\n        ],\n        [\n          0.20415177941322327\n        ],\n        [\n          0.1718633472919464\n        ]\n      ],\n      [\n        [\n          0.38103821873664856\n        ],\n        [\n          0.49745675921440125\n        ],\n        [\n          0.46087536215782166\n        ],\n        [\n          0.3077711760997772\n        ],\n        [\n          0.2346314936876297\n        ],\n        [\n          0.21714897453784943\n        ],\n        [\n          0.22957375645637512\n        ],\n        [\n          0.24477802217006683\n        ],\n        [\n          0.19452135264873505\n        ],\n        [\n          0.20413167774677277\n        ]\n      ],\n      [\n        [\n          0.15411126613616943\n        ],\n        [\n          0.207819864153862\n        ],\n        [\n          0.11820206791162491\n        ],\n        [\n          0.11848936229944229\n        ],\n        [\n          0.10849104076623917\n        ],\n        [\n          0.09979136288166046\n        ],\n        [\n          0.1238596960902214\n        ],\n        [\n          0.08145715296268463\n        ],\n        [\n          0.09614070504903793\n        ],\n        [\n          0.09094616025686264\n        ]\n      ],\n      [\n        [\n          0.1921706199645996\n        ],\n        [\n          0.22213983535766602\n        ],\n        [\n          0.17926646769046783\n        ],\n        [\n          0.21432924270629883\n        ],\n        [\n          0.18546871840953827\n        ],\n        [\n          0.16117601096630096\n        ],\n        [\n          0.2342357188463211\n        ],\n        [\n          0.18591706454753876\n        ],\n        [\n          0.16067436337471008\n        ],\n        [\n          0.17853759229183197\n        ]\n      ],\n      [\n        [\n          0.1732342541217804\n        ],\n        [\n          0.2398402988910675\n        ],\n        [\n          0.13286912441253662\n        ],\n        [\n          0.17756763100624084\n        ],\n        [\n          0.13222821056842804\n        ],\n        [\n          0.14270053803920746\n        ],\n        [\n          0.14799879491329193\n        ],\n        [\n          0.18150678277015686\n        ],\n        [\n          0.1514950543642044\n        ],\n        [\n          0.12253981828689575\n        ]\n      ],\n      [\n        [\n          0.24253790080547333\n        ],\n        [\n          0.30085447430610657\n        ],\n        [\n          0.19922763109207153\n        ],\n        [\n          0.24925296008586884\n        ],\n        [\n          0.17050492763519287\n        ],\n        [\n          0.12860316038131714\n        ],\n        [\n          0.14660999178886414\n        ],\n        [\n          0.1304672509431839\n        ],\n        [\n          0.1432170569896698\n        ],\n        [\n          0.14652545750141144\n        ]\n      ],\n      [\n        [\n          0.22539138793945312\n        ],\n        [\n          0.28324267268180847\n        ],\n        [\n          0.1736871898174286\n        ],\n        [\n          0.15117286145687103\n        ],\n        [\n          0.13862097263336182\n        ],\n        [\n          0.12672340869903564\n        ],\n        [\n          0.15748678147792816\n        ],\n        [\n          0.12852029502391815\n        ],\n        [\n          0.14012618362903595\n        ],\n        [\n          0.15266023576259613\n        ]\n      ]\n    ]\n  },\n  \"outputs\": {\n    \"words\": [\n      \" \\u201c\",\n      \"Interpreto\",\n      \"\\u201d\",\n      \" is\",\n      \" a\",\n      \" solid\",\n      \" name\",\n      \":\",\n      \" short\",\n      \",\",\n      \" distinctive\",\n      \",\",\n      \" and\",\n      \" it\",\n      \" strongly\",\n      \" cues\",\n      \" \\u201c\",\n      \"interpretability\",\n      \".\\u201d\"\n    ],\n    \"attributions\": [\n      [\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.2862333357334137\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.4946255683898926\n        ],\n        [\n          0.4101591110229492\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.3799474239349365\n        ],\n        [\n          0.354422926902771\n        ],\n        [\n          0.9095970988273621\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.36478176712989807\n        ],\n        [\n          0.11340779066085815\n        ],\n        [\n          0.14736337959766388\n        ],\n        [\n          0.22799263894557953\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.2017381638288498\n        ],\n        [\n          0.24134057760238647\n        ],\n        [\n          0.2232085019350052\n        ],\n        [\n          0.16125792264938354\n        ],\n        [\n          0.40986868739128113\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.11391901969909668\n        ],\n        [\n          0.12140476703643799\n        ],\n        [\n          0.1388571858406067\n        ],\n        [\n          0.12179573625326157\n        ],\n        [\n          0.13594897091388702\n        ],\n        [\n          0.19005663692951202\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.18121208250522614\n        ],\n        [\n          0.10996097326278687\n        ],\n        [\n          0.09379378706216812\n        ],\n        [\n          0.1025409922003746\n        ],\n        [\n          0.08595714718103409\n        ],\n        [\n          0.12823918461799622\n        ],\n        [\n          0.2792604863643646\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.15534593164920807\n        ],\n        [\n          0.12938512861728668\n        ],\n        [\n          0.0990009531378746\n        ],\n        [\n          0.14094524085521698\n        ],\n        [\n          0.12156558036804199\n        ],\n        [\n          0.1321350336074829\n        ],\n        [\n          0.1833413988351822\n        ],\n        [\n          0.40581265091896057\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.1328822672367096\n        ],\n        [\n          0.11458224058151245\n        ],\n        [\n          0.10780266672372818\n        ],\n        [\n          0.11903999000787735\n        ],\n        [\n          0.09324753284454346\n        ],\n        [\n          0.11055321991443634\n        ],\n        [\n          0.13106344640254974\n        ],\n        [\n          0.1726335734128952\n        ],\n        [\n          0.3740874230861664\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.2424507886171341\n        ],\n        [\n          0.19753997027873993\n        ],\n        [\n          0.2180100530385971\n        ],\n        [\n          0.19494865834712982\n        ],\n        [\n          0.1982569694519043\n        ],\n        [\n          0.1270727664232254\n        ],\n        [\n          0.21605229377746582\n        ],\n        [\n          0.24838630855083466\n        ],\n        [\n          0.23862142860889435\n        ],\n        [\n          0.5413948893547058\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.14755524694919586\n        ],\n        [\n          0.1735094040632248\n        ],\n        [\n          0.12813237309455872\n        ],\n        [\n          0.14595922827720642\n        ],\n        [\n          0.18554747104644775\n        ],\n        [\n          0.08817865699529648\n        ],\n        [\n          0.12279949337244034\n        ],\n        [\n          0.21658621728420258\n        ],\n        [\n          0.19217947125434875\n        ],\n        [\n          0.3401993215084076\n        ],\n        [\n          0.2730136513710022\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.431768000125885\n        ],\n        [\n          0.1437704712152481\n        ],\n        [\n          0.1905614286661148\n        ],\n        [\n          0.11859071254730225\n        ],\n        [\n          0.13152112066745758\n        ],\n        [\n          0.08861974626779556\n        ],\n        [\n          0.14930753409862518\n        ],\n        [\n          0.1744573563337326\n        ],\n        [\n          0.138687402009964\n        ],\n        [\n          0.26342102885246277\n        ],\n        [\n          0.2159728854894638\n        ],\n        [\n          0.3637312650680542\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.27288150787353516\n        ],\n        [\n          0.20264609158039093\n        ],\n        [\n          0.16257047653198242\n        ],\n        [\n          0.16421930491924286\n        ],\n        [\n          0.18298089504241943\n        ],\n        [\n          0.12614350020885468\n        ],\n        [\n          0.14662055671215057\n        ],\n        [\n          0.22705207765102386\n        ],\n        [\n          0.1884082555770874\n        ],\n        [\n          0.2444697916507721\n        ],\n        [\n          0.2019430249929428\n        ],\n        [\n          0.20735684037208557\n        ],\n        [\n          0.4578142762184143\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.14715576171875\n        ],\n        [\n          0.08557356148958206\n        ],\n        [\n          0.08489179611206055\n        ],\n        [\n          0.1093820109963417\n        ],\n        [\n          0.08904023468494415\n        ],\n        [\n          0.06796631962060928\n        ],\n        [\n          0.07887584716081619\n        ],\n        [\n          0.09199613332748413\n        ],\n        [\n          0.0749180018901825\n        ],\n        [\n          0.15258339047431946\n        ],\n        [\n          0.08320524543523788\n        ],\n        [\n          0.10047660022974014\n        ],\n        [\n          0.11410591751337051\n        ],\n        [\n          0.22231116890907288\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.26650965213775635\n        ],\n        [\n          0.16508759558200836\n        ],\n        [\n          0.13114409148693085\n        ],\n        [\n          0.18663814663887024\n        ],\n        [\n          0.15742838382720947\n        ],\n        [\n          0.1113542839884758\n        ],\n        [\n          0.17869511246681213\n        ],\n        [\n          0.20567989349365234\n        ],\n        [\n          0.18683277070522308\n        ],\n        [\n          0.20515675842761993\n        ],\n        [\n          0.1968790590763092\n        ],\n        [\n          0.13431845605373383\n        ],\n        [\n          0.22249627113342285\n        ],\n        [\n          0.2099849432706833\n        ],\n        [\n          0.4132314622402191\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.15692391991615295\n        ],\n        [\n          0.11370506137609482\n        ],\n        [\n          0.11947961896657944\n        ],\n        [\n          0.13284075260162354\n        ],\n        [\n          0.08051198720932007\n        ],\n        [\n          0.0959983691573143\n        ],\n        [\n          0.10547919571399689\n        ],\n        [\n          0.1014525443315506\n        ],\n        [\n          0.10607045143842697\n        ],\n        [\n          0.13330434262752533\n        ],\n        [\n          0.08466622978448868\n        ],\n        [\n          0.10143265873193741\n        ],\n        [\n          0.1204034611582756\n        ],\n        [\n          0.09827492386102676\n        ],\n        [\n          0.1494656503200531\n        ],\n        [\n          0.26271888613700867\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.146429181098938\n        ],\n        [\n          0.12938734889030457\n        ],\n        [\n          0.14516639709472656\n        ],\n        [\n          0.1288464218378067\n        ],\n        [\n          0.10180087387561798\n        ],\n        [\n          0.16415877640247345\n        ],\n        [\n          0.09827633202075958\n        ],\n        [\n          0.11829725652933121\n        ],\n        [\n          0.09947589784860611\n        ],\n        [\n          0.144107386469841\n        ],\n        [\n          0.1101304292678833\n        ],\n        [\n          0.09685337543487549\n        ],\n        [\n          0.10993759334087372\n        ],\n        [\n          0.13515350222587585\n        ],\n        [\n          0.17189529538154602\n        ],\n        [\n          0.1718560755252838\n        ],\n        [\n          0.22110921144485474\n        ],\n        [\n          null\n        ],\n        [\n          null\n        ]\n      ],\n      [\n        [\n          0.13754518330097198\n        ],\n        [\n          0.11916547268629074\n        ],\n        [\n          0.13957218825817108\n        ],\n        [\n          0.11974622309207916\n        ],\n        [\n          0.07769613713026047\n        ],\n        [\n          0.12422328442335129\n        ],\n        [\n          0.13309553265571594\n        ],\n        [\n          0.1043049693107605\n        ],\n        [\n          0.1092287078499794\n        ],\n        [\n          0.12298013269901276\n        ],\n        [\n          0.11633498966693878\n        ],\n        [\n          0.10373957455158234\n        ],\n        [\n          0.09965904802083969\n        ],\n        [\n          0.10873881727457047\n        ],\n        [\n          0.12269937247037888\n        ],\n        [\n          0.12101998180150986\n        ],\n        [\n          0.1056252270936966\n        ],\n        [\n          0.2500542104244232\n        ],\n        [\n          null\n        ]\n      ]\n    ]\n  },\n  \"custom_style\": {\n    \"margin-right\": \"0.2em\"\n  }\n}");
         window.viz = viz;
     </script>
     </body></html>

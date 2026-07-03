@@ -1,12 +1,14 @@
+import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from interpreto import KernelShap, plot_attributions
 
 tokenizer = AutoTokenizer.from_pretrained('gpt2', use_fast=True)
-model = AutoModelForCausalLM.from_pretrained('gpt2')
+model = AutoModelForCausalLM.from_pretrained('gpt2', torch_dtype=torch.float32)
 
 explainer = KernelShap(model, tokenizer)
 attributions = explainer(
     model_inputs='Alice and Bob enter the bar, ',
-    targets='then Alice offers a drink to Bob.'
+    targets='then Alice offers a drink to Bob.',
 )
+
 plot_attributions(attributions[0])

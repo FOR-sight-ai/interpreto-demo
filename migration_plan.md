@@ -97,11 +97,15 @@ must be reviewed by the user before moving on.
 - [ ] **Awaiting user review.**
 
 ### Step 5 – Rewrite `scripts/generation_attributions.py`
-- [ ] Remove `KernelShap` and `Sobol` (already commented out).
-- [ ] Confirm `n_perturbations` / `n_token_perturbations` extras still apply.
-- [ ] Verify snippet reproduces HTML on `gpt2` sample 0.
-- [ ] Run on GPT-2, Qwen, Llama.
-- [ ] **Stop for user review.**
+- [x] All 10 attribution methods kept (KernelShap and Sobol back in the METHODS dict, per user request).
+- [x] `MODEL_CONFIGS` per-model config: dtype + optional `skip_methods` set.
+- [x] Snippet mirrors `generation_demonstration.ipynb` (bar the added `torch_dtype=` and `use_fast=True`, which are cosmetic).
+- [x] Debug run (gpt2, 1 sample × Lime + KernelShap + Sobol) succeeded; standalone snippet run OK.
+- [x] Full runs: gpt2 (10 methods), Qwen3-0.6B (10 methods), Llama-3.1-8B (**perturbation only, 4 methods**).
+- [!] **Known interpreto 0.5.0 limitation**: gradient-based methods (GradientShap, IntegratedGradients, Saliency, SmoothGrad, SquareGrad, VarGrad) fail on non-float32 models because the InferenceWrapper embeds inputs in float32 but never casts them to the model dtype (`inference_wrapper.py:397`). Llama-8B in float32 is 32 GB and does not fit on a single 24 GB GPU; `device_map="auto"` conflicts with `self.model.to(device)` in the same file (line 228). Compromise: load Llama in bfloat16 and skip gradient methods for it. → Report as an interpreto issue.
+- [x] Manifest regenerated: 75 entries total; gpt2/qwen have 10 gen-attribution methods each, Llama has 4.
+- [x] Snippet diff vs `generation_demonstration.ipynb` matches (only cosmetic differences).
+- [ ] **Awaiting user review.**
 
 ### Step 6 – Rewrite `scripts/classification_concepts.py`
 - [ ] Use `SplitterForClassification`, unpack `(activations, predictions)`.

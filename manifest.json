@@ -1318,14 +1318,10 @@
       "scope": "general",
       "sample": "sample-000",
       "methods": [
-        "gradient_shap.html",
-        "integrated_gradients.html",
+        "kernel_shap.html",
         "lime.html",
         "occlusion.html",
-        "saliency.html",
-        "smoothgrad.html",
-        "squared_grad.html",
-        "vargrad.html"
+        "sobol.html"
       ]
     },
     {
@@ -1335,14 +1331,10 @@
       "scope": "general",
       "sample": "sample-001",
       "methods": [
-        "gradient_shap.html",
-        "integrated_gradients.html",
+        "kernel_shap.html",
         "lime.html",
         "occlusion.html",
-        "saliency.html",
-        "smoothgrad.html",
-        "squared_grad.html",
-        "vargrad.html"
+        "sobol.html"
       ]
     },
     {
@@ -1352,14 +1344,10 @@
       "scope": "general",
       "sample": "sample-002",
       "methods": [
-        "gradient_shap.html",
-        "integrated_gradients.html",
+        "kernel_shap.html",
         "lime.html",
         "occlusion.html",
-        "saliency.html",
-        "smoothgrad.html",
-        "squared_grad.html",
-        "vargrad.html"
+        "sobol.html"
       ]
     },
     {
@@ -1376,6 +1364,7 @@
         "occlusion.html",
         "saliency.html",
         "smoothgrad.html",
+        "sobol.html",
         "squared_grad.html",
         "vargrad.html"
       ]
@@ -1394,6 +1383,7 @@
         "occlusion.html",
         "saliency.html",
         "smoothgrad.html",
+        "sobol.html",
         "squared_grad.html",
         "vargrad.html"
       ]
@@ -1412,6 +1402,7 @@
         "occlusion.html",
         "saliency.html",
         "smoothgrad.html",
+        "sobol.html",
         "squared_grad.html",
         "vargrad.html"
       ]
