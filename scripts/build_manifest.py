@@ -8,6 +8,17 @@ EXPLANATIONS_DIR = ROOT / "explanations"
 OUTPUT_PATH = ROOT / "manifest.json"
 
 
+def resolve_interpreto_version() -> Optional[str]:
+    try:
+        from importlib.metadata import PackageNotFoundError, version
+    except ImportError:  # pragma: no cover - Python <3.8
+        return None
+    try:
+        return version("interpreto")
+    except PackageNotFoundError:
+        return None
+
+
 def parse_model_id(model_id: str) -> dict:
     if model_id.startswith("clf:"):
         parts = model_id.split(":", 2)
@@ -78,7 +89,11 @@ def scan_scope_dir(
 
 
 def build_manifest() -> dict:
-    manifest = {"models": {}, "explanations": []}
+    manifest = {
+        "interpreto_version": resolve_interpreto_version(),
+        "models": {},
+        "explanations": [],
+    }
     if not EXPLANATIONS_DIR.exists():
         return manifest
 
