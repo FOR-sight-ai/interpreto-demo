@@ -61,6 +61,7 @@ def cache_activations(
     *,
     force: bool = False,
     activation_dtype: torch.dtype | None = None,
+    load_dtype: torch.dtype | None = None,
     **get_activations_kwargs: Any,
 ) -> tuple[torch.Tensor, torch.Tensor | None]:
     """Compute or load a splitter's ``(activations, predictions)`` tuple.
@@ -68,23 +69,28 @@ def cache_activations(
     * ``force`` — bypass cache and recompute.
     * ``activation_dtype`` — if given, cast activations before saving to
       shrink the on-disk footprint (e.g. ``torch.float16`` for generation).
-      They are always loaded as-is; callers must upcast if needed.
+    * ``load_dtype`` — if given, cast activations back to this dtype after
+      loading from disk (typically ``torch.float32`` so downstream code
+      doesn't have to worry about low-precision surprises).
     * ``get_activations_kwargs`` — forwarded to ``splitter.get_activations``.
     """
     if cache_path.exists() and not force:
         payload = torch.load(cache_path, map_location="cpu", weights_only=False)
-        return payload["activations"], payload.get("predictions")
+        activations = payload["activations"]
+        if load_dtype is not None and activations.dtype != load_dtype:
+            activations = activations.to(load_dtype)
+        return activations, payload.get("predictions")
 
     activations, predictions = splitter.get_activations(
         inputs=inputs, **get_activations_kwargs
     )
 
-    payload = {
-        "activations": activations.to(activation_dtype)
+    to_save = (
+        activations.to(activation_dtype)
         if activation_dtype is not None
-        else activations,
-        "predictions": predictions,
-    }
+        else activations
+    )
+    payload = {"activations": to_save, "predictions": predictions}
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(payload, cache_path)
     return activations, predictions
