@@ -14,6 +14,9 @@ const elements = {
   typeSelect: document.getElementById("type-select"),
   scopeSelect: document.getElementById("scope-select"),
   sampleSelect: document.getElementById("sample-select"),
+  metricSelect: document.getElementById("metric-select"),
+  metricSortToggle: document.getElementById("metric-sort-toggle"),
+  metricSortIcon: document.querySelector(".metric-sort-icon"),
   methodsSummary: document.querySelector(".methods-dropdown summary"),
   methodsList: document.getElementById("methods-list"),
   methodsSelectAll: document.getElementById("methods-select-all"),
@@ -26,6 +29,8 @@ const state = {
   manifest: null,
   entries: [],
   models: [],
+  metricsMeta: {},
+  metricsSummary: [],
   task: null,
   model: null,
   type: null,
@@ -33,6 +38,8 @@ const state = {
   sample: null,
   methods: [],
   availableMethods: [],
+  metric: null,
+  sortDirection: null,
 };
 
 let eventsBound = false;
@@ -58,6 +65,8 @@ async function init() {
   state.manifest = normalized.manifest;
   state.entries = normalized.entries;
   state.models = normalized.models;
+  state.metricsMeta = normalized.metricsMeta || {};
+  state.metricsSummary = normalized.metricsSummary || [];
 
   renderInterpretoVersion(normalized.manifest);
 
@@ -137,6 +146,7 @@ function normalizeManifest(manifest) {
         scope: entry.scope,
         sample: entry.sample || null,
         methods: Array.isArray(entry.methods) ? entry.methods.slice() : [],
+        metricScores: normalizeMetricScores(entry.metric_scores),
       }))
       .filter((entry) => entry.methods.length);
 
@@ -144,6 +154,8 @@ function normalizeManifest(manifest) {
       manifest,
       models: models.length ? models : deriveModelsFromEntries(entries),
       entries: sortEntries(entries),
+      metricsMeta: normalizeMetricsMeta(manifest.metrics_meta),
+      metricsSummary: normalizeMetricsSummary(manifest.metrics_summary),
     };
   }
 
@@ -152,6 +164,58 @@ function normalizeManifest(manifest) {
   }
 
   return null;
+}
+
+function normalizeMetricScores(rawScores) {
+  if (!rawScores || typeof rawScores !== "object") {
+    return {};
+  }
+  const out = {};
+  Object.entries(rawScores).forEach(([method, values]) => {
+    if (!values || typeof values !== "object") {
+      return;
+    }
+    const clean = {};
+    Object.entries(values).forEach(([metric, value]) => {
+      if (typeof value === "number" && Number.isFinite(value)) {
+        clean[metric] = value;
+      }
+    });
+    if (Object.keys(clean).length) {
+      out[method] = clean;
+    }
+  });
+  return out;
+}
+
+function normalizeMetricsMeta(rawMeta) {
+  if (!rawMeta || typeof rawMeta !== "object") {
+    return {};
+  }
+  const out = {};
+  Object.entries(rawMeta).forEach(([name, meta]) => {
+    if (!meta || typeof meta !== "object") {
+      return;
+    }
+    const label = typeof meta.label === "string" && meta.label ? meta.label : name;
+    const direction =
+      meta.direction === "higher_better" || meta.direction === "lower_better"
+        ? meta.direction
+        : "higher_better";
+    const appliesTo =
+      typeof meta.applies_to === "string" ? meta.applies_to : null;
+    out[name] = { label, direction, appliesTo };
+  });
+  return out;
+}
+
+function normalizeMetricsSummary(rawSummary) {
+  if (!Array.isArray(rawSummary)) {
+    return [];
+  }
+  return rawSummary.filter(
+    (name) => typeof name === "string" && name.length > 0
+  );
 }
 
 function normalizeModels(modelsData) {
@@ -201,6 +265,7 @@ function normalizeLegacyManifest(manifest) {
         scope: "all-classes",
         sample: sampleId,
         methods,
+        metricScores: {},
       });
     });
   });
@@ -209,6 +274,8 @@ function normalizeLegacyManifest(manifest) {
     manifest,
     models: models.sort((a, b) => a.id.localeCompare(b.id)),
     entries: sortEntries(entries),
+    metricsMeta: {},
+    metricsSummary: [],
   };
 }
 
@@ -331,7 +398,33 @@ function hydrateState() {
     state.methods = state.availableMethods.slice();
   }
 
+  const availableMetrics = listMetricsForCurrentEntry(getCurrentEntry());
+  state.metric = chooseFromList(
+    [urlState.metric, storedState.metric],
+    availableMetrics,
+    null
+  );
+  state.sortDirection = chooseSortDirection(
+    [urlState.sortDirection, storedState.sortDirection],
+    state.metric
+  );
+
+  applyMethodSort();
+
   return true;
+}
+
+function applyMethodSort() {
+  const entry = getCurrentEntry();
+  const rawMethods = entry ? entry.methods.slice() : [];
+  state.availableMethods = sortMethodsByMetric(
+    rawMethods,
+    entry,
+    state.metric,
+    state.sortDirection
+  );
+  const selected = new Set(state.methods);
+  state.methods = state.availableMethods.filter((method) => selected.has(method));
 }
 
 function bindEvents() {
@@ -363,6 +456,21 @@ function bindEvents() {
   elements.sampleSelect.addEventListener("change", () => {
     state.sample = elements.sampleSelect.value;
     refreshAfterSelection();
+  });
+
+  elements.metricSelect.addEventListener("change", () => {
+    const value = elements.metricSelect.value || null;
+    state.metric = value;
+    state.sortDirection = chooseSortDirection([null], value);
+    refreshMethodSort();
+  });
+
+  elements.metricSortToggle.addEventListener("click", () => {
+    if (!state.metric) {
+      return;
+    }
+    state.sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
+    refreshMethodSort();
   });
 
   elements.methodsSelectAll.addEventListener("click", () => {
@@ -409,6 +517,15 @@ function refreshAfterSelection() {
     state.methods = state.availableMethods.slice();
   }
 
+  const availableMetrics = listMetricsForCurrentEntry(getCurrentEntry());
+  state.metric = chooseFromList([state.metric], availableMetrics, null);
+  state.sortDirection = chooseSortDirection(
+    [state.sortDirection],
+    state.metric
+  );
+
+  applyMethodSort();
+
   renderMethodsList();
   renderCards();
   syncState();
@@ -452,6 +569,42 @@ function updateControls() {
     samples.length ? "Select sample" : "Not applicable",
     formatSampleLabel
   );
+
+  updateMetricControl();
+}
+
+function updateMetricControl() {
+  const availableMetrics = listMetricsForCurrentEntry(getCurrentEntry());
+  populateSelect(
+    elements.metricSelect,
+    availableMetrics,
+    state.metric || "",
+    availableMetrics.length ? "Alphabetical" : "No metrics",
+    formatMetricLabel,
+    { includeEmpty: availableMetrics.length ? "Alphabetical" : null }
+  );
+
+  const hasMetric = Boolean(state.metric && availableMetrics.includes(state.metric));
+  elements.metricSortToggle.hidden = !hasMetric;
+  if (hasMetric) {
+    const direction = state.sortDirection === "asc" ? "asc" : "desc";
+    elements.metricSortIcon.textContent = direction === "asc" ? "↑" : "↓";
+    const meta = state.metricsMeta[state.metric];
+    const label = meta && meta.label ? meta.label : state.metric;
+    elements.metricSortToggle.setAttribute(
+      "aria-label",
+      `Sort ${label} ${direction === "asc" ? "ascending" : "descending"}`
+    );
+    elements.metricSortToggle.setAttribute(
+      "title",
+      `Sort ${label} ${direction === "asc" ? "ascending" : "descending"}`
+    );
+  }
+}
+
+function formatMetricLabel(metric) {
+  const meta = state.metricsMeta[metric];
+  return meta && meta.label ? meta.label : formatTitleLabel(metric);
 }
 
 function renderMethodsList() {
@@ -1125,6 +1278,113 @@ function listMethodsForSelection() {
   return entry ? entry.methods.slice() : [];
 }
 
+function listMetricsForCurrentEntry(entry) {
+  if (!entry || !entry.metricScores) {
+    return [];
+  }
+  const scoreMap = entry.metricScores;
+  const scoredMethods = Object.keys(scoreMap);
+  if (!scoredMethods.length) {
+    return [];
+  }
+  const perMethodMetrics = scoredMethods.map(
+    (method) => new Set(Object.keys(scoreMap[method] || {}))
+  );
+  const intersection = perMethodMetrics.reduce((acc, set) => {
+    if (!acc) {
+      return set;
+    }
+    const next = new Set();
+    acc.forEach((name) => {
+      if (set.has(name)) {
+        next.add(name);
+      }
+    });
+    return next;
+  }, null);
+  if (!intersection || !intersection.size) {
+    return [];
+  }
+  // Preserve metricsSummary ordering when possible, otherwise sort.
+  const ordered = [];
+  state.metricsSummary.forEach((name) => {
+    if (intersection.has(name)) {
+      ordered.push(name);
+    }
+  });
+  Array.from(intersection)
+    .filter((name) => !ordered.includes(name))
+    .sort()
+    .forEach((name) => ordered.push(name));
+  return ordered;
+}
+
+function chooseSortDirection(candidates, metric) {
+  for (const candidate of candidates) {
+    if (candidate === "asc" || candidate === "desc") {
+      return candidate;
+    }
+  }
+  if (!metric) {
+    return null;
+  }
+  const meta = state.metricsMeta[metric];
+  if (meta && meta.direction === "lower_better") {
+    return "asc";
+  }
+  return "desc";
+}
+
+function sortMethodsByMetric(methods, entry, metric, direction) {
+  if (!metric || !entry || !entry.metricScores) {
+    return methods.slice().sort();
+  }
+  const scoreOf = (method) => {
+    const scores = entry.metricScores[method];
+    if (!scores || typeof scores[metric] !== "number") {
+      return null;
+    }
+    return scores[metric];
+  };
+  const sign = direction === "asc" ? 1 : -1;
+  return methods.slice().sort((a, b) => {
+    const sa = scoreOf(a);
+    const sb = scoreOf(b);
+    // Unscored methods sink to the bottom regardless of direction.
+    if (sa === null && sb === null) {
+      return a.localeCompare(b);
+    }
+    if (sa === null) {
+      return 1;
+    }
+    if (sb === null) {
+      return -1;
+    }
+    if (sa === sb) {
+      return a.localeCompare(b);
+    }
+    return sign * (sa - sb) < 0 ? -1 : 1;
+  });
+}
+
+function refreshMethodSort() {
+  const entry = getCurrentEntry();
+  const rawMethods = entry ? entry.methods.slice() : [];
+  state.availableMethods = sortMethodsByMetric(
+    rawMethods,
+    entry,
+    state.metric,
+    state.sortDirection
+  );
+  // Preserve the user's method selection but reorder to match availability.
+  const selected = new Set(state.methods);
+  state.methods = state.availableMethods.filter((method) => selected.has(method));
+  updateMetricControl();
+  renderMethodsList();
+  renderCards();
+  syncState();
+}
+
 function getCurrentEntry() {
   const entries = filterEntries({
     model: state.model,
@@ -1177,8 +1437,9 @@ function isPresent(value) {
   return value !== null && value !== undefined;
 }
 
-function populateSelect(select, options, selectedValue, emptyLabel, formatLabel) {
+function populateSelect(select, options, selectedValue, emptyLabel, formatLabel, extras) {
   select.innerHTML = "";
+  const includeEmpty = extras && typeof extras.includeEmpty === "string" ? extras.includeEmpty : null;
 
   if (!options.length) {
     const option = document.createElement("option");
@@ -1189,6 +1450,14 @@ function populateSelect(select, options, selectedValue, emptyLabel, formatLabel)
     select.appendChild(option);
     select.disabled = true;
     return;
+  }
+
+  if (includeEmpty !== null) {
+    const emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = includeEmpty;
+    emptyOption.selected = !selectedValue;
+    select.appendChild(emptyOption);
   }
 
   options.forEach((option) => {
@@ -1234,6 +1503,8 @@ function getUrlState() {
       .split(",")
       .map((item) => item.trim())
       .filter(Boolean),
+    metric: params.get("metric"),
+    sortDirection: params.get("sortDir"),
   };
 }
 
@@ -1261,6 +1532,12 @@ function updateUrl() {
   }
   if (state.methods.length) {
     params.set("methods", state.methods.join(","));
+  }
+  if (state.metric) {
+    params.set("metric", state.metric);
+  }
+  if (state.sortDirection) {
+    params.set("sortDir", state.sortDirection);
   }
   const query = params.toString();
   const newUrl = query
@@ -1294,6 +1571,8 @@ function saveStoredState() {
       scope: state.scope,
       sample: state.sample,
       methods: state.methods,
+      metric: state.metric,
+      sortDirection: state.sortDirection,
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   } catch (error) {
@@ -1318,6 +1597,8 @@ function setControlsDisabled(disabled) {
   elements.typeSelect.disabled = disabled;
   elements.scopeSelect.disabled = disabled;
   elements.sampleSelect.disabled = disabled;
+  elements.metricSelect.disabled = disabled;
+  elements.metricSortToggle.disabled = disabled;
   elements.methodsSelectAll.disabled = disabled;
   elements.methodsClear.disabled = disabled;
 }

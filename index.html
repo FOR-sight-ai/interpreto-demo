@@ -65,6 +65,21 @@
           <label for="sample-select">Sample</label>
           <select id="sample-select" aria-label="Sample"></select>
         </div>
+        <div class="control" id="metric-control">
+          <label for="metric-select">Sort by</label>
+          <div class="metric-control-row">
+            <select id="metric-select" aria-label="Sort methods by metric"></select>
+            <button
+              id="metric-sort-toggle"
+              type="button"
+              class="button button--ghost metric-sort-toggle"
+              aria-label="Toggle sort direction"
+              hidden
+            >
+              <span class="metric-sort-icon" aria-hidden="true">↓</span>
+            </button>
+          </div>
+        </div>
         <div class="control control--methods">
           <label>Methods</label>
           <details class="methods-dropdown">

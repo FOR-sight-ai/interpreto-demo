@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -6,6 +7,10 @@ from typing import Optional
 ROOT = Path(__file__).resolve().parents[1]
 EXPLANATIONS_DIR = ROOT / "explanations"
 OUTPUT_PATH = ROOT / "manifest.json"
+DATA_ROOT = ROOT / "data"
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _common import METRIC_DIRECTIONS  # noqa: E402
 
 
 def resolve_interpreto_version() -> Optional[str]:
@@ -37,6 +42,30 @@ def collect_methods(path: Path) -> list[str]:
     )
 
 
+def load_metric_scores_for(
+    model_id: str,
+    type_name: str,
+    scope_name: str,
+) -> Optional[dict]:
+    """Return ``{method_name: {metric_name: value}}`` or ``None``.
+
+    Attribution scores live under ``data/<model>/metrics/attribution/<scope>.json``;
+    concept scores live under ``data/<model>/metrics/concept/general.json`` and
+    are broadcast to every scope. Returns ``None`` when the sidecar is
+    missing so the caller can decide whether to emit the field.
+    """
+    if type_name == "attribution":
+        path = DATA_ROOT / model_id / "metrics" / "attribution" / f"{scope_name}.json"
+    elif type_name == "concept":
+        path = DATA_ROOT / model_id / "metrics" / "concept" / "general.json"
+    else:
+        return None
+    if not path.exists():
+        return None
+    with path.open("r", encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def add_entry(
     entries: list[dict],
     model_id: str,
@@ -45,19 +74,28 @@ def add_entry(
     scope_name: str,
     sample: Optional[str],
     methods: list[str],
+    metric_scores: Optional[dict] = None,
 ) -> None:
     if not methods:
         return
-    entries.append(
-        {
-            "model": model_id,
-            "task": task,
-            "type": type_name,
-            "scope": scope_name,
-            "sample": sample,
-            "methods": methods,
+    entry: dict = {
+        "model": model_id,
+        "task": task,
+        "type": type_name,
+        "scope": scope_name,
+        "sample": sample,
+        "methods": methods,
+    }
+    if metric_scores:
+        # Only keep entries for methods actually present in this scope.
+        filtered = {
+            method: metric_scores[method]
+            for method in methods
+            if method in metric_scores and metric_scores[method]
         }
-    )
+        if filtered:
+            entry["metric_scores"] = filtered
+    entries.append(entry)
 
 
 def scan_scope_dir(
@@ -69,8 +107,19 @@ def scan_scope_dir(
 ) -> list[dict]:
     entries: list[dict] = []
 
+    metric_scores = load_metric_scores_for(model_id, type_name, scope_name)
+
     methods = collect_methods(scope_dir)
-    add_entry(entries, model_id, task, type_name, scope_name, None, methods)
+    add_entry(
+        entries,
+        model_id,
+        task,
+        type_name,
+        scope_name,
+        None,
+        methods,
+        metric_scores=metric_scores,
+    )
 
     for first in sorted(path for path in scope_dir.iterdir() if path.is_dir()):
         methods_in_first = collect_methods(first)
@@ -83,14 +132,30 @@ def scan_scope_dir(
                 scope_name,
                 first.name,
                 methods_in_first,
+                metric_scores=metric_scores,
             )
 
     return entries
 
 
+def collect_used_metrics(entries: list[dict]) -> list[str]:
+    """Return the sorted list of metric names actually present in the manifest."""
+    used: set[str] = set()
+    for entry in entries:
+        for method_scores in entry.get("metric_scores", {}).values():
+            used.update(method_scores.keys())
+    # Preserve METRIC_DIRECTIONS ordering for the ones we know about; append
+    # any unknown ones at the end (shouldn't happen but keeps forward-compat).
+    ordered = [name for name in METRIC_DIRECTIONS if name in used]
+    ordered.extend(sorted(name for name in used if name not in METRIC_DIRECTIONS))
+    return ordered
+
+
 def build_manifest() -> dict:
     manifest = {
         "interpreto_version": resolve_interpreto_version(),
+        "metrics_meta": METRIC_DIRECTIONS,
+        "metrics_summary": [],
         "models": {},
         "explanations": [],
     }
@@ -130,6 +195,7 @@ def build_manifest() -> dict:
             entry["sample"] or "",
         ),
     )
+    manifest["metrics_summary"] = collect_used_metrics(manifest["explanations"])
 
     return manifest
 

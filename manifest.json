@@ -1,5 +1,38 @@
 {
   "interpreto_version": "0.5.0",
+  "metrics_meta": {
+    "insertion": {
+      "label": "Insertion",
+      "direction": "higher_better",
+      "applies_to": "attribution"
+    },
+    "deletion": {
+      "label": "Deletion",
+      "direction": "lower_better",
+      "applies_to": "attribution"
+    },
+    "mse": {
+      "label": "MSE",
+      "direction": "lower_better",
+      "applies_to": "concept"
+    },
+    "fid": {
+      "label": "FID",
+      "direction": "lower_better",
+      "applies_to": "concept"
+    },
+    "sparsity": {
+      "label": "Sparsity",
+      "direction": "lower_better",
+      "applies_to": "concept"
+    },
+    "sparsity_ratio": {
+      "label": "Sparsity ratio",
+      "direction": "lower_better",
+      "applies_to": "concept"
+    }
+  },
+  "metrics_summary": [],
   "models": {
     "clf:ag-news:roberta": {
       "task": "classification",

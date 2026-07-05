@@ -193,6 +193,34 @@ body::before {
   grid-column: span 2;
 }
 
+.metric-control-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.metric-control-row select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.metric-sort-toggle {
+  flex: 0 0 auto;
+  padding: 0 12px;
+  min-width: 44px;
+}
+
+.metric-sort-icon {
+  display: inline-block;
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+#metric-control select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 button {
   border: 1px solid var(--accent-3);
   border-radius: 999px;
