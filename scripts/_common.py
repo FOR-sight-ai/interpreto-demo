@@ -13,10 +13,14 @@ The main features are:
   hardened from ``references/save_load_concepts.py``.
 * ``format_value`` / ``format_kwargs_lines`` — turn Python objects back
   into source strings for the rendered ``.py`` snippets.
+* ``metrics_cache_path`` / ``save_metric_scores`` / ``load_metric_scores``
+  / ``split_activations`` / ``METRIC_DIRECTIONS`` — shared building blocks
+  for the metric-compute scripts (see ``TODO_METRICS.md``).
 """
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -230,3 +234,124 @@ def dedupe(names: Iterable[str]) -> list[str]:
         seen.add(name)
         out.append(name)
     return out
+
+
+# ----------------------------------------------------------------------
+# Metric utilities
+# ----------------------------------------------------------------------
+
+
+#: Direction and display metadata for every metric wired into the gallery.
+#: Shared between ``build_manifest.py`` (writes ``metrics_meta`` at the
+#: top of ``manifest.json``) and every ``*_metrics.py`` script (which
+#: uses the ``direction`` value to know whether a higher score is better).
+METRIC_DIRECTIONS: dict[str, dict[str, str]] = {
+    "insertion": {
+        "label": "Insertion",
+        "direction": "higher_better",
+        "applies_to": "attribution",
+    },
+    "deletion": {
+        "label": "Deletion",
+        "direction": "lower_better",
+        "applies_to": "attribution",
+    },
+    "mse": {
+        "label": "MSE",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+    "fid": {
+        "label": "FID",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+    "sparsity": {
+        "label": "Sparsity",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+    "sparsity_ratio": {
+        "label": "Sparsity ratio",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+}
+
+
+def metrics_cache_dir(model_id: str) -> Path:
+    """Return the ``data/<model_id>/metrics`` folder, creating it on demand."""
+    path = model_data_dir(model_id) / "metrics"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def metrics_cache_path(
+    model_id: str,
+    type_name: str,
+    scope: str | None = None,
+) -> Path:
+    """Return the JSON sidecar path for a metric run.
+
+    Layout:
+
+        data/<model_id>/metrics/attribution/<scope>.json
+        data/<model_id>/metrics/concept/general.json
+
+    ``scope`` is required for attribution and ignored for concept (the
+    concept metric is per-method, not per-scope, so a single file per
+    model is enough).
+    """
+    root = metrics_cache_dir(model_id) / type_name
+    root.mkdir(parents=True, exist_ok=True)
+    if type_name == "attribution":
+        if not scope:
+            raise ValueError("attribution metrics require a scope")
+        return root / f"{scope}.json"
+    if type_name == "concept":
+        return root / "general.json"
+    raise ValueError(f"unknown metric type_name {type_name!r}")
+
+
+def save_metric_scores(cache_path: Path, scores: dict[str, dict[str, float]]) -> None:
+    """Dump a ``{method_name: {metric_name: value}}`` mapping as JSON."""
+    cache_path = Path(cache_path)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    with cache_path.open("w", encoding="utf-8") as fh:
+        json.dump(scores, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+
+
+def load_metric_scores(cache_path: Path) -> dict[str, dict[str, float]]:
+    """Load a ``{method_name: {metric_name: value}}`` mapping from JSON."""
+    with Path(cache_path).open("r", encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def split_activations(
+    activations: torch.Tensor,
+    *,
+    ratio: float = 0.1,
+    seed: int = 0,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Deterministically split an activation tensor into ``(train, eval)``.
+
+    The split is over the first dimension. ``ratio`` is the fraction that
+    goes to the ``eval`` slice. The RNG is seeded so a given tensor and
+    ``(ratio, seed)`` always produce the same split.
+    """
+    if activations.ndim < 1:
+        raise ValueError("activations must be at least 1-D")
+    if not 0.0 < ratio < 1.0:
+        raise ValueError("ratio must be in (0, 1)")
+
+    n = activations.shape[0]
+    if n < 2:
+        raise ValueError(f"need at least 2 activations to split, got {n}")
+
+    n_eval = max(1, int(round(n * ratio)))
+    generator = torch.Generator(device="cpu").manual_seed(seed)
+    perm = torch.randperm(n, generator=generator)
+    eval_idx = perm[:n_eval]
+    train_idx = perm[n_eval:]
+    return activations[train_idx], activations[eval_idx]
