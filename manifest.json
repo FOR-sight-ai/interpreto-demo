@@ -32,7 +32,14 @@
       "applies_to": "concept"
     }
   },
-  "metrics_summary": [],
+  "metrics_summary": [
+    "insertion",
+    "deletion",
+    "mse",
+    "fid",
+    "sparsity",
+    "sparsity_ratio"
+  ],
   "models": {
     "clf:ag-news:roberta": {
       "task": "classification",
@@ -77,7 +84,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -96,7 +145,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -115,7 +206,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -134,7 +267,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -153,7 +328,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -172,7 +389,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -191,7 +450,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -210,7 +511,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -229,7 +572,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -248,7 +633,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -267,7 +694,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -286,7 +755,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -305,7 +816,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -324,7 +877,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -343,7 +938,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -362,7 +999,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -381,7 +1060,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -400,7 +1121,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -419,7 +1182,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -438,7 +1243,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.6473838860250194,
+          "insertion": 0.9065485449080413
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.5833057103251867,
+          "insertion": 0.8997569512721334
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5573454281905742,
+          "insertion": 0.9510969712781723
+        },
+        "lime.html": {
+          "deletion": 0.5468890056907558,
+          "insertion": 0.956172532562499
+        },
+        "occlusion.html": {
+          "deletion": 0.7032032050305707,
+          "insertion": 0.9286053079061409
+        },
+        "saliency.html": {
+          "deletion": 0.5972920427601216,
+          "insertion": 0.8949202037506471
+        },
+        "smoothgrad.html": {
+          "deletion": 0.6092087341341845,
+          "insertion": 0.8986344266196314
+        },
+        "sobol.html": {
+          "deletion": 0.8046353184309032,
+          "insertion": 0.8893136836946196
+        },
+        "squared_grad.html": {
+          "deletion": 0.6053910215177084,
+          "insertion": 0.8944953349751465
+        },
+        "vargrad.html": {
+          "deletion": 0.652522773253641,
+          "insertion": 0.8924755150448453
+        }
+      }
     },
     {
       "model": "clf:ag-news:roberta",
@@ -454,7 +1301,51 @@
         "semi_nmf.html",
         "svd.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "ica.html": {
+          "fid": 0.020297596231102943,
+          "mse": 376.8194885253906,
+          "sparsity": 0.9999972581863403,
+          "sparsity_ratio": 0.03333324193954468
+        },
+        "mp_sae.html": {
+          "fid": 0.08767402917146683,
+          "mse": 681.3557739257812,
+          "sparsity": 0.03333333507180214,
+          "sparsity_ratio": 0.0011111111690600714
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.0013020833333333333
+        },
+        "pca.html": {
+          "fid": 0.020297512412071228,
+          "mse": 376.8194580078125,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "semi_nmf.html": {
+          "fid": 0.030525458976626396,
+          "mse": 437.71221923828125,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "svd.html": {
+          "fid": 0.020638281479477882,
+          "mse": 379.6947937011719,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "vanilla_sae.html": {
+          "fid": 0.02368338406085968,
+          "mse": 396.49334716796875,
+          "sparsity": 0.9352750182151794,
+          "sparsity_ratio": 0.031175833940505982
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -473,7 +1364,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -492,7 +1425,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -511,7 +1486,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -530,7 +1547,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -549,7 +1608,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -568,7 +1669,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -587,7 +1730,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -606,7 +1791,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -625,7 +1852,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -644,7 +1913,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -663,7 +1974,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -682,7 +2035,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -701,7 +2096,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -720,7 +2157,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -739,7 +2218,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -758,7 +2279,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -777,7 +2340,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -796,7 +2401,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -815,7 +2462,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -834,7 +2523,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.2782376945448097,
+          "insertion": 0.8582515905980285
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.2642268998114762,
+          "insertion": 0.8671629113877717
+        },
+        "kernel_shap.html": {
+          "deletion": 0.18863210049925683,
+          "insertion": 0.8994774403263328
+        },
+        "lime.html": {
+          "deletion": 0.18436969149387678,
+          "insertion": 0.9012761234384253
+        },
+        "occlusion.html": {
+          "deletion": 0.26765591610877687,
+          "insertion": 0.900765157313938
+        },
+        "saliency.html": {
+          "deletion": 0.2645739535803446,
+          "insertion": 0.8690263515614403
+        },
+        "smoothgrad.html": {
+          "deletion": 0.34844115206066595,
+          "insertion": 0.797405344382436
+        },
+        "sobol.html": {
+          "deletion": 0.26109642854443843,
+          "insertion": 0.8571984193925808
+        },
+        "squared_grad.html": {
+          "deletion": 0.35424506300175546,
+          "insertion": 0.7880444363299174
+        },
+        "vargrad.html": {
+          "deletion": 0.37205700909801465,
+          "insertion": 0.7753947263051094
+        }
+      }
     },
     {
       "model": "clf:emotion:bert",
@@ -850,7 +2581,51 @@
         "semi_nmf.html",
         "svd.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "ica.html": {
+          "fid": 0.013052728958427906,
+          "mse": 56.825077056884766,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "mp_sae.html": {
+          "fid": 0.05757555738091469,
+          "mse": 159.4131622314453,
+          "sparsity": 0.03333333134651184,
+          "sparsity_ratio": 0.001111111044883728
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.0013020833333333333
+        },
+        "pca.html": {
+          "fid": 0.01305268332362175,
+          "mse": 56.825111389160156,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "semi_nmf.html": {
+          "fid": 0.02171001210808754,
+          "mse": 77.29048156738281,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "svd.html": {
+          "fid": 0.013198498636484146,
+          "mse": 57.376338958740234,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "vanilla_sae.html": {
+          "fid": 0.035589393228292465,
+          "mse": 120.59835815429688,
+          "sparsity": 0.6573749780654907,
+          "sparsity_ratio": 0.02191249926884969
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -869,7 +2644,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -888,7 +2705,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -907,7 +2766,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -926,7 +2827,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -945,7 +2888,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -964,7 +2949,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -983,7 +3010,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1002,7 +3071,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1021,7 +3132,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1040,7 +3193,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1059,7 +3254,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1078,7 +3315,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1097,7 +3376,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1116,7 +3437,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1135,7 +3498,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1154,7 +3559,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1173,7 +3620,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1192,7 +3681,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1211,7 +3742,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1230,7 +3803,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.757672744118075,
+          "insertion": 0.8441497058771339
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.7447446359008381,
+          "insertion": 0.8498631839669092
+        },
+        "kernel_shap.html": {
+          "deletion": 0.5709857235961775,
+          "insertion": 0.9281062630518027
+        },
+        "lime.html": {
+          "deletion": 0.5663588349383498,
+          "insertion": 0.9286294195486707
+        },
+        "occlusion.html": {
+          "deletion": 0.5963900718702618,
+          "insertion": 0.9243563839167994
+        },
+        "saliency.html": {
+          "deletion": 0.7559913686799077,
+          "insertion": 0.8382380638392373
+        },
+        "smoothgrad.html": {
+          "deletion": 0.783495821652731,
+          "insertion": 0.8208106089908505
+        },
+        "sobol.html": {
+          "deletion": 0.7312743069091229,
+          "insertion": 0.876480112871294
+        },
+        "squared_grad.html": {
+          "deletion": 0.7849777600083957,
+          "insertion": 0.8143169582769597
+        },
+        "vargrad.html": {
+          "deletion": 0.7803820242986602,
+          "insertion": 0.8233627566430545
+        }
+      }
     },
     {
       "model": "clf:imdb:distilbert",
@@ -1246,7 +3861,51 @@
         "semi_nmf.html",
         "svd.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "ica.html": {
+          "fid": 0.006156561430543661,
+          "mse": 33.578311920166016,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "mp_sae.html": {
+          "fid": 0.028509363532066345,
+          "mse": 107.6141128540039,
+          "sparsity": 0.03333333507180214,
+          "sparsity_ratio": 0.0011111111690600714
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.40934115648269653,
+          "sparsity_ratio": 0.0005329962975035111
+        },
+        "pca.html": {
+          "fid": 0.0061565847136080265,
+          "mse": 33.578330993652344,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "semi_nmf.html": {
+          "fid": 0.00863984227180481,
+          "mse": 48.01572036743164,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "svd.html": {
+          "fid": 0.006189696490764618,
+          "mse": 33.759422302246094,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "vanilla_sae.html": {
+          "fid": 0.010354635305702686,
+          "mse": 50.02040481567383,
+          "sparsity": 0.8587200045585632,
+          "sparsity_ratio": 0.028624000151952107
+        }
+      }
     },
     {
       "model": "gen:gpt2",
@@ -1265,7 +3924,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.029484851112916072,
+          "insertion": 0.09630344237669324
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.03666319365090252,
+          "insertion": 0.08788299967048349
+        },
+        "kernel_shap.html": {
+          "deletion": 0.048265964269458034,
+          "insertion": 0.06426889367406678
+        },
+        "lime.html": {
+          "deletion": 0.050669041426195965,
+          "insertion": 0.06304842384656248
+        },
+        "occlusion.html": {
+          "deletion": 0.049708660315881274,
+          "insertion": 0.06536985694880859
+        },
+        "saliency.html": {
+          "deletion": 0.03155175837541003,
+          "insertion": 0.09530741177575987
+        },
+        "smoothgrad.html": {
+          "deletion": 0.03153050667088875,
+          "insertion": 0.09508861236993005
+        },
+        "sobol.html": {
+          "deletion": 0.0401394957003301,
+          "insertion": 0.0743253492398017
+        },
+        "squared_grad.html": {
+          "deletion": 0.030341310196352715,
+          "insertion": 0.09521268273446709
+        },
+        "vargrad.html": {
+          "deletion": 0.038169098919841916,
+          "insertion": 0.08977792572828981
+        }
+      }
     },
     {
       "model": "gen:gpt2",
@@ -1284,7 +3985,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.029484851112916072,
+          "insertion": 0.09630344237669324
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.03666319365090252,
+          "insertion": 0.08788299967048349
+        },
+        "kernel_shap.html": {
+          "deletion": 0.048265964269458034,
+          "insertion": 0.06426889367406678
+        },
+        "lime.html": {
+          "deletion": 0.050669041426195965,
+          "insertion": 0.06304842384656248
+        },
+        "occlusion.html": {
+          "deletion": 0.049708660315881274,
+          "insertion": 0.06536985694880859
+        },
+        "saliency.html": {
+          "deletion": 0.03155175837541003,
+          "insertion": 0.09530741177575987
+        },
+        "smoothgrad.html": {
+          "deletion": 0.03153050667088875,
+          "insertion": 0.09508861236993005
+        },
+        "sobol.html": {
+          "deletion": 0.0401394957003301,
+          "insertion": 0.0743253492398017
+        },
+        "squared_grad.html": {
+          "deletion": 0.030341310196352715,
+          "insertion": 0.09521268273446709
+        },
+        "vargrad.html": {
+          "deletion": 0.038169098919841916,
+          "insertion": 0.08977792572828981
+        }
+      }
     },
     {
       "model": "gen:gpt2",
@@ -1303,7 +4046,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.029484851112916072,
+          "insertion": 0.09630344237669324
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.03666319365090252,
+          "insertion": 0.08788299967048349
+        },
+        "kernel_shap.html": {
+          "deletion": 0.048265964269458034,
+          "insertion": 0.06426889367406678
+        },
+        "lime.html": {
+          "deletion": 0.050669041426195965,
+          "insertion": 0.06304842384656248
+        },
+        "occlusion.html": {
+          "deletion": 0.049708660315881274,
+          "insertion": 0.06536985694880859
+        },
+        "saliency.html": {
+          "deletion": 0.03155175837541003,
+          "insertion": 0.09530741177575987
+        },
+        "smoothgrad.html": {
+          "deletion": 0.03153050667088875,
+          "insertion": 0.09508861236993005
+        },
+        "sobol.html": {
+          "deletion": 0.0401394957003301,
+          "insertion": 0.0743253492398017
+        },
+        "squared_grad.html": {
+          "deletion": 0.030341310196352715,
+          "insertion": 0.09521268273446709
+        },
+        "vargrad.html": {
+          "deletion": 0.038169098919841916,
+          "insertion": 0.08977792572828981
+        }
+      }
     },
     {
       "model": "gen:gpt2",
@@ -1316,7 +4101,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.730768620967865,
+          "mse": 14564.5888671875,
+          "sparsity": 0.010174259543418884,
+          "sparsity_ratio": 1.0174259543418885e-05
+        },
+        "mp_sae.html": {
+          "fid": 1.5635077953338623,
+          "mse": 19652.5234375,
+          "sparsity": 0.0010000000474974513,
+          "sparsity_ratio": 1.0000000474974512e-06
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.0013020833333333333
+        },
+        "vanilla_sae.html": {
+          "fid": 0.3961291015148163,
+          "mse": 6702.9814453125,
+          "sparsity": 0.5059770941734314,
+          "sparsity_ratio": 0.0005059770941734314
+        }
+      }
     },
     {
       "model": "gen:gpt2",
@@ -1329,7 +4140,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.730768620967865,
+          "mse": 14564.5888671875,
+          "sparsity": 0.010174259543418884,
+          "sparsity_ratio": 1.0174259543418885e-05
+        },
+        "mp_sae.html": {
+          "fid": 1.5635077953338623,
+          "mse": 19652.5234375,
+          "sparsity": 0.0010000000474974513,
+          "sparsity_ratio": 1.0000000474974512e-06
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.0013020833333333333
+        },
+        "vanilla_sae.html": {
+          "fid": 0.3961291015148163,
+          "mse": 6702.9814453125,
+          "sparsity": 0.5059770941734314,
+          "sparsity_ratio": 0.0005059770941734314
+        }
+      }
     },
     {
       "model": "gen:gpt2",
@@ -1342,7 +4179,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.730768620967865,
+          "mse": 14564.5888671875,
+          "sparsity": 0.010174259543418884,
+          "sparsity_ratio": 1.0174259543418885e-05
+        },
+        "mp_sae.html": {
+          "fid": 1.5635077953338623,
+          "mse": 19652.5234375,
+          "sparsity": 0.0010000000474974513,
+          "sparsity_ratio": 1.0000000474974512e-06
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.0013020833333333333
+        },
+        "vanilla_sae.html": {
+          "fid": 0.3961291015148163,
+          "mse": 6702.9814453125,
+          "sparsity": 0.5059770941734314,
+          "sparsity_ratio": 0.0005059770941734314
+        }
+      }
     },
     {
       "model": "gen:llama3.1-8b",
@@ -1394,7 +4257,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.03513862192630768,
+          "mse": 1172.360107421875,
+          "sparsity": 0.005193240009248257,
+          "sparsity_ratio": 2.596620004624128e-06
+        },
+        "mp_sae.html": {
+          "fid": 0.05856247991323471,
+          "mse": 1362.6806640625,
+          "sparsity": 0.0005000000237487257,
+          "sparsity_ratio": 2.500000118743628e-07
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.9989749789237976,
+          "sparsity_ratio": 0.00024389037571381778
+        },
+        "vanilla_sae.html": {
+          "fid": 0.01498071476817131,
+          "mse": 644.4635620117188,
+          "sparsity": 0.8949577808380127,
+          "sparsity_ratio": 0.00044747889041900634
+        }
+      }
     },
     {
       "model": "gen:llama3.1-8b",
@@ -1407,7 +4296,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.03513862192630768,
+          "mse": 1172.360107421875,
+          "sparsity": 0.005193240009248257,
+          "sparsity_ratio": 2.596620004624128e-06
+        },
+        "mp_sae.html": {
+          "fid": 0.05856247991323471,
+          "mse": 1362.6806640625,
+          "sparsity": 0.0005000000237487257,
+          "sparsity_ratio": 2.500000118743628e-07
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.9989749789237976,
+          "sparsity_ratio": 0.00024389037571381778
+        },
+        "vanilla_sae.html": {
+          "fid": 0.01498071476817131,
+          "mse": 644.4635620117188,
+          "sparsity": 0.8949577808380127,
+          "sparsity_ratio": 0.00044747889041900634
+        }
+      }
     },
     {
       "model": "gen:llama3.1-8b",
@@ -1420,7 +4335,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.03513862192630768,
+          "mse": 1172.360107421875,
+          "sparsity": 0.005193240009248257,
+          "sparsity_ratio": 2.596620004624128e-06
+        },
+        "mp_sae.html": {
+          "fid": 0.05856247991323471,
+          "mse": 1362.6806640625,
+          "sparsity": 0.0005000000237487257,
+          "sparsity_ratio": 2.500000118743628e-07
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.9989749789237976,
+          "sparsity_ratio": 0.00024389037571381778
+        },
+        "vanilla_sae.html": {
+          "fid": 0.01498071476817131,
+          "mse": 644.4635620117188,
+          "sparsity": 0.8949577808380127,
+          "sparsity_ratio": 0.00044747889041900634
+        }
+      }
     },
     {
       "model": "gen:qwen3-0.6b",
@@ -1439,7 +4380,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.04453263228847128,
+          "insertion": 0.17507286020798873
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.08140073757870982,
+          "insertion": 0.1652929827592471
+        },
+        "kernel_shap.html": {
+          "deletion": 0.03935389805679648,
+          "insertion": 0.20882375281981072
+        },
+        "lime.html": {
+          "deletion": 0.03998383513984173,
+          "insertion": 0.2094363142193938
+        },
+        "occlusion.html": {
+          "deletion": 0.031081435559548672,
+          "insertion": 0.22079949436809315
+        },
+        "saliency.html": {
+          "deletion": 0.08043684917963709,
+          "insertion": 0.16634955309982394
+        },
+        "smoothgrad.html": {
+          "deletion": 0.04085687369258442,
+          "insertion": 0.16691503489214388
+        },
+        "sobol.html": {
+          "deletion": 0.04501113013709047,
+          "insertion": 0.15126972919878803
+        },
+        "squared_grad.html": {
+          "deletion": 0.05016962784533621,
+          "insertion": 0.162927855523251
+        },
+        "vargrad.html": {
+          "deletion": 0.05206225011322691,
+          "insertion": 0.1583462297192007
+        }
+      }
     },
     {
       "model": "gen:qwen3-0.6b",
@@ -1458,7 +4441,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.04453263228847128,
+          "insertion": 0.17507286020798873
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.08140073757870982,
+          "insertion": 0.1652929827592471
+        },
+        "kernel_shap.html": {
+          "deletion": 0.03935389805679648,
+          "insertion": 0.20882375281981072
+        },
+        "lime.html": {
+          "deletion": 0.03998383513984173,
+          "insertion": 0.2094363142193938
+        },
+        "occlusion.html": {
+          "deletion": 0.031081435559548672,
+          "insertion": 0.22079949436809315
+        },
+        "saliency.html": {
+          "deletion": 0.08043684917963709,
+          "insertion": 0.16634955309982394
+        },
+        "smoothgrad.html": {
+          "deletion": 0.04085687369258442,
+          "insertion": 0.16691503489214388
+        },
+        "sobol.html": {
+          "deletion": 0.04501113013709047,
+          "insertion": 0.15126972919878803
+        },
+        "squared_grad.html": {
+          "deletion": 0.05016962784533621,
+          "insertion": 0.162927855523251
+        },
+        "vargrad.html": {
+          "deletion": 0.05206225011322691,
+          "insertion": 0.1583462297192007
+        }
+      }
     },
     {
       "model": "gen:qwen3-0.6b",
@@ -1477,7 +4502,49 @@
         "sobol.html",
         "squared_grad.html",
         "vargrad.html"
-      ]
+      ],
+      "metric_scores": {
+        "gradient_shap.html": {
+          "deletion": 0.04453263228847128,
+          "insertion": 0.17507286020798873
+        },
+        "integrated_gradients.html": {
+          "deletion": 0.08140073757870982,
+          "insertion": 0.1652929827592471
+        },
+        "kernel_shap.html": {
+          "deletion": 0.03935389805679648,
+          "insertion": 0.20882375281981072
+        },
+        "lime.html": {
+          "deletion": 0.03998383513984173,
+          "insertion": 0.2094363142193938
+        },
+        "occlusion.html": {
+          "deletion": 0.031081435559548672,
+          "insertion": 0.22079949436809315
+        },
+        "saliency.html": {
+          "deletion": 0.08043684917963709,
+          "insertion": 0.16634955309982394
+        },
+        "smoothgrad.html": {
+          "deletion": 0.04085687369258442,
+          "insertion": 0.16691503489214388
+        },
+        "sobol.html": {
+          "deletion": 0.04501113013709047,
+          "insertion": 0.15126972919878803
+        },
+        "squared_grad.html": {
+          "deletion": 0.05016962784533621,
+          "insertion": 0.162927855523251
+        },
+        "vargrad.html": {
+          "deletion": 0.05206225011322691,
+          "insertion": 0.1583462297192007
+        }
+      }
     },
     {
       "model": "gen:qwen3-0.6b",
@@ -1490,7 +4557,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.10687782615423203,
+          "mse": 2799.7001953125,
+          "sparsity": 0.014937300235033035,
+          "sparsity_ratio": 1.4937300235033035e-05
+        },
+        "mp_sae.html": {
+          "fid": 0.21570518612861633,
+          "mse": 3253.04833984375,
+          "sparsity": 0.0010000000474974513,
+          "sparsity_ratio": 1.0000000474974512e-06
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.9990410208702087,
+          "sparsity_ratio": 0.0009756259969435632
+        },
+        "vanilla_sae.html": {
+          "fid": 0.030963126569986343,
+          "mse": 783.4721069335938,
+          "sparsity": 0.9110722541809082,
+          "sparsity_ratio": 0.0009110722541809082
+        }
+      }
     },
     {
       "model": "gen:qwen3-0.6b",
@@ -1503,7 +4596,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.10687782615423203,
+          "mse": 2799.7001953125,
+          "sparsity": 0.014937300235033035,
+          "sparsity_ratio": 1.4937300235033035e-05
+        },
+        "mp_sae.html": {
+          "fid": 0.21570518612861633,
+          "mse": 3253.04833984375,
+          "sparsity": 0.0010000000474974513,
+          "sparsity_ratio": 1.0000000474974512e-06
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.9990410208702087,
+          "sparsity_ratio": 0.0009756259969435632
+        },
+        "vanilla_sae.html": {
+          "fid": 0.030963126569986343,
+          "mse": 783.4721069335938,
+          "sparsity": 0.9110722541809082,
+          "sparsity_ratio": 0.0009110722541809082
+        }
+      }
     },
     {
       "model": "gen:qwen3-0.6b",
@@ -1516,7 +4635,33 @@
         "mp_sae.html",
         "neurons_as_concepts.html",
         "vanilla_sae.html"
-      ]
+      ],
+      "metric_scores": {
+        "batch_top_k_sae.html": {
+          "fid": 0.10687782615423203,
+          "mse": 2799.7001953125,
+          "sparsity": 0.014937300235033035,
+          "sparsity_ratio": 1.4937300235033035e-05
+        },
+        "mp_sae.html": {
+          "fid": 0.21570518612861633,
+          "mse": 3253.04833984375,
+          "sparsity": 0.0010000000474974513,
+          "sparsity_ratio": 1.0000000474974512e-06
+        },
+        "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.9990410208702087,
+          "sparsity_ratio": 0.0009756259969435632
+        },
+        "vanilla_sae.html": {
+          "fid": 0.030963126569986343,
+          "mse": 783.4721069335938,
+          "sparsity": 0.9110722541809082,
+          "sparsity_ratio": 0.0009110722541809082
+        }
+      }
     }
   ]
 }

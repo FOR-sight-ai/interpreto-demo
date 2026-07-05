@@ -76,6 +76,12 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # ----------------------------
 EVAL_RATIO = 0.1
 EVAL_SEED = 0
+# Cap the eval slice size so FID's Wasserstein 1D sort fits on the GPU.
+# 50k activations is more than enough for a statistically meaningful
+# score; larger slices bloat GPU memory (gpt2 has 6.8M token-activations
+# → a 10% slice of 688k × 768 float32 = 2 GB, plus intermediate sort
+# buffers that push it above 24 GB on a single card).
+EVAL_MAX_ROWS = 50_000
 
 
 def _env_list(var: str, default: list[str]) -> list[str]:
@@ -120,6 +126,11 @@ def evaluate_model(model_id: str, eval_ratio: float, seed: int) -> None:
     train_slice, eval_slice = split_activations(
         activations, ratio=eval_ratio, seed=seed
     )
+    if eval_slice.shape[0] > EVAL_MAX_ROWS:
+        # Deterministic sub-sample so the eval slice fits on the GPU.
+        gen = torch.Generator(device="cpu").manual_seed(seed)
+        idx = torch.randperm(eval_slice.shape[0], generator=gen)[:EVAL_MAX_ROWS]
+        eval_slice = eval_slice[idx]
     print(
         f"  activations: total={activations.shape[0]}  "
         f"train={train_slice.shape[0]}  eval={eval_slice.shape[0]}"

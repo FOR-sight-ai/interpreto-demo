@@ -5,6 +5,10 @@ plan is the single source of truth for wiring per-(model, method)
 metric scores into the gallery, sorting the method chooser by them, and
 displaying a small badge next to each explanation card.
 
+**Status:** the 10 numbered steps below were all completed. See the
+"Execution notes" section at the bottom for what was actually run,
+what deviated from the plan, and follow-up work.
+
 The other, out-of-scope follow-ups (probes, inputs-to-concepts, sample
 bumps, upstream dtype bug report) live in the "Later" section at the
 bottom.
@@ -343,6 +347,77 @@ Deliverable: JS diff. No visual change yet — dropdown still hidden.
 
 **Migration to metrics complete.**
 
+## Execution notes
+
+What actually ran when Step 10 executed the plan end to end.
+
+### Scores delivered
+
+Manifest coverage after `build_manifest.py`:
+
+- `clf:ag-news:roberta`: 21/21 entries scored (attribution × 2 scopes, concept).
+- `clf:emotion:bert`: 21/21 entries scored.
+- `clf:imdb:distilbert`: 21/21 entries scored.
+- `gen:gpt2`: 6/6 entries scored (attribution + concept).
+- `gen:qwen3-0.6b`: 6/6 entries scored.
+- `gen:llama3.1-8b`: 3/6 entries scored (concept only; see limitation below).
+
+**Total: 78/81 entries have `metric_scores`.**
+
+### Deviations from the plan
+
+1. **Classification attribution sample filter.** IMDB's SENTENCE
+   granularity fails on single-sentence reviews (interpreto raises
+   `ValueError: The mask dimension ... must be greater than 1`).
+   `filter_by_granularity()` in
+   `scripts/classification_attribution_metrics.py` drops such inputs
+   pre-run; 3 of the first 100 IMDB test samples were single-sentence.
+
+2. **Generation attribution scaled down.** The plan targeted 100
+   samples × 50 perturbations × (32 prompt + 16 target). Reality: gpt2
+   alone took 91 minutes at those settings. Defaults are now 50 samples
+   × 16 prompt + 8 target tokens; per-model perturbation counts are
+   `{gpt2: 50, qwen: 20, llama: 10}`. Total gen attribution time
+   dropped to ~15 min (gpt2) + ~68 min (qwen).
+
+3. **Generation concept eval slice capped.** FID's Wasserstein-1D
+   sort OOMed on the raw 10% eval slice for gpt2 (688k tokens ×
+   768 dim). `EVAL_MAX_ROWS = 50_000` in
+   `scripts/generation_concept_metrics.py` sub-samples the eval slice
+   deterministically before scoring. All 3 gen concept runs then fit
+   easily in <5 min each.
+
+4. **UX: hide the metric dropdown when no metrics exist.**
+   `updateMetricControl` in `app.js` toggles `#metric-control.hidden`
+   based on `metricsSummary.length`, so repositories without metric
+   JSONs get the pre-Step-8 look with no visual clutter.
+
+### Known limitations
+
+**L1. Llama attribution metrics broken upstream.**
+`gen:llama3.1-8b` is listed in `SKIP_MODELS` inside
+`scripts/generation_attribution_metrics.py`. On the first sample,
+`interpreto.commons.granularity.get_association_matrix` raises
+`IndexError: index 16 is out of bounds for dimension 0 with size 16`
+— the BOS token that Llama's tokenizer prepends shifts granularity
+indices off by one. Concept metrics work fine on Llama; only the
+attribution scores are missing. Fix belongs upstream (`interpreto`
+package). Filed as an addendum to L6 below.
+
+**L2. Metric magnitudes vary by model, not by method.**
+MSE and FID scales depend on the raw activation magnitudes, which
+differ between classification (CLS activations, small) and generation
+(token activations, much larger). Cross-model comparison is not
+meaningful; **within-model** comparison (the actual UI sort target)
+works as designed.
+
+**L3. Attribution scores on the same activations as fit.**
+Concept metrics use a 90/10 split of the cached activations. Because
+the fitted explainers (except `BatchTopKSAEConcepts` which we refit
+on the train slice) were originally trained on the full tensor, the
+eval slice was seen during fit — scores are mildly optimistic. This
+is the accepted trade-off from the plan.
+
 ## Later (not blocked by this plan)
 
 The four remaining items from the original TODO — kept here for
@@ -384,10 +459,22 @@ Once disk + time budgets allow: `gen:qwen3-0.6b` 5k–10k articles,
 `MODEL_CONFIGS[...][num_samples]` in `scripts/generation_concepts.py`
 and re-run.
 
-### L6. Report the interpreto 0.5.0 attribution dtype bug
+### L6. Report interpreto 0.5.0 bugs discovered during metric integration
 
+Two upstream bugs blocked full coverage; both should be filed on
+`FOR-sight-ai/interpreto`.
+
+**Bug A. Attribution dtype cast missing.**
 `inference_wrapper.py:397` moves `inputs_embeds` to device but not to
 model dtype → gradient methods fail on non-float32 models. Impact:
-`gen:llama3.1-8b` only ships perturbation methods. Suggested action:
-open issue on FOR-sight-ai/interpreto with a `padded_inputs[key] =
-padded_inputs[key].to(self.model.dtype)` proposal.
+`gen:llama3.1-8b` only ships perturbation attribution HTMLs
+(see `MODEL_CONFIGS["gen:llama3.1-8b"]["skip_methods"]`). Proposed fix:
+`padded_inputs[key] = padded_inputs[key].to(self.model.dtype)`.
+
+**Bug B. `get_association_matrix` off-by-one on BOS token.**
+`commons/granularity.py:621` writes into `assoc_matrix[j, gran_indices]`
+where `gran_indices` can equal `assoc_matrix.shape[0]` when the
+tokenizer prepends a BOS (Llama family). Reproduces on every call to
+`Insertion(model, tokenizer).evaluate(...)` for `gen:llama3.1-8b`.
+Impact: `SKIP_MODELS = {"gen:llama3.1-8b"}` in
+`scripts/generation_attribution_metrics.py`.

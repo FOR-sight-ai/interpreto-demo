@@ -574,6 +574,17 @@ function updateControls() {
 }
 
 function updateMetricControl() {
+  const control = document.getElementById("metric-control");
+  const hasAnyMetric =
+    Array.isArray(state.metricsSummary) && state.metricsSummary.length > 0;
+  if (control) {
+    control.hidden = !hasAnyMetric;
+  }
+  if (!hasAnyMetric) {
+    elements.metricSortToggle.hidden = true;
+    return;
+  }
+
   const availableMetrics = listMetricsForCurrentEntry(getCurrentEntry());
   populateSelect(
     elements.metricSelect,
@@ -607,6 +618,27 @@ function formatMetricLabel(metric) {
   return meta && meta.label ? meta.label : formatTitleLabel(metric);
 }
 
+function getMethodScore(method, entry, metric) {
+  if (!entry || !entry.metricScores || !metric) {
+    return null;
+  }
+  const scores = entry.metricScores[method];
+  if (!scores || typeof scores[metric] !== "number") {
+    return null;
+  }
+  return scores[metric];
+}
+
+function formatMetricValue(value) {
+  if (value === null || value === undefined || !Number.isFinite(value)) {
+    return "—";
+  }
+  if (value === 0) {
+    return "0";
+  }
+  return value.toPrecision(3);
+}
+
 function renderMethodsList() {
   elements.methodsList.innerHTML = "";
 
@@ -618,6 +650,8 @@ function renderMethodsList() {
     updateMethodsSummary();
     return;
   }
+
+  const entry = getCurrentEntry();
 
   state.availableMethods.forEach((method) => {
     const item = document.createElement("label");
@@ -631,10 +665,20 @@ function renderMethodsList() {
     checkbox.addEventListener("change", collectSelectedMethods);
 
     const text = document.createElement("span");
+    text.className = "method-item-label";
     text.textContent = prettifyMethodName(method);
 
     item.appendChild(checkbox);
     item.appendChild(text);
+
+    if (state.metric) {
+      const scoreText = formatMetricValue(getMethodScore(method, entry, state.metric));
+      const score = document.createElement("span");
+      score.className = "method-metric";
+      score.textContent = scoreText;
+      item.appendChild(score);
+    }
+
     elements.methodsList.appendChild(item);
   });
 
@@ -789,11 +833,23 @@ function buildCard(method, index) {
   header.className = "card-header";
 
   const headerText = document.createElement("div");
+  headerText.className = "card-header-text";
   const title = document.createElement("div");
   title.className = "card-title";
   title.textContent = prettifyMethodName(method);
 
   headerText.appendChild(title);
+
+  if (state.metric) {
+    const entry = getCurrentEntry();
+    const scoreText = formatMetricValue(getMethodScore(method, entry, state.metric));
+    const meta = state.metricsMeta[state.metric];
+    const label = meta && meta.label ? meta.label : state.metric;
+    const badge = document.createElement("span");
+    badge.className = "metric-badge";
+    badge.textContent = `${label}: ${scoreText}`;
+    headerText.appendChild(badge);
+  }
 
   const headerActions = document.createElement("div");
   headerActions.className = "card-actions";

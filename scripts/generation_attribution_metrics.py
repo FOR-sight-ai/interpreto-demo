@@ -49,11 +49,11 @@ from generation_attributions import MODEL_CONFIGS, METHODS  # noqa: E402
 # ----------------------------
 # Configuration (edit these)
 # ----------------------------
-NUM_EVAL_SAMPLES = 100
+NUM_EVAL_SAMPLES = 50
 EVAL_SEED = 1  # disjoint from generation_attributions.SEED = 0
 BATCH_SIZE = 1
-PROMPT_TOKENS = 32
-TARGET_TOKENS = 16
+PROMPT_TOKENS = 16
+TARGET_TOKENS = 8
 
 DATASET_HF_ID = "wikimedia/wikipedia"
 DATASET_CONFIG = "20231101.en"
@@ -63,9 +63,16 @@ DATASET_SPLIT = "train"
 # expensive per forward pass, so we cut it down.
 N_PERTURBATIONS_PER_MODEL: dict[str, int] = {
     "gen:gpt2": 50,
-    "gen:qwen3-0.6b": 50,
-    "gen:llama3.1-8b": 20,
+    "gen:qwen3-0.6b": 20,
+    "gen:llama3.1-8b": 10,
 }
+
+# Models that cannot currently produce attribution metrics.
+# ``gen:llama3.1-8b`` hits an interpreto 0.5.0 bug in
+# ``Granularity.get_association_matrix`` (BOS-token index math goes out
+# of bounds) — the run halts on the first sample. See
+# ``TODO_METRICS.md`` L6/L7 for follow-up.
+SKIP_MODELS: set[str] = {"gen:llama3.1-8b"}
 
 
 def _env_list(var: str, default: list[str]) -> list[str]:
@@ -206,6 +213,12 @@ def main() -> None:
     for model_id in model_ids:
         if model_id not in MODEL_CONFIGS:
             print(f"! unknown model_id {model_id!r}, skipping")
+            continue
+        if model_id in SKIP_MODELS:
+            print(
+                f"! skipping {model_id} (attribution metric currently broken "
+                f"upstream; see SKIP_MODELS)"
+            )
             continue
         n_perturbations = _env_int(
             "METRIC_N_PERTURBATIONS", N_PERTURBATIONS_PER_MODEL[model_id]

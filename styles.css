@@ -391,6 +391,22 @@ button:active {
   min-height: var(--method-item-height);
 }
 
+.method-item-label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.method-metric {
+  flex: 0 0 auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--accent-2);
+  font-variant-numeric: tabular-nums;
+  padding-left: 8px;
+  text-align: right;
+  min-width: 3.5em;
+}
+
 .control select:disabled,
 .control input[type="text"]:disabled {
   background: #f5efe8;
@@ -474,6 +490,27 @@ main {
   font-weight: 700;
   color: var(--accent-3);
   font-size: 1.05rem;
+}
+
+.card-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.metric-badge {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(42, 157, 143, 0.14);
+  color: var(--accent-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .card-link {
