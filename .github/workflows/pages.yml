@@ -26,9 +26,11 @@ jobs:
       - name: Reduce html to necessary information (each file was self-contained)
         run: |
           python scripts/externalize_explanations.py
-      - name: Build manifest (if attributions exist)
-        run: |
-          python scripts/build_manifest.py
+      # NOTE: do NOT rebuild manifest.json in CI. `data/` is gitignored, so the
+      # metric sidecars are missing on the runner and `build_manifest.py` would
+      # overwrite the committed manifest with one that has empty metrics_summary
+      # and no metric_scores — making the "Sort by" dropdown empty in prod.
+      # Instead, rely on the manifest.json committed from local builds.
       - name: Prepare Pages artifact
         run: |
           mkdir -p site
