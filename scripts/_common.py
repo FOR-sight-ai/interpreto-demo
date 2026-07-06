@@ -14,7 +14,7 @@ The main features are:
 * ``format_value`` / ``format_kwargs_lines`` — turn Python objects back
   into source strings for the rendered ``.py`` snippets.
 * ``metrics_cache_path`` / ``save_metric_scores`` / ``load_metric_scores``
-  / ``split_activations`` / ``METRIC_DIRECTIONS`` — shared building blocks
+  / ``split_activations``  — shared building blocks
   for the metric-compute scripts (see ``TODO_METRICS.md``).
 """
 
@@ -239,44 +239,6 @@ def dedupe(names: Iterable[str]) -> list[str]:
 # ----------------------------------------------------------------------
 # Metric utilities
 # ----------------------------------------------------------------------
-
-
-#: Direction and display metadata for every metric wired into the gallery.
-#: Shared between ``build_manifest.py`` (writes ``metrics_meta`` at the
-#: top of ``manifest.json``) and every ``*_metrics.py`` script (which
-#: uses the ``direction`` value to know whether a higher score is better).
-METRIC_DIRECTIONS: dict[str, dict[str, str]] = {
-    "insertion": {
-        "label": "Insertion",
-        "direction": "higher_better",
-        "applies_to": "attribution",
-    },
-    "deletion": {
-        "label": "Deletion",
-        "direction": "lower_better",
-        "applies_to": "attribution",
-    },
-    "mse": {
-        "label": "MSE",
-        "direction": "lower_better",
-        "applies_to": "concept",
-    },
-    "fid": {
-        "label": "FID",
-        "direction": "lower_better",
-        "applies_to": "concept",
-    },
-    "sparsity": {
-        "label": "Sparsity",
-        "direction": "lower_better",
-        "applies_to": "concept",
-    },
-    "sparsity_ratio": {
-        "label": "Sparsity ratio",
-        "direction": "lower_better",
-        "applies_to": "concept",
-    },
-}
 
 
 def metrics_cache_dir(model_id: str) -> Path:

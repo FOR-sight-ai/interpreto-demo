@@ -10,7 +10,44 @@ OUTPUT_PATH = ROOT / "manifest.json"
 DATA_ROOT = ROOT / "data"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _common import METRIC_DIRECTIONS  # noqa: E402
+
+
+#: Direction and display metadata for every metric wired into the gallery.
+#: Shared between ``build_manifest.py`` (writes ``metrics_meta`` at the
+#: top of ``manifest.json``) and every ``*_metrics.py`` script (which
+#: uses the ``direction`` value to know whether a higher score is better).
+METRIC_DIRECTIONS: dict[str, dict[str, str]] = {
+    "insertion": {
+        "label": "Insertion",
+        "direction": "higher_better",
+        "applies_to": "attribution",
+    },
+    "deletion": {
+        "label": "Deletion",
+        "direction": "lower_better",
+        "applies_to": "attribution",
+    },
+    "mse": {
+        "label": "MSE",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+    "fid": {
+        "label": "FID",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+    "sparsity": {
+        "label": "Sparsity",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+    "sparsity_ratio": {
+        "label": "Sparsity ratio",
+        "direction": "lower_better",
+        "applies_to": "concept",
+    },
+}
 
 
 def resolve_interpreto_version() -> Optional[str]:
@@ -164,7 +201,9 @@ def build_manifest() -> dict:
 
     entries: list[dict] = []
 
-    for model_dir in sorted(path for path in EXPLANATIONS_DIR.iterdir() if path.is_dir()):
+    for model_dir in sorted(
+        path for path in EXPLANATIONS_DIR.iterdir() if path.is_dir()
+    ):
         meta = parse_model_id(model_dir.name)
         model_entries: list[dict] = []
 
