@@ -90,6 +90,11 @@ def load_metric_scores_for(
     concept scores live under ``data/<model>/metrics/concept/general.json`` and
     are broadcast to every scope. Returns ``None`` when the sidecar is
     missing so the caller can decide whether to emit the field.
+
+    Concept scores are also broadcast from ``<method>.html`` to
+    ``<method>_llm_labels.html`` — the LLM-Labels variant shares the
+    same fitted ``concept_explainer`` as its TopK sibling, so the four
+    reconstruction / sparsity metrics are identical by construction.
     """
     if type_name == "attribution":
         path = DATA_ROOT / model_id / "metrics" / "attribution" / f"{scope_name}.json"
@@ -100,7 +105,29 @@ def load_metric_scores_for(
     if not path.exists():
         return None
     with path.open("r", encoding="utf-8") as fh:
-        return json.load(fh)
+        scores = json.load(fh)
+    if type_name == "concept":
+        scores = broadcast_llm_labels_scores(scores)
+    return scores
+
+
+def broadcast_llm_labels_scores(scores: dict) -> dict:
+    """For every ``<method>.html`` key, also expose its scores under
+    ``<method>_llm_labels.html``.
+
+    LLM Labels shares its ``concept_explainer`` with the TopK variant,
+    so MSE / FID / Sparsity / SparsityRatio are identical by
+    construction. Existing ``_llm_labels.html`` entries are preserved.
+    """
+    out = dict(scores)
+    for key, value in scores.items():
+        if not key.endswith(".html"):
+            continue
+        if key.endswith("_llm_labels.html"):
+            continue
+        twin = f"{key[:-5]}_llm_labels.html"
+        out.setdefault(twin, value)
+    return out
 
 
 def add_entry(

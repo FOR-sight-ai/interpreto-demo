@@ -14,8 +14,14 @@ The main features are:
 * ``format_value`` / ``format_kwargs_lines`` — turn Python objects back
   into source strings for the rendered ``.py`` snippets.
 * ``metrics_cache_path`` / ``save_metric_scores`` / ``load_metric_scores``
-  / ``split_activations``  — shared building blocks
+  / ``split_activations`` / ``METRIC_DIRECTIONS`` — shared building blocks
   for the metric-compute scripts (see ``TODO_METRICS.md``).
+* ``HuggingFaceLLM`` — a minimal :class:`LLMInterface` wrapping a local
+  HuggingFace causal LM, used by the concept-labeling scripts. Adapted
+  from the "Using your own LLM interface" section of
+  ``references/generation_concept_tutorial.ipynb``. This class does not
+  yet ship with interpreto; the rendered snippets note that and refer
+  users to the tutorial for the reference implementation.
 """
 
 from __future__ import annotations
@@ -25,6 +31,8 @@ from pathlib import Path
 from typing import Any, Iterable
 
 import torch
+
+from interpreto.commons.llm_interface import LLMInterface, Role
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -317,3 +325,82 @@ def split_activations(
     eval_idx = perm[:n_eval]
     train_idx = perm[n_eval:]
     return activations[train_idx], activations[eval_idx]
+
+
+# ----------------------------------------------------------------------
+# HuggingFace LLM interface (script-only)
+#
+# Adapted from ``references/generation_concept_tutorial.ipynb``, section
+# "Using your own LLM interface". The reference cell has two quirks that
+# are fixed here:
+#   * the fallback (non chat-template) branch had no ``return`` statement;
+#   * the ``preprocess`` type hint used ``list(tuple[Role, str])`` instead
+#     of ``list[tuple[Role, str]]``.
+#
+# This class is not (yet) part of ``interpreto``. The rendered snippets
+# import it as ``from interpreto.commons import HuggingFaceLLM`` and carry
+# a comment pointing users to the tutorial for a paste-in fallback.
+# ----------------------------------------------------------------------
+
+
+class HuggingFaceLLM(LLMInterface):
+    """Minimal :class:`LLMInterface` backed by a local HuggingFace causal LM.
+
+    ``model`` and ``tokenizer`` must be an already-loaded pair (any
+    ``AutoModelForCausalLM`` + matching ``AutoTokenizer``). The model is
+    expected to already live on the right device; ``self.device`` is
+    inferred from ``model.device`` so no manual ``.to(...)`` is needed
+    at call time.
+    """
+
+    def __init__(self, model, tokenizer):
+        self.model = model
+        self.tokenizer = tokenizer
+        self.device = model.device
+
+    def preprocess(self, prompt: list[tuple[Role, str]]) -> str:
+        assert prompt[0][0] == Role.SYSTEM
+        assert prompt[1][0] == Role.USER
+
+        if getattr(self.tokenizer, "chat_template", None):
+            messages = [
+                {"role": "system", "content": prompt[0][1]},
+                {"role": "user", "content": prompt[1][1]},
+            ]
+            return self.tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+                enable_thinking=False,
+            )
+        return (
+            f"System:\n{prompt[0][1]}\n\n"
+            f"User:\n{prompt[1][1]}\n\n"
+            f"Assistant:\n"
+        )
+
+    def generate(self, prompt: list[tuple[Role, str]]) -> list[str]:
+        processed = self.preprocess(prompt)
+
+        inputs = self.tokenizer(
+            processed,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+        ).to(self.device)
+
+        with torch.no_grad():
+            generated_ids = self.model.generate(
+                **inputs,
+                pad_token_id=self.tokenizer.pad_token_id,
+                max_new_tokens=32,
+            )
+
+        input_lengths = inputs["attention_mask"].sum(dim=1)
+
+        outputs: list[str] = []
+        for j, output_ids in enumerate(generated_ids):
+            new_tokens = output_ids[input_lengths[j]:]
+            text = self.tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
+            outputs.append(text)
+        return outputs

@@ -20,7 +20,7 @@ topk = TopKInputs(
     concept_explainer=concept_explainer,
     k=5,
     use_unique_words=3,
-    unique_words_kwargs={"count_min_threshold": 32, "lemmatize": True},
+    unique_words_kwargs={"count_min_threshold": 4, "lemmatize": True},
 )
 labels = {k: list(v.keys()) for k, v in topk.interpret(inputs=inputs, concepts_indices="all").items()}
 

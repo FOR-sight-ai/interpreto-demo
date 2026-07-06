@@ -1295,15 +1295,28 @@
       "sample": null,
       "methods": [
         "ica.html",
+        "ica_llm_labels.html",
         "mp_sae.html",
+        "mp_sae_llm_labels.html",
         "neurons_as_concepts.html",
+        "neurons_as_concepts_llm_labels.html",
         "pca.html",
+        "pca_llm_labels.html",
         "semi_nmf.html",
+        "semi_nmf_llm_labels.html",
         "svd.html",
-        "vanilla_sae.html"
+        "svd_llm_labels.html",
+        "vanilla_sae.html",
+        "vanilla_sae_llm_labels.html"
       ],
       "metric_scores": {
         "ica.html": {
+          "fid": 0.020297596231102943,
+          "mse": 376.8194885253906,
+          "sparsity": 0.9999972581863403,
+          "sparsity_ratio": 0.03333324193954468
+        },
+        "ica_llm_labels.html": {
           "fid": 0.020297596231102943,
           "mse": 376.8194885253906,
           "sparsity": 0.9999972581863403,
@@ -1315,7 +1328,19 @@
           "sparsity": 0.03333333507180214,
           "sparsity_ratio": 0.0011111111690600714
         },
+        "mp_sae_llm_labels.html": {
+          "fid": 0.08767402917146683,
+          "mse": 681.3557739257812,
+          "sparsity": 0.03333333507180214,
+          "sparsity_ratio": 0.0011111111690600714
+        },
         "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.0013020833333333333
+        },
+        "neurons_as_concepts_llm_labels.html": {
           "fid": 0.0,
           "mse": 0.0,
           "sparsity": 1.0,
@@ -1327,7 +1352,19 @@
           "sparsity": 1.0,
           "sparsity_ratio": 0.03333333333333333
         },
+        "pca_llm_labels.html": {
+          "fid": 0.020297512412071228,
+          "mse": 376.8194580078125,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
         "semi_nmf.html": {
+          "fid": 0.030525458976626396,
+          "mse": 437.71221923828125,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "semi_nmf_llm_labels.html": {
           "fid": 0.030525458976626396,
           "mse": 437.71221923828125,
           "sparsity": 1.0,
@@ -1339,7 +1376,19 @@
           "sparsity": 1.0,
           "sparsity_ratio": 0.03333333333333333
         },
+        "svd_llm_labels.html": {
+          "fid": 0.020638281479477882,
+          "mse": 379.6947937011719,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
         "vanilla_sae.html": {
+          "fid": 0.02368338406085968,
+          "mse": 396.49334716796875,
+          "sparsity": 0.9352750182151794,
+          "sparsity_ratio": 0.031175833940505982
+        },
+        "vanilla_sae_llm_labels.html": {
           "fid": 0.02368338406085968,
           "mse": 396.49334716796875,
           "sparsity": 0.9352750182151794,
@@ -2575,15 +2624,28 @@
       "sample": null,
       "methods": [
         "ica.html",
+        "ica_llm_labels.html",
         "mp_sae.html",
+        "mp_sae_llm_labels.html",
         "neurons_as_concepts.html",
+        "neurons_as_concepts_llm_labels.html",
         "pca.html",
+        "pca_llm_labels.html",
         "semi_nmf.html",
+        "semi_nmf_llm_labels.html",
         "svd.html",
-        "vanilla_sae.html"
+        "svd_llm_labels.html",
+        "vanilla_sae.html",
+        "vanilla_sae_llm_labels.html"
       ],
       "metric_scores": {
         "ica.html": {
+          "fid": 0.013052728958427906,
+          "mse": 56.825077056884766,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "ica_llm_labels.html": {
           "fid": 0.013052728958427906,
           "mse": 56.825077056884766,
           "sparsity": 1.0,
@@ -2595,7 +2657,19 @@
           "sparsity": 0.03333333134651184,
           "sparsity_ratio": 0.001111111044883728
         },
+        "mp_sae_llm_labels.html": {
+          "fid": 0.05757555738091469,
+          "mse": 159.4131622314453,
+          "sparsity": 0.03333333134651184,
+          "sparsity_ratio": 0.001111111044883728
+        },
         "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.0013020833333333333
+        },
+        "neurons_as_concepts_llm_labels.html": {
           "fid": 0.0,
           "mse": 0.0,
           "sparsity": 1.0,
@@ -2607,7 +2681,19 @@
           "sparsity": 1.0,
           "sparsity_ratio": 0.03333333333333333
         },
+        "pca_llm_labels.html": {
+          "fid": 0.01305268332362175,
+          "mse": 56.825111389160156,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
         "semi_nmf.html": {
+          "fid": 0.02171001210808754,
+          "mse": 77.29048156738281,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "semi_nmf_llm_labels.html": {
           "fid": 0.02171001210808754,
           "mse": 77.29048156738281,
           "sparsity": 1.0,
@@ -2619,7 +2705,19 @@
           "sparsity": 1.0,
           "sparsity_ratio": 0.03333333333333333
         },
+        "svd_llm_labels.html": {
+          "fid": 0.013198498636484146,
+          "mse": 57.376338958740234,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
         "vanilla_sae.html": {
+          "fid": 0.035589393228292465,
+          "mse": 120.59835815429688,
+          "sparsity": 0.6573749780654907,
+          "sparsity_ratio": 0.02191249926884969
+        },
+        "vanilla_sae_llm_labels.html": {
           "fid": 0.035589393228292465,
           "mse": 120.59835815429688,
           "sparsity": 0.6573749780654907,
@@ -3855,15 +3953,28 @@
       "sample": null,
       "methods": [
         "ica.html",
+        "ica_llm_labels.html",
         "mp_sae.html",
+        "mp_sae_llm_labels.html",
         "neurons_as_concepts.html",
+        "neurons_as_concepts_llm_labels.html",
         "pca.html",
+        "pca_llm_labels.html",
         "semi_nmf.html",
+        "semi_nmf_llm_labels.html",
         "svd.html",
-        "vanilla_sae.html"
+        "svd_llm_labels.html",
+        "vanilla_sae.html",
+        "vanilla_sae_llm_labels.html"
       ],
       "metric_scores": {
         "ica.html": {
+          "fid": 0.006156561430543661,
+          "mse": 33.578311920166016,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "ica_llm_labels.html": {
           "fid": 0.006156561430543661,
           "mse": 33.578311920166016,
           "sparsity": 1.0,
@@ -3875,7 +3986,19 @@
           "sparsity": 0.03333333507180214,
           "sparsity_ratio": 0.0011111111690600714
         },
+        "mp_sae_llm_labels.html": {
+          "fid": 0.028509363532066345,
+          "mse": 107.6141128540039,
+          "sparsity": 0.03333333507180214,
+          "sparsity_ratio": 0.0011111111690600714
+        },
         "neurons_as_concepts.html": {
+          "fid": 0.0,
+          "mse": 0.0,
+          "sparsity": 0.40934115648269653,
+          "sparsity_ratio": 0.0005329962975035111
+        },
+        "neurons_as_concepts_llm_labels.html": {
           "fid": 0.0,
           "mse": 0.0,
           "sparsity": 0.40934115648269653,
@@ -3887,7 +4010,19 @@
           "sparsity": 1.0,
           "sparsity_ratio": 0.03333333333333333
         },
+        "pca_llm_labels.html": {
+          "fid": 0.0061565847136080265,
+          "mse": 33.578330993652344,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
         "semi_nmf.html": {
+          "fid": 0.00863984227180481,
+          "mse": 48.01572036743164,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
+        "semi_nmf_llm_labels.html": {
           "fid": 0.00863984227180481,
           "mse": 48.01572036743164,
           "sparsity": 1.0,
@@ -3899,7 +4034,19 @@
           "sparsity": 1.0,
           "sparsity_ratio": 0.03333333333333333
         },
+        "svd_llm_labels.html": {
+          "fid": 0.006189696490764618,
+          "mse": 33.759422302246094,
+          "sparsity": 1.0,
+          "sparsity_ratio": 0.03333333333333333
+        },
         "vanilla_sae.html": {
+          "fid": 0.010354635305702686,
+          "mse": 50.02040481567383,
+          "sparsity": 0.8587200045585632,
+          "sparsity_ratio": 0.028624000151952107
+        },
+        "vanilla_sae_llm_labels.html": {
           "fid": 0.010354635305702686,
           "mse": 50.02040481567383,
           "sparsity": 0.8587200045585632,

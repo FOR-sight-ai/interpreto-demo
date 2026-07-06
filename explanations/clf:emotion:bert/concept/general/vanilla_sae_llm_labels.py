@@ -1,8 +1,14 @@
 import torch
 from datasets import load_dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from interpreto import SplitterForClassification, plot_concepts
-from interpreto.concepts import VanillaSAEConcepts
-from interpreto.concepts.interpretations import TopKInputs
+from interpreto.concepts import VanillaSAEConcepts, LLMLabels
+
+# ``HuggingFaceLLM`` is not (yet) shipped by interpreto — this import will
+# start working once the class lands upstream. In the meantime, see the
+# "Using your own LLM interface" section of the classification concept
+# tutorial for the reference implementation you can paste in here.
+from interpreto.commons import HuggingFaceLLM
 from interpreto.concepts.methods.overcomplete import DeadNeuronsReanimationLoss
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -31,13 +37,17 @@ concept_explainer.fit(
     monitoring=0,
 )
 
-topk = TopKInputs(
+# Load a small local causal LM as the labeler.
+labeler_tokenizer = AutoTokenizer.from_pretrained('Qwen/Qwen3.5-2B')
+labeler_model = AutoModelForCausalLM.from_pretrained('Qwen/Qwen3.5-2B', torch_dtype=torch.bfloat16).to(device)
+llm_interface = HuggingFaceLLM(labeler_model, labeler_tokenizer)
+
+llm_labels = LLMLabels(
     concept_explainer=concept_explainer,
-    k=5,
-    use_unique_words=3,
-    unique_words_kwargs={"count_min_threshold": 4, "lemmatize": True},
+    llm_interface=llm_interface,
+    k_examples=20,
 )
-labels = {k: list(v.keys()) for k, v in topk.interpret(inputs=inputs, concepts_indices="all").items()}
+labels = {k: v for k, v in llm_labels.interpret(inputs=inputs, latent_activations=activations, concepts_indices="all").items() if v}
 
 gradients = concept_explainer.concept_output_gradient(
     inputs=activations,
