@@ -36,7 +36,7 @@ gradients = concept_explainer.concept_output_gradient(
     targets=None,
     batch_size=64,
 )
-mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)
+mean_gradients = torch.stack(gradients).squeeze().mean(0)
 
 plot_concepts(
     classes_names=classes_names,

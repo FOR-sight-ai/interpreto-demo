@@ -266,7 +266,7 @@ def render_code_snippet(
     lines.append("    targets=None,")
     lines.append(f"    batch_size={GRADIENT_BATCH_SIZE},")
     lines.append(")")
-    lines.append("mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)")
+    lines.append("mean_gradients = torch.stack(gradients).squeeze().mean(0)")
     lines.append("")
     lines.append("plot_concepts(")
     lines.append("    classes_names=classes_names,")
@@ -377,7 +377,7 @@ def render_llm_labels_snippet(
     lines.append("    targets=None,")
     lines.append(f"    batch_size={GRADIENT_BATCH_SIZE},")
     lines.append(")")
-    lines.append("mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)")
+    lines.append("mean_gradients = torch.stack(gradients).squeeze().mean(0)")
     lines.append("")
     lines.append("plot_concepts(")
     lines.append("    classes_names=classes_names,")
@@ -533,7 +533,7 @@ def main() -> None:
             targets=None,
             batch_size=GRADIENT_BATCH_SIZE,
         )
-        mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)
+        mean_gradients = torch.stack(gradients).squeeze().mean(0)
 
         # ---- TopK interpretation + HTML ------------------------------
         if not only_llm_labels:

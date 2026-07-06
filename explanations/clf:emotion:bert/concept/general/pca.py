@@ -24,7 +24,7 @@ topk = TopKInputs(
     concept_explainer=concept_explainer,
     k=5,
     use_unique_words=3,
-    unique_words_kwargs={"count_min_threshold": 4, "lemmatize": True},
+    unique_words_kwargs={"count_min_threshold": 32, "lemmatize": True},
 )
 labels = {k: list(v.keys()) for k, v in topk.interpret(inputs=inputs, concepts_indices="all").items()}
 
@@ -33,7 +33,7 @@ gradients = concept_explainer.concept_output_gradient(
     targets=None,
     batch_size=64,
 )
-mean_gradients = torch.stack(gradients).abs().squeeze().mean(0)
+mean_gradients = torch.stack(gradients).squeeze().mean(0)
 
 plot_concepts(
     classes_names=classes_names,

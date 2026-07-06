@@ -50,7 +50,7 @@ sample_tokens = [t.replace("Ġ", " ") for t in splitter.tokenizer.convert_ids_to
 
 local_importances = concept_explainer.concept_output_gradient(
     inputs=[sample], targets=None,
-)[0].abs().sum(dim=1)
+)[0].sum(dim=1)
 
 local_activations, _ = splitter.get_activations([sample], include_special_tokens=True)
 concepts_activations = concept_explainer.activations_to_concepts(local_activations)

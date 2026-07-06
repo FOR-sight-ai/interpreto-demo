@@ -127,13 +127,13 @@ and fitted concept explainers under `data/<model_id>/explainers/<method>.pt`,
 so re-running a script only trains what is missing. `NUM_SAMPLES` can be
 overridden per run via the `DEBUG_SAMPLES` environment variable.
 
-Classification concept methods emit **two** HTML files per method:
-`<method>.html` (TopK-input labels) and `<method>_llm_labels.html`
-(LLM-generated labels via a small local causal LM, default
-`Qwen/Qwen3.5-2B`). Both share the same fitted `concept_explainer`, so
-metric scores are computed once and broadcast to the LLM-Labels variant
-by `build_manifest.py`. Two environment flags control the labeler
-branch:
+Classification and generation concept methods emit **two** HTML files per
+method: `<method>.html` (TopK-input labels) and
+`<method>_llm_labels.html` (LLM-generated labels via a small local
+causal LM, default `Qwen/Qwen3.5-2B`). Both share the same fitted
+`concept_explainer`, so metric scores are computed once and broadcast
+to the LLM-Labels variant by `build_manifest.py`. Two environment
+flags control the labeler branch:
 
 - `SKIP_LLM_LABELS=1` — bypass the labeler load entirely; only the
   TopK HTMLs are (re)written. Useful when no GPU headroom is available
@@ -141,6 +141,10 @@ branch:
 - `ONLY_LLM_LABELS=1` — skip TopK and only (re)write the
   `_llm_labels.html` variants. Useful when the TopK HTMLs are already
   on disk and only the labeler needs iteration.
+
+For generation, the labeler is placed on `cuda:1` when a second GPU is
+available so it doesn't compete with the base model for VRAM (the base
+model always sits on `cuda:0`).
 
 ## Compute metric scores
 
